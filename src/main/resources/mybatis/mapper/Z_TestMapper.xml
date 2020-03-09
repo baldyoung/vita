@@ -5,7 +5,7 @@
 
 
     <select id="showDataBaseCreateSQL" resultType="map">
-        show create database MiniBlog
+        show create database test
     </select>
 
 </mapper>
