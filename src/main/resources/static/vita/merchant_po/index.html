@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>主页面</title>
+        <link rel="stylesheet" href="fonts/iconfont.css"/>
+        <link rel="stylesheet" href="css/font.css"/>
+        <link rel="stylesheet" href="css/weui.min.css"/>
+        <link rel="stylesheet" href="css/jquery-weui.min.css"/>
+        <link rel="stylesheet" href="css/mui.css"/>
+        <link rel="stylesheet" href="css/pages/index.css"/>
+        <script>
+        (function (doc, win) {
+          var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              if (!clientWidth) return;
+              docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+            };
+
+          if (!doc.addEventListener) return;
+          win.addEventListener(resizeEvt, recalc, false);
+          doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+    </script>
+    </head>
+    <body>
+        <header>
+            <div class="titlebar reverse" >
+                <h1>主页面</h1>
+				<a href="login.html" class="app">
+                    <i class="iconfont">&#xe60e;</i>
+                </a>
+            </div>
+        </header>
+        <article style="padding-bottom:14px;">
+            <div class="list-wrap">
+                <h4>系统服务</h4>
+                <ul class="app-list">
+                	<li>
+                        <div class="app-wrap">
+                            <a href="myclass.html">
+                                <i class="iconfont">&#xe611;</i>
+                                <span>包间预定</span>
+                            </a>
+							<div class="instruction">本章节学生易错题目</div>
+                        </div>
+                        
+                    </li>
+                    <li>
+                        <div class="app-wrap">
+                            <a href="creat_class.html">
+                                <i class="iconfont">&#xe63a;</i>
+                                <span>创建班级</span>
+                            </a>
+							<div class="instruction">创建班级，学生加入班级</div>
+                        </div>
+                        
+                    </li>
+                    <li>
+                        <div class="app-wrap">
+                            <a href="catemain-tm.html">
+                                <i class="iconfont">&#xe63e;</i>
+                                <span>成员管理</span>
+                            </a>
+							<div class="instruction">班级列表，随时修改</div>
+                        </div>
+                        
+                    </li>
+                </ul>
+            </div>
+
+            <div class="list-wrap">
+                <h4>学情统计</h4>
+                <ul class="app-list">
+                    <li>
+                        <div class="app-wrap">
+                            <a href="catemain-tm.html">
+                                <i class="iconfont">&#xe62d;</i>
+                                <span>题目统计</span>
+                            </a>
+							<div class="instruction">按章节，题目正确率统计</div>
+                        </div>
+                        
+                    </li>
+                    <li>
+                        <div class="app-wrap">
+                            <a href="catemain-stu.html">
+                                <i class="iconfont">&#xe63e;</i>
+                                <span>学生统计</span>
+                            </a>
+							<div class="instruction">本章节学生学习情况统计</div>
+                        </div>
+                        
+                    </li>
+                    <li>
+                        <div class="app-wrap">
+                            <a href="catemain-errtm.html">
+                                <i class="iconfont">&#xe611;</i>
+                                <span>易错题</span>
+                            </a>
+							<div class="instruction">本章节学生易错题目</div>
+                        </div>
+                        
+                    </li>
+                    <li>
+                        <div class="app-wrap">
+                            <a href="javascript:;">
+                                <i class="iconfont">&#xe61f;</i>
+                                <span>xxxxxx</span>
+                            </a>
+                        </div>
+                        
+                    </li>
+                </ul>
+            </div>
+        </article>
+        <footer>
+        </footer>
+    </body>
+</html>

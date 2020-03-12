@@ -1,0 +1,347 @@
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="renderer" content="webkit">
+
+		<title> Vita - 后台管理</title>
+
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+
+		<!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+
+		<script src="../../res/js/jquery.min.js?v=2.1.4"></script>
+		<script src="../../res/js/bootstrap.min.js?v=3.3.6"></script>
+		<link href="../../res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="../../res/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+		<link href="../../res/css/animate.css" rel="stylesheet">
+		<link href="../../res/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+		<script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
+		<script src="../../res/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="../../res/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="../../res/js/plugins/layer/layer.min.js"></script>
+
+		<script src="../../res/js/hAdmin.js?v=4.1.0"></script>
+		<script type="text/javascript" src="../../res/js/index.js"></script>
+
+		<!-- 第三方插件 -->
+		<script src="../../res/js/plugins/pace/pace.min.js"></script>
+
+	</head>
+
+	<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+		<div id="wrapper">
+			<!--左侧导航开始-->
+			<nav class="navbar-default navbar-static-side" role="navigation">
+				<div class="nav-close"><i class="fa fa-times-circle"></i>
+				</div>
+				<div class="sidebar-collapse">
+					<ul class="nav" id="side-menu">
+						<li class="nav-header">
+							<div class="dropdown profile-element">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+									<span class="clear">
+                                    <span class="block m-t-xs" style="font-size:20px;">
+                                        <i class="fa fa-leaf"></i>
+                                        <strong class="font-bold">Vita-Back</strong>
+                                    </span>
+									</span>
+								</a>
+							</div>
+							<div class="logo-element">Vita
+							</div>
+						</li>
+						<!-- 运营相关 -->
+						<li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+							<span class="ng-scope">运营</span>
+						</li>
+						<li>
+							<a class="J_menuItem" href="../Working/workingL.html">
+								<i class="fa fa-desktop"></i>
+								<span class="nav-label">实时营业</span>
+								<!--<span class="label label-warning pull-right">16</span>-->
+							</a>
+						</li>
+						<li>
+							<a href="">
+								<i class="fa fa-cubes"></i>
+								<span class="nav-label">菜单操作</span>
+								<span class="fa arrow">
+								
+							</a>
+							<ul class="nav nav-second-level">
+								<li>
+									<a class="J_menuItem" href="../MenuProductManage/menuProductManage.html">商品操作</a>
+								</li>
+								<li>
+									<a class="J_menuItem" href="../MenuProductTypeManage/menuProductTypeManage.html">品类操作</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="">
+								<i class="glyphicon glyphicon-tower"></i> 
+								<span class="nav-label">首页操作</span>
+								<span class="fa arrow">
+								
+							</a>
+							<ul class="nav nav-second-level">
+								<li>
+									<a class="J_menuItem" href=" ">海报</a>
+								</li>
+								<li>
+									<a class="J_menuItem" href=" ">商家推荐</a>
+								</li>
+								<li>
+									<a href="">
+										<span class="nav-label">附加服务</span>
+								<span class="fa arrow">
+									</a>
+									<ul class="nav nav-second-level">
+										<li>
+											<a class="J_menuItem" href=" ">店铺活动</a>
+										</li>
+										<li>
+											<a class="J_menuItem" href=" ">今日限量</a>
+										</li>
+										<li>
+											<a class="J_menuItem" href=" ">娱乐消遣</a>
+										</li>
+										<li>
+											<a class="J_menuItem" href=" ">留言评价</a>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a class="J_menuItem" href="">
+								<i class="glyphicon glyphicon-list-alt"></i> 
+								<span class="nav-label">账单处理</span>
+							</a>
+						</li>
+						<!-- 基础数据管理相关 -->
+						<li class="line dk"></li>
+						<li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+							<span class="ng-scope">管理</span>
+						</li>
+						<li>
+							<a href="">
+								<i class="fa fa-shopping-cart"></i>
+								<span class="nav-label">商品管理</span>
+								<span class="fa arrow">
+								
+							</a>
+							<ul class="nav nav-second-level">
+								<li>
+									<a class="J_menuItem" href="../ProductManage/productManage.html">商品</a>
+								</li>
+								<li>
+									<a class="J_menuItem" href="../ProductTypeManage/productTypeManage.html">商品类型</a>
+								</li>
+								<li>
+									<a class="J_menuItem" href=" ">商品属性</a>
+								</li>
+								<li>
+									<a class="J_menuItem" href="../ProductImgManage/productImgManage.html">商品图片</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#">
+								<i class="fa fa-edit"></i> 
+								<span class="nav-label">订单管理</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level">
+								<li>
+									<a class="J_menuItem" href="../OrderFormManage/orderFormManage.html">历史账单</a>
+								</li>
+								<li>
+									<a class="J_menuItem" href="../OrderFormTypeManage/orderTypeManage.html">订单类型</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#">
+								<i class="glyphicon glyphicon-blackboard"></i>
+								<span class="nav-label">商家信息管理</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level">
+								<li>
+									<a class="J_menuItem" href=" ">商家信息</a>
+								</li>
+								<li>
+									<a class="J_menuItem" href=" ">商家联系人</a>
+								</li>
+								<li>
+									<a class="J_menuItem" href=" ">店内咨询</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#">
+								<i class="fa fa-users"></i>
+								<span class="nav-label">用户管理</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level">
+								<li>
+									<a class="J_menuItem" href="../UserManage/userManage.html">所有账号</a>
+								</li>
+								<!--<li><a class="J_menuItem" href="Common/404.html">新增用户</a>
+                            </li>-->
+							</ul>
+						</li>
+						<li>
+							<a href="">
+								<i class="glyphicon glyphicon-th-large"></i>
+								<span class="nav-label">其它</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level">
+								<li>
+									<a class="J_menuItem" href=" ">客戶就餐时间类型</a>
+								</li>
+								<li>
+									<a class="J_menuItem" href=" ">客戶消息类型</a>
+								</li>
+							</ul>
+						</li>
+						<!-- 系统相关 -->
+						<li class="line dk"></li>
+						<li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+							<span class="ng-scope">系统</span>
+						</li>
+						<li>
+							<a href="#">
+								<i class="fa fa-gears"></i>
+								<span class="nav-label">系统相关</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level">
+								<li>
+									<a class="J_menuItem" href="../Setting/setting.html">设置</a>
+								</li>
+								<li>
+									<a class="J_menuItem" href=" ">系统日志</a>
+								</li>
+								<li>
+									<a class="J_menuItem" href="../About/about.html">关于我们</a>
+								</li>
+							</ul>
+						</li>
+						<li class="line dk"></li>
+						<!--<li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                        <span class="ng-scope">分类</span>
+                    </li>-->
+						<!--<li>
+                        <a href="#"><i class="fa fa-picture-o"></i> <span class="nav-label">系统管理</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a class="J_menuItem" href="Common/404.html">系统日志</a>
+                            </li>
+                        </ul>
+                    </li>-->
+
+					</ul>
+				</div>
+			</nav>
+			<!--左侧导航结束-->
+			<!--右侧部分开始-->
+			<div id="page-wrapper" class="gray-bg dashbard-1">
+				<div class="row border-bottom">
+					<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+						<div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-info " href="#"><i class="fa fa-bars"></i> </a>
+							<form role="search" class="navbar-form-custom" method="post" action="search_results.html">
+								<div class="form-group">
+									<!--<input type="text" placeholder="请输入您需要查找的内容 …" class="form-control" name="top-search" id="top-search">-->
+								</div>
+							</form>
+						</div>
+
+						<ul class="nav navbar-top-links navbar-right">
+
+							<li class="dropdown">
+								<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+									<i class="glyphicon glyphicon-user"></i>
+									<!-- <span class="label label-primary">8</span>
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>-->
+								</a>
+								<ul class="dropdown-menu dropdown-alerts" style="width:100px; ">
+									<li>
+										<button type="button" class="btn btn-warning" style='width:80px;' onclick="logoutUser()"><!--<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>-->用户注销</button>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<button type="button" class="btn btn-primary" style='width:80px;' data-toggle="modal" data-target="#myModal6"><!--<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>-->修改密码</button>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<!-- 声音按钮 -->
+						<ul class="nav navbar-top-links navbar-right">
+
+							<li class="dropdown" style='margin-right:5px;'>
+								<a id='AudioAction' class="dropdown-toggle count-info" href="#" onclick='changeAudioState()'>
+									<i id='AudioActionIcon' class="glyphicon glyphicon-volume-up"></i>
+									<!-- <span class="label label-primary">8</span>
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>-->
+								</a>
+
+							</li>
+						</ul>
+						<!-- 全屏按钮 -->
+						<ul class="nav navbar-top-links navbar-right">
+
+							<li class="dropdown" style='margin-right:5px;'>
+								<a id='FullScreenAction' class="dropdown-toggle count-info" href="#" onclick='changeFullScreenState()'>
+									<i id='FullScreenIcon' class="glyphicon glyphicon-fullscreen"></i>
+									<!-- <span class="label label-primary">8</span>
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>-->
+								</a>
+
+							</li>
+						</ul>
+					</nav>
+				</div>
+				<div class="row J_mainContent" id="content-main">
+					<iframe id="J_iframe" width="100%" height="100%" src="../Working/workingL.html" frameborder="0" data-id="index_v1.html" seamless></iframe>
+				</div>
+			</div>
+			<!--右侧部分结束-->
+		</div>
+
+		<div class="modal inmodal fade" id="myModal6" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h5 class="modal-title">修改密码</h5>
+					</div>
+					<div class="modal-body">
+						<div class="form-group"><label>旧密码：</label> <input id='oldPWD' type="text" placeholder="请输入当前登录密码" class="form-control" style="width:100%; "></div>
+						<div class="form-group"><label>新密码：</label> <input id='newPWD' type="text" placeholder="请输入更改后的密码" class="form-control" style="width:100%; "></div>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="changePWD()">保存</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="js/FullScreenModel.js"></script>
+		<script src="js/BackHomePage.js"></script>
+		<script>
+		</script>
+
+	</body>
+
+</html>

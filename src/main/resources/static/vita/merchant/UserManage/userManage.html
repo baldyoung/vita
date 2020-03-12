@@ -1,0 +1,114 @@
+
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>用户管理</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <script src="../../res/js/jquery.min.js?v=2.1.4"></script>
+    <script src="../../res/js/bootstrap.min.js?v=3.3.6"></script>
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="../../res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../res/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+
+    <link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="../../res/css/animate.css" rel="stylesheet">
+    <link href="../../res/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="../../res/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="../../res/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    <script src="../../res/js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="../../res/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+    <script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="../../res/js/plugins/toastr/toastr.min.js"></script>
+
+</head>
+
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInUp">
+    <div class="modal-dialog" style="width:1300px;">
+        <div class="col-sm-12">
+
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>当前可查阅用户</h5>
+                    <div class="ibox-tools">
+                        <button type='button' class="btn btn-primary btn-xs" data-toggle="modal" data-target="#alertOrAddUserInfoPanel" onclick="readForAddUser()">新增</button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div >
+                        <table id="userTable" style="width:100%; ">
+                            <thead>
+                                <tr>
+                                    <td width="20%">用户名</td>
+                                    <td width="20%">登陆名</td>
+                                    <td width="10%">账户类型</td>
+                                    <td width="30%">操作</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="alertOrAddUserInfoPanel" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:600px;">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <span id="myModal_title">用户信息-修改</span>
+                <button type="button" class="close" data-dismiss="modal">
+                	<span aria-hidden="true">&times;</span>
+                	<span class="sr-only">关闭</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                	<label>用户名：</label> 
+                	<input id='nameText' type="text" placeholder="请输入用户名" class="form-control" style="width:70%; ">
+                </div>
+                <div class="form-group">
+                	<label>登录名<span style="color:red;">（必填）</span>：</label> 
+                	<input id='accountText' type="text" placeholder="请输入登录名" class="form-control" style="width:70%; ">
+                </div>
+                <div class="form-group">
+                	<label>登录密码<span style="color:red;">（必填）</span>：</label> 
+                	<input id='passwordText' type="text" placeholder="请输入登录密码" class="form-control" style="width:70%; ">
+                </div>
+                <label>用户类型：</label>
+                <div class="btn-group open">
+                    <select id='gradeText' class="form-control" style="font-size:10px; height:40px;">
+                    	<option class="form-control" value="" >请选择</option>
+                        <option class="form-control" onclick="" value="30">普通</option>
+                        <option class="form-control" onclick="" value="60">管理员</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id='btnCloseInfWin' type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="saveUserInf()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- 自定义js -->
+<script src="js/userMn.js"></script>
+
+
+
+
+</body>
+</html>

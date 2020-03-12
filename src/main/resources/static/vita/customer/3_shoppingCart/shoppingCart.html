@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" id="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="format-detection" content="telephone=no" />
+		
+		<link href="../0_common/css/reset.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="../0_common/js/jquery-3.4.1.min.js"></script>
+		<script type="text/javascript" src="../../resource/configFile/globalConfig.js"></script>
+		
+		<link href="./css/shoppingCart.css" rel="stylesheet" type="text/css">
+		<script src='../0_common/js/layer/mobile/layer.js'></script>
+		<script src="./js/testData.js" type="text/javascript"></script>
+		<script src="./js/shoppingCart.js" type="text/javascript"></script>
+	</head>
+
+	<body style="background: #F5F5F4;">
+		<div class="near-box">
+			<div class="header">
+				<span style='float:left; margin-left:30px; '>购物车</span>
+				<span class="delete" style='margin-right:15px;' onclick="ShopingCartModule.deleteSelectedProduct()"></span>
+			</div>
+			<div class="shop-cart-bigbox">
+				<a onclick="SelectDiningTimeModule.init()">
+					<div class="cart-title">预定上菜时间<i id='presetTimeResult' ></i></div>
+				</a>
+				<div id='itemDisplayArea' style='width:100%; '>
+					<div class="shop-cart-listbox1">
+						<div class="shop-cart-box2" style='border-bottom: 1px solid #DCDCDC;' >
+							<input type="checkbox" name="sub2" class="btn1" style='display:none;'>
+							<span class="shop-cart-ltext1"></span>
+						</div>
+						<div class="index-goods" style="background:#E1E1E1; ">
+							<span class="shop-cart-check2"><input type="checkbox" name="sub2" class="shopcart-input1 btn2" style="pointer-events: none; display:none; " ></span>
+							<span class="index-goods-img"><img ></span>
+							<div class="index-goods-textbox" >
+								<span class="index-goods-text1"></span>
+								<div class="index-goods-text2">￥<i class="priceJs"></i></div>
+								<div class="shop-cart-box3">
+									<span class="shop-cart-subtract"></span>
+									<input type="tel" size="4" value="0" id="tb_count" class="shop-cart-numer" readonly="true" style="background:#E1E1E1;" >
+									<span class="shop-cart-add"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+			<div class="shop-cart-total">
+				<label class="checkall">
+			<span class="shop-cart-check1 ckAllA"><input type="checkbox"  id="ckAll" onclick="ShopingCartModule.selectItemAllProduct()" ></span>
+			全选
+		</label>
+				<span class="scart-total-text2">合计：￥</span>
+				<span id="AllTotal" class="scart-total-text3">0.00</span>
+				<span class="scart-total-text4" onclick='ShopingCartModule.readySubmitOrder()'>提交<i id="selectedTotal"></i></span>
+			</div>
+			<div class="kaola-bottom">
+				<a href="../3_index/index.html" class="kaola-bottom-box1">
+					<span class="kaola-bottom-img1"><img src="../0_common/img/home2.png"></span>
+					<span class="kaola-bottom-text1 ">首页</span>
+				</a>
+				<a href="../3_menu/menu.html" class="kaola-bottom-box1">
+					<span class="kaola-bottom-img1"><img src="../0_common/img/search3.png"></span>
+					<span class="kaola-bottom-text1 ">点餐</span>
+				</a>
+				<a href="../3_shoppingCart/shoppingCart.html" class="kaola-bottom-box1">
+					<span class="kaola-bottom-img1"><img src="../0_common/img/shop-cart2.png"></span>
+					<span class="kaola-bottom-text1 text2">购物车</span>
+				</a>
+				<a href="../3_customerCenter/customerCenter.html" class="kaola-bottom-box1">
+					<span class="kaola-bottom-img1"><img src="../0_common/img/people1.png"></span>
+					<span class="kaola-bottom-text1">我的</span>
+				</a>
+			</div>
+		</div>
+		<input type="hidden" id="ids" value="">
+	</body>
+
+</html>

@@ -1,0 +1,257 @@
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>商品管理</title>
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+		
+		<link href="../../res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="../../res/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="../../res/css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+		<link href="../../res/css/animate.css" rel="stylesheet">
+		<link href="../../res/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="../../res/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+		<!--<link href="../../res/css/plugins/iCheck/custom.css" rel="stylesheet">-->
+		<link rel="stylesheet" type="text/css" href="../../res/css/plugins/webuploader/webuploader.css">
+		<link rel="stylesheet" type="text/css" href="../../res/css/demo/webuploader-demo.css">
+
+		<script src="../../res/js/jquery.min.js?v=2.1.4"></script>
+		<script src="../../res/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="../../res/js/plugins/dataTables/jquery.dataTables.js"></script>
+		<script src="../../res/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+		<script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
+		<script src="../../res/js/plugins/iCheck/icheck.min.js"></script>
+		<script src="../../res/js/plugins/webuploader/webuploader.min.js"></script>
+		<script src="../Common/js/PagingBarModule.js"></script>
+		<!-- 自定义js -->
+		<script src="js/proMn.js"></script>
+
+		<script type="text/javascript">
+			// 添加全局站点信息
+			var BASE_URL = '../../res/js/plugins/webuploader';
+			var url = "/Vita_war_exploded";
+		</script>
+
+		<!-- <script src="../../res/js/demo/webuploader-demo.js"></script>-->
+
+		<!--<link href="../../res/css/plugins/fullcalendar/fullcalendar.css" rel="stylesheet">
+    <link href="../../res/css/plugins/fullcalendar/fullcalendar.print.css" rel="stylesheet">-->
+
+	</head>
+
+	<body class="gray-bg">
+
+		<div class="wrapper wrapper-content animated fadeInUp">
+
+			<div class='col-sm-7'>
+				<div class="ibox float-e-margins">
+					<div class='ibox-title'>
+						<label class="col-sm-2 control-label">商品集筛选条件</label>
+					</div>
+					<div class="ibox-content">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">商品类型选择</label>
+								<div class="col-sm-5">
+									<div class="input-group m-b" style='width:100%; '>
+
+										<select id='filterProductTypeList' class="form-control" style="font-size:10px; width:100%; height:40px; ">
+											<option value='全部'>全部</option>
+											<option value='未指定'>未指定</option>
+										</select>
+									</div>
+								</div>
+								<label class='col-sm-2 control-label'>展示属性选择</label>
+								<label class="checkbox-inline i-checks">
+                                    <div id='isHasShown' class="icheckbox_square-green checked" style="position: relative;"  >
+										<input type="checkbox" value="option1" style="position: absolute; opacity: 0;" onclick='hasShown("is")'>
+										<ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;">
+										</ins>
+									</div>
+										已上架
+								</label>
+								<label class="checkbox-inline i-checks">
+                                    <div id='notHasShown' class="icheckbox_square-green checked" style="position: relative;"  >
+										<input type="checkbox" value="option1" style="position: absolute; opacity: 0;" onclick='hasShown("not")'>
+										<ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;">
+										</ins>
+									</div>
+										未上架
+								</label>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-4 col-sm-offset-2" style='float:right; '>
+									<button class="btn btn-primary" type="button" onclick='requestAllProduct()'>搜索</button>
+									<button class="btn btn-white" type="button" style='margin-left:20px;' onclick='resetFilterCondition()'>重置</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+			</div>
+
+			<div class='col-sm-5'>
+				<div class="ibox float-e-margins">
+					<div class='ibox-title'>
+						<label class="col-sm-4 control-label">商品信息统计</label>
+					</div>
+					<div class="ibox-content">
+						<form class="form-horizontal">
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">商品总数</label>
+								<label class='col-sm-3 control-label'>已展示数量</label>
+								<label class='col-sm-2 control-label'>库存为零</label>
+								<label class='col-sm-2 control-label'>待录图片</label>
+								<label class='col-sm-2 control-label'>类型未指定</label>
+								<div class="col-sm-10">
+
+								</div>
+							</div>
+							<div class="form-group">
+								<label id='infProAmount' class="col-sm-2 control-label">102</label>
+								<label id='infProAmount_isShow' class='col-sm-3 control-label'>88</label>
+								<label id='infProAmount_stock' class='col-sm-2 control-label' style='color:red; '>1</label>
+								<label id='infProAmount_picture' class='col-sm-2 control-label' style='color:red; '>0</label>
+								<label id='infProAmount_type' class='col-sm-2 control-label' style='color:red; '>9</label>
+								<div class="col-sm-10">
+
+								</div>
+							</div>
+							<div class="hr-line-dashed"></div>
+
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-12">
+
+			<div class="ibox">
+				<div class="ibox-title">
+					<h5 id='productListTitle'>搜索结果</h5>
+					<div class="ibox-tools">
+						<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal5" onclick="readyProWin(-1)">新增</button>
+					</div>
+				</div>
+				<div class="ibox-content">
+					<div>
+						<table id="productTable" style="width:100%; ">
+							<thead>
+								<tr>
+									<td width="5%" style='font-size:10px; '>编号</td>
+									<td width="13%" style='font-size:10px; '>名称</td>
+									<td width="11%" style='font-size:10px; '>类型</td>
+									<td width="11%" style='font-size:10px; '>属性</td>
+									<td width="7%" style='font-size:10px; '>单价</td>
+									<td width="7%" style='font-size:10px; '>库存</td>
+									<td width="5%" style='font-size:10px; '>已上架</td>
+									<td width="12%" style='font-size:10px; '>图片名称</td>
+									<td width="6%" style="font-size:10px;">优先级</td>
+									<td width="25%" style='font-size:10px; '>操作</td>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<!-- 分页控制区 -->
+					<div id='pagingBtnDisplayArea' style='text-align: right;'>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		</div>
+
+		<div class="modal inmodal fade" id="myModal5" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<span id='myModal5Title'>商品信息-新增</span>
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<div id='productPictureDiv' style='width:100%; height:300px;  align-items:center;  '>
+							<img id='productPicture' src='' style='width:auto;height:auto;max-width:100%;max-height:100%; ' />
+						</div>
+					</div>
+					<div class="modal-body">
+						<div style="margin-top:3px;">
+							<span>商品名称：</span>
+							<div class="btn-group open"><input id='newProductName' type="text" placeholder="请输入商品名称" class="form-control" style="width:70%; "></div>
+							<span>商品类型：</span>
+							<div class="btn-group open">
+								<select id='newProductTypeId' class="form-control" style="font-size:10px; ">
+                            <!--<option>选项一</option>
+                            <option>选项二</option>-->
+                        </select>
+							</div>
+						</div>
+						<div style="margin-top:3px;">
+							<span>商品单价：</span>
+							<div class="btn-group open"><input id='newProductPrice' type="text" placeholder="请输入商品单价" class="form-control" style="width:70%; "></div>
+							<span>价格单位：</span>
+							<div class="btn-group open"><input id='newProductPriceUnit' type="text" placeholder="请输入价格单位" class="form-control" style="width:70%; "></div>
+						</div>
+						<div style="margin-top:3px;">
+							<span>商品库存：</span>
+							<div class="btn-group open"><input id='newProductStock' type="text" placeholder="请输入商品库存" class="form-control" style="width:70%; "></div>
+							<!--<span>不需要库存：</span>
+                    <input type='checkbox' id='showInMenu'   class="i-checks" checked />-->
+						</div>
+						<div style="margin-top:3px;">
+							<span>商品等级：</span>
+							<div class="btn-group open"><input id='newProductGrade' type="text" placeholder="请输入商品库存" class="form-control" style="width:70%; "></div>
+							<span>显示在菜单：</span>
+							<input type='checkbox' id='showInMenu' class="i-checks" checked />
+						</div>
+						<div style="margin-top:3px;">
+							<span>商品备注：</span></br>
+							<textarea id='newProductRemark' style='resize:none; height:80px; width:80%; ' placeholder="请输入商品备注"></textarea>
+						</div>
+
+						<div class="page-container">
+							<button type="button" id='changeProPicBtn' class="btn btn-w-m btn-warning" style='' onclick='readyUpdatePicture()'>修改图片</button>
+							<div id='updateProPicWindow' style='width:100%; '>
+								<p>商品图片（注意：只能上传单张图片）</p>
+								<div id="uploader" class="wu-example">
+									<div class="queueList">
+										<div id="dndArea" class="placeholder">
+											<div id="filePicker"></div>
+											<p>你可以将照片拖到这里，单次最多可选1张</p>
+										</div>
+									</div>
+									<div class="statusBar" style="display:none;">
+										<div class="progress">
+											<span class="text">0%</span>
+											<span class="percentage"></span>
+										</div>
+										<div class="info"></div>
+										<div class="btns">
+											<div id="filePicker2"></div>
+											<div class="uploadBtn" style="display:none;">开始上传</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" id='btnCloseProductInfWin' class="btn btn-white" data-dismiss="modal">关闭</button>
+						<!--class=""-->
+						<button type="button" class="btn btn-primary" onclick="submit()">保存</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>

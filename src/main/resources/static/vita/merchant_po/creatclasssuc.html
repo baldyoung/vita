@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>创建班级</title>
+        <link rel="stylesheet" href="fonts/iconfont.css"/>
+        <link rel="stylesheet" href="css/font.css"/>
+        <link rel="stylesheet" href="css/weui.min.css"/>
+        <link rel="stylesheet" href="css/jquery-weui.min.css"/>
+        <link rel="stylesheet" href="css/mui.css"/>
+        <link rel="stylesheet" href="css/pages/creatclasssuc.css"/>
+        <script>(function (doc, win) {
+          var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              if (!clientWidth) return;
+              docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+            };
+
+          if (!doc.addEventListener) return;
+          win.addEventListener(resizeEvt, recalc, false);
+          doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+        function back()
+		{
+			history.go(-1);
+		}
+		</script>
+    </head>
+    <body>
+        <header>
+            <div class="titlebar reverse">
+                <a href="javascript:back()">
+                    <i class="iconfont">&#xe640;</i>
+                </a>
+                <h1>班级号</h1>
+				<a href="login.html" class="app">
+                    <i class="iconfont">&#xe60e;</i>
+                </a>
+            </div>
+        </header>
+        <article style="bottom: 0;">
+		    <div class="no-data">
+                <span>
+                    <i class="iconfont">&#xe62c;</i>   
+                </span>
+                <label>班级创建成功!</label>
+            </div>
+			<div style="font-size:20px;text-align:center;color:red;font-weight:bold;margin-bottom:10px;">班级名称为：计算1班</div>
+            <ul class="xunjia-box">
+                <li class="inner">
+                    <div class="item-name">学校：</div>
+                    <div class="item-value">******</div>
+                </li>
+                <li class="inner">
+                    <div class="item-name">院系：</div>
+                    <div class="item-value">******</div>
+                </li>
+                <li class="inner">
+                    <div class="item-name">专业：</div>
+                    <div class="item-value">******</div>
+                </li>
+                <li class="inner">
+                    <div class="item-name">班级：</div>
+                    <div class="item-value">******</div>
+                </li>
+            </ul>
+        </article>
+        <footer>
+		   <ul class="menubar animated fadeInUp delay3">
+                <li class="tab" onclick="window.location='index.html'">
+                    <i class="iconfont" style="font-size:24px;">&#xe63f;</i>
+                    <label class="tab-label">主目录</label>
+                </li>
+            </ul>
+        </footer>
+        <script src="js/jquery-1.8.3.min.js"></script>
+        <script src="js/jquery-weui.js"></script>
+    </body>
+</html>

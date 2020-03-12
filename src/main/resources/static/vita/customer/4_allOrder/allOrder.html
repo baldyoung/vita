@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" id="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="format-detection" content="telephone=no" />
+		
+		<link href="../0_common/css/reset.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="../0_common/js/jquery-3.4.1.min.js"></script>
+		<script type="text/javascript" src="../../resource/configFile/globalConfig.js"></script>
+		
+		<link href="./css/my-indent.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="./js/allOrder.js"></script>
+		
+		<title></title>
+		<!--
+        	后期增加“类电子”票据
+        -->
+	</head>
+	<body>
+		<div class="zjzz-buylist-wear">
+			
+			<div class="zjzz-buylist-top">
+				<a href="../3_customerCenter/customerCenter.html" class="zjzz-buylist-t1"></a>
+				<span class="zjzz-buylist-t2">我的订单</span>
+				<span class="zjzz-buylist-t3">
+					<span class="zjzz-buylist-t4"></span>
+				</span>
+			</div>
+			<div class="zjzz-buylist-top2">			
+				<a href="../4_allOrder/allOrder.html" class="zjzz-buylist-tp1">
+					<i class="zjzz-buylist-tp2">全部&nbsp;<i id="totalAmount">13</i></i>
+				</a>
+				<a href="../4_unfinishedOrder/unfinishedOrder.html" class="zjzz-buylist-tp1">
+					<i>备货中<i id="unfinishedAmount">3</i></i>
+				</a>
+				<a href="../4_finishedOrder/finishedOrder.html" class="zjzz-buylist-tp1">
+					<i>已完成<i id="finishedAmount">10</i></i>
+				</a>
+			</div>		
+			<div class="zjzz-buylist-mid">
+				<!--全部订单的统计信息 -->
+				<div class="zjzz-buylist-goods1"  style='margin-top:1px;'>
+					<span class="zjzz-buylist-goodsm">
+						<i style='float:left;'>总计</i>
+						<i id="totalItemQuantity" class="zjzz-buylist-gm3">共3件</i>
+						<i>应付总额：<i id="totalOrderAmount" class="zjzz-buylist-gm4">263.00</i></i>
+					</span>
+				</div>
+				<!--全部-->
+				<div id="orderDisplayArea" class="zjzz-buylist-m1" style='margin-bottom: 30px;'>
+					<!--
+					<div class="zjzz-buylist-goods1">
+						<div class="zjzz-buylist-gtime">
+							<span class="zjzz-buylist-gtime1">订单1</span>
+							<span class="zjzz-buylist-gtime2">12:21:33</span>
+						</div>
+						<div class="zjzz-buylist-det">
+							<img src="./del/2017-11-21_162114.png"/>
+							<div class="zjzz-buylist-gdetail">
+								<span class="zjzz-buylist-gtit1">Dr.Ci:Labo 城野医生 卓效收敛化妆水 限量版 200毫升</span>
+								<span class="zjzz-buylist-gmoney">
+									<i class="zjzz-buylist-gm1">￥179.00</i>
+									<i class="zjzz-buylist-gm2">x1</i>
+								</span>
+							</div>
+						</div>
+						<span class="zjzz-buylist-goodsm">
+							<i class="zjzz-buylist-gm3">共1件</i>
+							<i>应付总额：<i class="zjzz-buylist-gm4">￥179.00</i></i>
+						</span>
+					</div>
+					-->
+				</div>
+				
+				
+			
+			</div>
+		</div>
+	</body>
+</html>

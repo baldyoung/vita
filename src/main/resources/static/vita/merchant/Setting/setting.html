@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title> 设置</title>
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+
+		<link href="../../res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="../../res/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="../../res/css/animate.css" rel="stylesheet">
+		<link href="../../res/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+		<!-- 全局js -->
+		<script src="../../res/js/jquery.min.js?v=2.1.4"></script>
+		<script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
+		<script src="js/setting.js"></script>
+
+
+	</head>
+
+	<body class="gray-bg">
+		<div class="row">
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="wrapper wrapper-content animated fadeInRight">
+
+							<div class="ibox-content m-b-sm border-bottom">
+								<div class="p-xs">
+									<div class="pull-left m-r-md">
+										<i class="fa fa-globe text-navy mid-icon"></i>
+									</div>
+									<h2>系统设置</h2>
+									<span>这里可以进行一些功能上的配置。</span>
+								</div>
+							</div>
+
+							<div class="ibox-content forum-container">
+
+								<div class="forum-title">
+								</div>
+
+								<div id="packageOptionArea" class="forum-item active">
+									<div class="row">
+										<div class="col-sm-9">
+											<div class="forum-icon">
+												<i class="fa fa-archive"></i>
+											</div>
+											<a class="forum-item-title">商品打包</a>
+											<div class="forum-sub-title">该开关可以控制顾客下单时是否出现打包选项！</div>
+										</div>
+										<div class="col-sm-1 forum-info pull-right">
+											<button id="packageOptionBtn" class="btn btn-primary dim" type="button" onclick="openOrClosePackageOption()">
+                                        	打开
+                    						</button>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>

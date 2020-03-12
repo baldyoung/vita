@@ -1,0 +1,187 @@
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>实时营业情况</title>
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+
+		<script src="../../res/js/jquery.min.js?v=2.1.4"></script>
+		<script src="../../res/js/bootstrap.min.js?v=3.3.6"></script>
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="../../res/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+
+		<link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+		<link href="../../res/css/animate.css" rel="stylesheet">
+		<link href="../../res/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="../../res/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+
+		<script src="../../res/js/plugins/dataTables/jquery.dataTables.js"></script>
+		<script src="../../res/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+		<script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content animated fadeInRight" style='background:#e7cc80; '>
+			<div id='RoomList' class="row">
+
+			</div>
+		</div>
+
+		<div class="modal inmodal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content animated bounceInRight">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span>
+							<span class="sr-only">关闭</span>
+                        </button>
+						<small class="font-bold">订单列表
+                    </div>
+                    <div class="modal-body">
+                        <table id='OrderFormList' style='width:100%;'>
+                            <thead>
+                                <tr>
+                                    <td width='20%'>订单编号</td>
+                                    <td width='20%'>商品数量</td>
+                                    <td width='20%'>订单金额</td>
+                                    <td width='20%'>下单时间</td>
+                                    <td width='20%'>操作</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button id='myModalBtnClose' class="btn btn-white" data-dismiss="modal" onclick='refreshOFT()'>关闭</button>
+                    </div>
+                </div>
+            </div>
+    	</div>
+
+    
+    
+    
+    <div class="modal inmodal" id="OrderFormWindow" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop='false'>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <!--
+                    <button type="button" class="close" data-dismiss="modal">
+                    	<span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                    </button>
+                    -->
+                    <div>
+                    	<table style='width:80%; '>
+                    		<tr>
+                    			<td style='width:50%; text-align: left; '><input type='text' style='width:20%; border:0 solid; ' readonly="true" value='订单编号:'><input id='ofId' type='text' style='border:0px solid; ' value='100010' readonly="true"/></td>
+                    			<td style='width:50%; text-align: left; '><input type='text' style='width:20%; border:0 solid; ' readonly="true" value='下单时间:'><input id='ofTime' type='text' style='border:0px solid; ' value='2019/6/22 13:00:00' readonly="true"/></td>
+                    		</tr>
+                    		<tr>
+                    			<td style='width:50%; text-align: left; '><input type='text' style='width:20%; border:0 solid; ' readonly="true" value='订单类型:'><input id='oftName' type='text' style='border:0px solid; ' value='二号桌' readonly="true"/></td>
+                    			<td style='width:50%; text-align: left; '><input type='text' style='width:20%; border:0 solid; ' readonly="true" value='处理人:'><input id='ofUser' type='text' style='border:0px solid; ' value='龚女士' readonly="true"/></td>
+                    		</tr>
+                    		<tr>
+                    			<td style='width:50%; text-align: left; '><input type='text' style='width:20%; border:0 solid; ' readonly="true" value='商品条目数:'><input id='ofProQuantity' type='text' style='border:0px solid; ' value='15' readonly="true"/></td>
+                    			<td style='width:50%; text-align: left; '><input type='text' style='width:20%; border:0 solid; ' readonly="true" value='订单总额:'><input id='ofTotalAmount' type='text' style='border:0px solid; ' value='863.5' readonly="true"/></td>
+                    		</tr>
+                    		
+                    	</table>
+                    	<table style='width:100%; '>  
+                    		<tr>
+                    			<td style='width:50%; text-align:left; '><span>顾客备注:</span></td>
+                    			<td style='width:50%; text-align:left; '><span>商家备注:</span></td>
+                    		</tr>
+                    		<tr>
+                    			<td ><textarea id='customerRemark' style='resize:none; height:80px; width:100%; ' readonly="true" ></textarea></td>
+                    			<td ><textarea id='merchantRemark' style='resize:none; height:80px; width:100%; ' readonly="true" ></textarea></td>
+                    		</tr>
+                    	</table>
+                    </div>
+                </div>
+                <div class="modal-body">
+                	<table id='OrderFormData' style='width:100%; '>
+                		<thead>
+                			<tr>
+                                <td width='7%'>序号</td>
+                				<td width='10%'>商品编号</td>
+                				<td width='25%'> 商品名称</td>
+                				<td width='10%'> 商品单价</td>
+                				<td width='10%'> 商品数量</td>
+                				<td width='10%'>商品总额</td>
+                				<td width='28%'>操作</td>
+                			</tr>
+                		</thead>
+                	</table>
+                </div>
+                <div class="modal-footer">
+                    <button id='OrderFormWindowBtnClose' type="button" class="btn btn-white" data-dismiss="modal" onclick='refreshWin()'>关闭</button>
+                    <a data-toggle="modal" class="btn btn-primary" href="form_basic.html#modal-form" style='float:left; ' onclick='readyToSettleAccount()'>结账</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div id="modal-form" class="modal fade" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6 b-r">
+                            <h3 class="m-t-none m-b">订单结账</h3>
+                            <form role="form">
+                                <div class="form-group">
+                                    <label>应收金额：</label>
+                                    <input id='shouldPay' type="text" placeholder="" class="form-control" readonly="true">
+                                </div>
+                                <div class="form-group">
+                                    <label>实收金额：</label>
+                                    <input id='actuallyPay' type="text" placeholder="" class="form-control" >
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="button" onclick='settleAccount()'><strong>结账</strong>
+                                    </button>
+                                    <!--
+                                    	<label>
+                                        	<input type="checkbox" class="i-checks">自动登录
+                                        </label>
+                                    -->
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-sm-6">
+                            <!--<h4>？</h4>
+                            <p>您可以注册一个账户</p>-->
+                            <p class="text-center">
+                                <i class="glyphicon glyphicon-jpy"></i>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    
+
+
+
+    <!-- 自定义js -->
+	
+	<script src="js/AudioModel.js"></script>
+    <script src="js/workingX.js"></script>
+	
+	
+
+    
+    
+
+</body>
+
+</html>

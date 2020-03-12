@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" id="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="format-detection" content="telephone=no" />
+
+		<link href="../0_common/css/reset.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="../0_common/js/jquery-3.4.1.min.js"></script>
+		<script type="text/javascript" src="../../resource/configFile/globalConfig.js"></script>
+
+		<link href="./css/indent-details.css" rel="stylesheet" type="text/css">
+		<link href="./css/shoppingCart.css" rel="stylesheet" type="text/css">
+		<script src='../0_common/js/layer/mobile/layer.js'></script>
+		<script src='./js/advanceOrder.js'></script>
+	</head>
+
+	<body>
+		<div class="near-box">
+			<div class="header">
+				<a href="../3_shoppingCart/shoppingCart.html" class="left"></a>
+				请核对订单
+				<a href="../4_orderResult/orderResult.html" class="scart-total-text4" style='margin-right:10px;'>确定<i id="selectedTotal"></i></a>
+			</div>
+			<div class="jd-qrdd-bigbox">
+				<!--
+				<div class="indent-details-box" style='display: ;'>
+					<span class="indent-details-img1"></span>
+					<span class="indent-details-text1">注意事项</span>
+					<span class="indent-details-text2">物流信息：客户签收人：邮件收发 已签收 感谢使用圆通快递，期待再次为您服务！</span>
+				</div>
+				-->
+				<!--商品部分-->
+				<div id="itemDisplayArea" class="zjzz-buylist-goods1" style=''>
+					<!--
+                    
+					<div class="zjzz-buylist-det" style="background:#FF685E; margin-bottom: 1px ; ">
+						<img src="../1_res/productImg/1.png" />
+						<div class="zjzz-buylist-gdetail">
+							<span class="zjzz-buylist-gtit1">苹果</span>
+							<span class="zjzz-buylist-gmoney">
+                        		<i class="zjzz-buylist-gm1">￥30.00</i>
+                        		<i class="zjzz-buylist-gm2">x0</i>
+                    		</span>
+						</div>
+					</div>
+					<div style="width:100%; color:#EF4F4F; font-size:10px; text-align: right;">
+						以上商品已被其它顾客抢先一步选购了！
+					</div>
+
+					<div class="zjzz-buylist-det" style="margin-bottom: 1px;">
+						<img src="../1_res/productImg/3.png" />
+						<div class="zjzz-buylist-gdetail">
+							<span class="zjzz-buylist-gtit1">新鲜南方脐橙1000g/盒，大个保证新鲜！包赔！</span>
+							<span class="zjzz-buylist-gmoney">
+                        		<i class="zjzz-buylist-gm1">￥30.00</i>
+                        		<i class="zjzz-buylist-gm2">x1</i>
+                    		</span>
+                    		<span class="zjzz-buylist-gtit1" style="font-size:13px; " onclick="test()">口味：<i style=" height:20px; background: #009F95; border-radius: 5px; padding:0 5px 0 5px;">正常</i></span>
+						</div>
+					</div>
+					-->
+
+				</div>
+				<!--商品金额部分-->
+				<div class="indent-details-box2">
+					<span class="indent-details-text4 tcolor-grey">就餐类型</span>
+					<span id="diningTypeName" class="indent-details-text5 tcolor-black">堂食</span>
+				</div>
+				<div class="indent-details-box2">
+					<span class="indent-details-text4 tcolor-grey">就餐时间</span>
+					<span id="diningTime" class="indent-details-text5 tcolor-black">现在</span>
+				</div>
+				<div class="indent-details-box2">
+					<span class="indent-details-text4 tcolor-grey">条目数量</span>
+					<span id="itemNumber" class="indent-details-text5 tcolor-black">15</span>
+				</div>
+				<div class="indent-details-box2">
+					<span class="indent-details-text4 tcolor-grey">商品总价</span>
+					<span id="orderAmount" class="indent-details-text5 tcolor-black">￥300.00</span>
+				</div>
+				<div class="indent-details-box2">
+					<span class="indent-details-text4 tcolor-grey">折扣</span>
+					<span id="discount" class="indent-details-text5 tcolor-black">0.8</span>
+				</div>
+				<div class="indent-details-box2">
+					<span class="indent-details-text4 tcolor-grey">优惠金额</span>
+					<span id="discountAmount" class="indent-details-text5 tcolor-black">60</span>
+				</div>
+				<div class="indent-details-box2">
+					<span class="indent-details-text4">应付总额</span>
+					<span id="receivableAmount" class="indent-details-text5">240.00</span>
+				</div>
+				<!--订单编号部分
+				<div class="indent-details-box3" style='display: none;'>
+					<p>订单编号:201711024866544846</p>
+					<p>创建时间:2017-11-01 21:15:23</p>
+				</div>
+				-->
+
+			</div>
+		</div>
+	</body>
+
+</html>

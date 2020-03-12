@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title></title>
+        <link rel="stylesheet" href="fonts/iconfont.css"/>
+        <link rel="stylesheet" href="css/font.css"/>
+        <link rel="stylesheet" href="css/weui.min.css"/>
+        <link rel="stylesheet" href="css/jquery-weui.min.css"/>
+        <link rel="stylesheet" href="css/mui.css"/>
+        <link rel="stylesheet" href="css/pages/myclass.css"/>
+        <script>(function (doc, win) {
+          var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              if (!clientWidth) return;
+              docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+            };
+
+          if (!doc.addEventListener) return;
+          win.addEventListener(resizeEvt, recalc, false);
+          doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);</script>
+        <style>
+        	.buttonPreOrder{
+        		background: #0062CC;
+        	}
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="titlebar reverse">
+                <a href="index.html">
+                    <i class="iconfont">&#xe63f;</i>
+                </a>
+                <h1>包间预定情况</h1>
+				<a href="login.html" class="app">
+                    <i class="iconfont">&#xe60e;</i>
+                </a>
+            </div>
+        </header>
+        <article style="bottom: 0;">
+            <ul class="xunjia-tab clearfix">
+                <li class="red">包厢（1）</li>
+            </ul>
+            <ul class="xunjia-box">
+            	
+                <li class="inner">
+                    <div class="item-name">客容量：</div>
+                    <div class="item-value">16~20</div>
+                </li>
+                <li class="inner">
+                    <div class="item-name">麻将桌：</div>
+                    <div class="item-value">有</div>
+                </li>
+                <li class="inner">
+                    <div class="item-name">空调：</div>
+                    <div class="item-value">有</div>
+                </li>
+				<li class="inner">
+                    <div class="item-name">独立卫生间：</div>
+                    <div class="item-value">无</div>
+                </li>
+				<li style="text-align:center;">
+                    <div href="javascript:;" class="weui_btn weui_btn_mini weui_btn_warn buttonPreOrder">预定</div>&nbsp;&nbsp;&nbsp;&nbsp;
+				</li>
+            </ul>
+            <ul class="xunjia-tab clearfix">
+                <li class="green"> 包间（2）</li>
+            </ul>
+            <ul class="xunjia-box">
+               <li class="inner">
+                    <div class="item-name">姓名：</div>
+                    <div class="item-value">梁院长（人民医院）</div>
+                </li>
+                <li class="inner">
+                    <div class="item-name">时间：</div>
+                    <div class="item-value">2020-01-31 晚餐</div>
+                </li>
+                <li class="inner">
+                    <div class="item-name">人数：</div>
+                    <div class="item-value">5</div>
+                </li>
+				<li class="inner">
+                    <div class="item-name">备注：</div>
+                    <div class="item-value">6点上菜</div>
+                </li>
+				<li style="text-align:center;">
+                    <div href="javascript:;" class="weui_btn weui_btn_mini weui_btn_warn">修改</div>&nbsp;&nbsp;&nbsp;&nbsp;
+					<div href="javascript:;" class="weui_btn weui_btn_mini weui_btn_primary">删除</div>
+                </li>
+            </ul>
+			 
+        
+        </article>
+        <footer>
+        </footer>
+
+        <script src="js/jquery-1.8.3.min.js"></script>
+        <script src="js/jquery-weui.js"></script>
+    </body>
+</html>

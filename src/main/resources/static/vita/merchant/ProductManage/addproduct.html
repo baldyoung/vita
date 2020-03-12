@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+<link rel="stylesheet" href="./css/bootstrap.css" />
+		<style>
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		body{
+			background-image: url(img/header-bg.jpg);
+			background-size: auto 950px; 
+			color: black;
+			font-size: 22px;
+		}
+		</style>
+</head>
+<body>
+	<div class="container">
+		<h1 class="page-header">新增商品类型</h1>
+		<form id="form1" class="form-horizontal col-md-8">
+			
+			
+				
+			<div class="form-group">
+				<label for="" class="col-md-2">商品ID</label>
+				<div class="col-md-10">
+					<input type="text" id="id" name="id" class="form-control" readonly>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="" class="col-md-2">商品等级</label>
+				<div class="col-md-10">
+					<input type="text" id="grade" name="grade" class="form-control" >
+				</div>
+			</div>
+			
+			
+			<div class="form-group">
+				<label for="" class="col-md-2">商品名称</label>
+				<div class="col-md-10">
+					<input type="text" id="NAME" name="NAME" class="form-control" >
+				</div>
+			</div>
+			
+			<div class="form-group">
+					<label for="" class="col-md-2">商品ID</label>
+					<select name="ptId" id="ptId" class="form-controlselect" style="margin: 0 auto;">
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+					</select>
+				</div>
+			
+			<div class="form-group">
+				<label for="" class="col-md-2">商品单价</label>
+				<div class="col-md-10">
+					<input type="text" id="price" name="price" class="form-control" >
+				</div>
+			</div>
+			
+			
+			<div class="form-group">
+				<label for="" class="col-md-2">单价单位</label>
+				<div class="col-md-10">
+					<input type="text" id="priceUnit" name="priceUnit" class="form-control" >
+				</div>
+			</div>
+			
+			
+			<div class="form-group">
+				<label for="" class="col-md-2">商品库存</label>
+				<div class="col-md-10">
+					<input type="text" id="stock" name="stock" class="form-control" >
+				</div>
+			</div>
+			
+			<div class="form-group">
+					<label for="" class="col-md-2">是否展示</label>
+					<select name="isShow" id="isShow" class="form-controlselect" style="margin: 0 auto;" >
+						<option value="Yes">Yes</option>
+						<option value="No">No</option>
+						
+					</select>
+				</div>
+				
+				
+			<div class="form-group">
+				<label for="" class="col-md-2">商品备注</label>
+				<div class="col-md-10">
+					<input type="text" id="remark" name="remark" class="form-control" >
+				</div>
+			</div>
+			
+				<div class="form-group">
+				<label for="" class="col-md-2">图片名称</label>
+				<div class="col-md-10">
+					<input type="text" id="picture" name="picture" class="form-control" >
+				</div>
+			</div>
+			
+			
+			
+		
+			
+			<div class="form-group">				
+				<div class="col-md-10">
+					<input type="button" value="确认添加" id="confirmBtn" class="btn btn-primary" onclick="history.back()">
+					<!--<input type="button" value="修改信息" id="updateBtn" class="btn btn-primary">-->
+					<input type="button" value="取消" onclick="history.back()" class="btn btn-success" />
+				</div>					
+			</div>
+			
+			
+		</form>
+		
+	</div>
+</body>
+</html>
