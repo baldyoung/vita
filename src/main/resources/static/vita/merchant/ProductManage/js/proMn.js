@@ -205,14 +205,14 @@ function readyForWebUploader() {
 		disableGlobalDnd: true,
 		chunked: true,
 		// server: 'http://webuploader.duapp.com/server/fileupload.php',
-		server: url + '/Vita_Back/uploadFile',
+		server:  GlobalConfig.serverAddress + "/mProduct/add",
 		//限制，一次只能上传一个文件
 		fileNumLimit: 1,
 		fileSizeLimit: 50 * 1024 * 1024, // 50 M
 		fileSingleSizeLimit: 10 * 1024 * 1024, // 10 M
 		compress: false,
 		formData: {
-			inf: 'testMsg'
+			// inf: 'testMsg'
 		},
 		//disableGlobalDnd:false
 
@@ -548,7 +548,7 @@ function readyForWebUploader() {
 		if (response.result == 'succeed') { //添加商品信息提交成功
 			requestAllProduct();
 			$('#btnCloseProductInfWin').trigger('click');
-			swal("保持成功", "商品集已变更", "success")
+			swal("保存成功", "商品集已变更", "success")
 		}
 		uploader.removeFile(file);
 
@@ -586,7 +586,7 @@ function readyForWebUploader() {
 		//console.log(newProductInf)
 		//传入表单参数
 		data = $.extend(data, {
-			productData: JSON.stringify(newProductInf)
+			productName : newProductInf.productName //JSON.stringify(newProductInf)
 		});
 	});
 
@@ -607,18 +607,6 @@ function submit() {
 		if (undefined == newProductInf.picture) newProductInf.picture = 'default.gif'; //默认图片
 		saveProductInfByAjax(newProductInf);
 	} else { //选择了图片
-		//console.log('已选择图片，将调用webuploader组件的内部函数')
-		/*newProductInf={
-    		id:'1',
-    		name:'测试名称',
-    		price:'45.5',
-            priceUnit:'元/份',
-    		stock:'10',
-            grade:'0',
-            ptId:'1',
-            isShow:'yes',
-            remark:'test message'
-    	}*/
 		uploaderX.upload();
 	}
 	//$('.uploadBtn').trigger('click')
@@ -628,28 +616,20 @@ function submit() {
 //检验数据是否合规范,并获取整理后的json对象
 function checkInf() {
 	var temp = {
-		price: $('#newProductPrice').val(),
-		priceUnit: $('#newProductPriceUnit').val(),
-		ptId: $('#newProductTypeId').val(),
-		name: $('#newProductName').val(),
-		grade: $('#newProductGrade').val(),
-		stock: $('#newProductStock').val(),
-		remark: $('#newProductRemark').val(),
-		grade: $('#newProductGrade').val(),
-		isShow: $('#showInMenu').is(':checked') ? 'yes' : 'no'
+		productPrice : $('#newProductPrice').val(),
+		// priceUnit: $('#newProductPriceUnit').val(),
+		productTypeId : $('#newProductTypeId').val(),
+		productName : $('#newProductName').val(),
+		// grade: $('#newProductGrade').val(),
+		productStock : $('#newProductStock').val(),
+		productInfo : $('#newProductRemark').val(),
+		// grade: $('#newProductGrade').val(),
+		productIsShow : $('#showInMenu').is(':checked') ? 'yes' : 'no'
 	};
-	if (temp.remark == '') temp.remark = ' ';
+	if (GlobalMethod.isEmpty(temp.productInfo)) temp.productInfo = '';
 	if (-1 != currentProductId) {
 		temp.proId = currentProductId;
 		temp.picture = currentProductImg;
-	}
-	if (temp.price == '' || temp.priceUnit == '' || temp.ptId == '' || temp.name == '' || temp.grade == '' || temp.stock == '' || temp.isShow == '' || temp.remark == '') {
-		alert("信息不能留");
-		return undefined;
-	}
-	if (temp.price == undefined || temp.priceUnit == undefined || temp.ptId == undefined || temp.name == undefined || temp.grade == undefined || temp.stock == undefined || temp.isShow == undefined || temp.remark == undefined) {
-		alert("信息不能留");
-		return undefined;
 	}
 
 	return temp;
@@ -699,7 +679,7 @@ function loadTargetProduct(t) {
 	$('#newProductPriceUnit').val(t.priceUnit);
 	$('#newProductRemark').val(t.remark);
 	$('#newProductStock').val(t.stock);
-	$('#newProductGrade').val(t.grade);
+	//$('#newProductGrade').val(t.grade);
 	$("#showInMenu").prop("checked", 'yes' == t.isShow ? true : false); //使用attr控制状态选中失败，采用prop调用可行
 }
 //重置商品详情窗口
@@ -709,8 +689,9 @@ function resetTargetProdut() {
 	$('#newProductPrice').val("");
 	$('#newProductPriceUnit').val("元");
 	$('#newProductRemark').val("");
-	$('#newProductStock').val("6666");
-	$('#newProductGrade').val('50');
+	$('#newProductStock').val("");
+	//$('#newProductGrade').val('50');
+	$('#needStock').prop('checked', true);
 	$("#showInMenu").prop("checked", true);
 }
 //修改商品信息时，替换图片按钮对应的函数调用
@@ -872,7 +853,7 @@ function statisticInfOfProductList(t) {
 	return result;
 }
 
-//统计并加载当前显示的商品集的简要信息
+// 统计并加载当前显示的商品集的简要信息
 function loadInfOfProductList(t) {
 	var temp = statisticInfOfProductList(t);
 	$('#infProAmount').text(temp.amount);
@@ -881,6 +862,20 @@ function loadInfOfProductList(t) {
 	$('#infProAmount_picture').text(temp.amount_picture);
 	$('#infProAmount_type').text(temp.amount_type);
 }
+// 库存字段的控制函数
+function onNeedStockChange() {
+	var target = $('#needStock');
+	if (target.is(':checked')) {
+		$('#newProductStock').val('');
+		$('#newProductStock').prop('readOnly', 'true');
+	} else {
+		$('#newProductStock').val('100');
+		$('#newProductStock').removeAttr('readOnly');
+	}
+}
+
+
+
 //************************************************************************************************************************** ajax请求
 //请求商品类型并加载-----------ajax请求，获取所有商品类型
 function requestAllProductType() {
@@ -972,20 +967,21 @@ function requestTargetProduct(t) {
 //保持商品信息（新增或者修改）
 function saveProductInfByAjax(t) {
 	$.ajax({
-		url: url + "/Vita_Back/saveTheProduct",
+		url: GlobalConfig.serverAddress + "/mProduct/add",
 		type: 'POST',
 		cache: false,
-		//dataType:'json',
-		dataType: 'text',
+		dataType:'json',
+		// dataType: 'text',
 		contentType: "application/json; charset=utf-8",
+		// contentType: "application/x-www-form-urlencoded;charset=utf-8",
+		// contentType : 'multipart/form-data;',
 		data: JSON.stringify(t),
-		//data:temp,
-		//processData: false,
-		//contentType: false,
 		success: function(data) {
-			//将json字符串转换为json对象
-			data = JSON.parse(data);
-			//console.log(data);
+			if (data.code == 0) {
+				swal('保存成功', '', 'success');
+				return;
+			}
+			return;
 			if (data.result == 'succeed') { //获取成功
 				//var temp = JSON.parse(data.inf); //将inf字段转换为json对象
 				requestAllProduct();

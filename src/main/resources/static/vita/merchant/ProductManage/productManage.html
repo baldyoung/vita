@@ -28,6 +28,7 @@
 		<script src="../../res/js/plugins/iCheck/icheck.min.js"></script>
 		<script src="../../res/js/plugins/webuploader/webuploader.min.js"></script>
 		<script src="../Common/js/PagingBarModule.js"></script>
+		<script src="../../resource/configFile/globalConfig.js"></script>
 		<!-- 自定义js -->
 		<script src="js/proMn.js"></script>
 
@@ -189,26 +190,31 @@
 								<select id='newProductTypeId' class="form-control" style="font-size:10px; ">
                             <!--<option>选项一</option>
                             <option>选项二</option>-->
-                        </select>
+                        		</select>
 							</div>
 						</div>
 						<div style="margin-top:3px;">
 							<span>商品单价：</span>
 							<div class="btn-group open"><input id='newProductPrice' type="text" placeholder="请输入商品单价" class="form-control" style="width:70%; "></div>
-							<span>价格单位：</span>
-							<div class="btn-group open"><input id='newProductPriceUnit' type="text" placeholder="请输入价格单位" class="form-control" style="width:70%; "></div>
+							<span>商品属性：</span>
+							<div class="btn-group open">
+								<select id='newProductAttributeTypeId' class="form-control" style="font-size:10px; ">
+                            <!--<option>选项一</option>
+                            <option>选项二</option>-->
+                        		</select>
+							</div>
 						</div>
 						<div style="margin-top:3px;">
 							<span>商品库存：</span>
-							<div class="btn-group open"><input id='newProductStock' type="text" placeholder="请输入商品库存" class="form-control" style="width:70%; "></div>
-							<!--<span>不需要库存：</span>
-                    <input type='checkbox' id='showInMenu'   class="i-checks" checked />-->
+							<div class="btn-group open"><input id='newProductStock' type="text" readonly="true" placeholder="默认无库存限制" class="form-control" style="width:70%; "></div>
+							<span>不需要库存：</span>
+                    		<input type='checkbox' id='needStock' onchange="onNeedStockChange()" class="i-checks" checked />
 						</div>
 						<div style="margin-top:3px;">
-							<span>商品等级：</span>
-							<div class="btn-group open"><input id='newProductGrade' type="text" placeholder="请输入商品库存" class="form-control" style="width:70%; "></div>
-							<span>显示在菜单：</span>
-							<input type='checkbox' id='showInMenu' class="i-checks" checked />
+							<!--<span>商品等级：</span>
+							<div class="btn-group open"><input id='newProductGrade' type="text" placeholder="请输入商品库存" class="form-control" style="width:70%; "></div>-->
+							<!--<span>显示在菜单：</span>
+							<input type='checkbox' id='showInMenu' class="i-checks" checked />-->
 						</div>
 						<div style="margin-top:3px;">
 							<span>商品备注：</span></br>

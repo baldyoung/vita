@@ -1,9 +1,15 @@
 package com.baldyoung.vita.merchant.controller;
 
+import com.baldyoung.vita.common.pojo.dto.ResponseResult;
+import com.baldyoung.vita.common.pojo.dto.product.NewProductDto;
 import com.baldyoung.vita.common.pojo.entity.ProductEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+
+import static com.baldyoung.vita.common.pojo.dto.ResponseResult.*;
 import static java.lang.System.*;
 
 import java.math.BigDecimal;
@@ -14,7 +20,33 @@ import java.util.Map;
 public class ProductController {
 
     @PostMapping("add")
-    public Map addProduct(@RequestParam("productName")String productName,
+    public ResponseResult addProduct(@Valid NewProductDto newProductDto, BindingResult bindingResult) {
+        out.println("kkk");
+        if (bindingResult.hasErrors())
+            out.println(bindingResult.getFieldError().getDefaultMessage());
+        out.println(newProductDto );
+        MultipartFile multipartFile = newProductDto.getFile();
+        if (null == multipartFile) {
+            return defeat("图片为空");
+        }
+        out.println(multipartFile.getContentType());
+        out.println(multipartFile.getName() + ", " + multipartFile.getOriginalFilename());
+        out.println(multipartFile.getSize());
+        return success(newProductDto);
+    }
+
+
+
+    public ResponseResult addProduct2(@RequestParam("newProductInfo") @Valid NewProductDto newProductDto, @RequestParam(value = "file", required = false)MultipartFile multipartFile) {
+        out.println(newProductDto );
+        out.println(multipartFile.getContentType());
+        out.println(multipartFile.getName() + ", " + multipartFile.getOriginalFilename());
+        out.println(multipartFile.getSize());
+        return success(newProductDto);
+    }
+
+    @PostMapping("add2")
+    public Map addProduct2(@RequestParam("productName")String productName,
                           @RequestParam(value = "productTypeId", required = false)Integer productTypeId,
                           @RequestParam(value = "productAttributeId", required = false)Integer productAttributeId,
                           @RequestParam("productPrice")BigDecimal productPrice,
