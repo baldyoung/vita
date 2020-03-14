@@ -41,6 +41,8 @@ CREATE TABLE V_Product (
 	updateDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT'修改时间：非空',
 	PRIMARY KEY (productId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'商品表';
+INSERT V_Product(productName, productTypeId, productPrice, productStockFlag, productIsShow, productImgName, productGrade)
+VALUES ('牛腩面', 1, 25.5, 0, 0, 'default.gif', 50), ('牛肉面', 1, 15.5, 0, 0, 'default.gif', 50), ('鸡蛋炒面', 1, 15.5, 0, 0, 'default.gif', 50);
 -- 商品类型表
 DROP TABLE IF EXISTS V_ProductType;
 CREATE TABLE V_ProductType (
@@ -49,6 +51,7 @@ CREATE TABLE V_ProductType (
 	productTypeGrade SMALLINT UNSIGNED NOT NULL COMMENT'商品类型的优先级：非空，其为用于类型排序的首要标准',
 	PRIMARY KEY (productTypeId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'商品类型表';
+INSERT V_ProductType(productTypeName, productTypeGrade) VALUES('主食', 50), ('炒菜', 50), ('小吃', 50), ('汤类', 50);
 -- 商品属性类型表
 DROP TABLE IF EXISTS V_ProductAttributeType;
 CREATE TABLE V_ProductAttributeType (

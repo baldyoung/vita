@@ -3,6 +3,10 @@ package com.baldyoung.vita.merchant.controller;
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.dto.product.NewProductDto;
 import com.baldyoung.vita.common.pojo.entity.ProductEntity;
+import com.baldyoung.vita.merchant.service.ProductServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,14 +23,19 @@ import java.util.Map;
 @RequestMapping("mProduct")
 public class ProductController {
 
+    @Autowired
+    private ProductServiceImpl productService;
+
+    @GetMapping("pagingList")
+    public ResponseResult getProductPagingList() {
+        return success(productService.getProductPagingList());
+    }
+
     @PostMapping("add")
     public ResponseResult addProduct(@Valid NewProductDto newProductDto, BindingResult bindingResult) {
-        out.println("kkk");
-        out.println(newProductDto);
         if (bindingResult.hasErrors()) {
             return defeat(bindingResult.getFieldError().getDefaultMessage());
         }
-        out.println(newProductDto );
         MultipartFile multipartFile = newProductDto.getFile();
         if (null == multipartFile && null == newProductDto.getProductImgName()) {
             return defeat("图片为空");

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baldyoung.vita.common.dao.ProductDao">
+
+    <resultMap id="baseMap" type="com.baldyoung.vita.common.pojo.entity.ProductEntity">
+        <id property="productId" column="productId"></id>
+        <!--非主键字段的对应-->
+        <result property="productTypeId" column="productTypeId"></result>
+        <result property="productAttributeTypeId" column="productAttributeTypeId"></result>
+        <result property="productName" column="productName"></result>
+        <result property="productPrice" column="productPrice"></result>
+        <result property="productStockFlag" column="productStockFlag"></result>
+        <result property="productStock" column="productStock"></result>
+        <result property="productSalesVolume" column="productSalesVolume"></result>
+        <result property="productIsShow" column="productIsShow"></result>
+        <result property="productImgName" column="productImgName"></result>
+        <result property="productInfo" column="productInfo"></result>
+        <result property="productGrade" column="productGrade"></result>
+        <result property="isDelete" column="isDelete"></result>
+        <result property="createDateTime" column="createDateTime"></result>
+        <result property="updateDateTime" column="updateDateTime"></result>
+
+    </resultMap>
+
+
+    <select id="selectProduct" resultMap="baseMap">
+
+        SELECT productId, productTypeId, productName, productAttributeTypeId, productPrice, productStockFlag, productStock, productSalesVolume, productIsShow, productImgName, productInfo, productGrade, isDelete, createDateTime, updateDateTime
+        FROM V_Product
+        where
+          isDelete = #{product.isDelete}
+    </select>
+
+</mapper>
