@@ -26,9 +26,33 @@ public class ProductController {
     @Autowired
     private ProductServiceImpl productService;
 
-    @GetMapping("pagingList")
-    public ResponseResult getProductPagingList() {
-        return success(productService.getProductPagingList());
+    /**
+     * 获取商品的统计数据
+     * @return
+     */
+    @GetMapping("targetCountInfo")
+    public ResponseResult getTargetCountInfo() {
+        return success(productService.getProductTargetCountInfo());
+    }
+
+    /**
+     * 分页的方式获取商品数据集
+     * @param productTypeId
+     * @param isShow
+     * @param pageIndex
+     * @param maxSize
+     * @return
+     */
+    @PostMapping("pagingList")
+    public ResponseResult getProductPagingList(@RequestParam(value = "productTypeId", required = false)Integer productTypeId,
+                                               @RequestParam(value = "isShow", required = false)Integer isShow,
+                                               @RequestParam(value = "startIndex")Integer pageIndex,
+                                               @RequestParam(value = "maxSize")Integer maxSize) {
+        if (pageIndex.intValue() < 0 || maxSize.intValue() < 0) {
+            return defeat("参数格式不正确");
+        }
+        Integer startIndex = (pageIndex - 1) * maxSize;
+        return success(productService.getProductPagingList(productTypeId, isShow, startIndex, maxSize));
     }
 
     @PostMapping("add")

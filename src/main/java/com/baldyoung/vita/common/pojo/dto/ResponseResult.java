@@ -1,5 +1,6 @@
 package com.baldyoung.vita.common.pojo.dto;
 
+
 public class ResponseResult<T> {
 
     public static Integer DefaultSuccessCode = 0;
@@ -13,6 +14,7 @@ public class ResponseResult<T> {
 
     private Integer code;
     private String desc;
+
     private T data;
 
     public static <T> ResponseResult success(T data) {

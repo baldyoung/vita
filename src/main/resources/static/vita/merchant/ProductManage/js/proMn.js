@@ -6,20 +6,29 @@ var currentProductImg; //当前商品的图片
 var productTypeList; //商品类型集合
 
 $(document).ready(function() {
+    // 获取商品统计数据
+    var countData = requestTargetCountInfo();
+    if (undefined == countData) {
+        return ;
+    }
+    // 加载商品统计数据
+    loadInfOfProductList(countData);
     // 创建一个分页条，并请求第3页
     PagingBarModule.build({
         pageOptionalAreaId: 'pagingBtnDisplayArea',
-        totalAmountOfData: 100,
+        totalAmountOfData: countData.total,
         maxNumberOfDisplayPageButton: 6, //
-        maxAmountOfOnePage: 6,
-        //loadPageIndex : 3,
-
+        maxAmountOfOnePage: 20,
+        run : requestProductList
     });
-    testFun();
+    // 获取并加载商品类型
+    requestAllProductType();
+    return;
+    // testFun();
 
     //return;
 
-    requestAllProductType();
+
     requestAllProduct();
     resetTargetProdut();
     //console.log("readyForProductInf...")
@@ -809,12 +818,22 @@ function loadFilterProductTypeList(t) {
     target.append(temp);
 }
 
-//获取商品过滤条件的数据
+// 获取商品过滤条件的数据
 function getProductFilterCondition() {
+    var isShow = ($('#isHasShown').attr('class') == 'icheckbox_square-green checked' ? 'yes' : 'no');
+    var notShow = ($('#notHasShown').attr('class') == 'icheckbox_square-green checked' ? 'yes' : 'no');
     var result = {
         productTypeName: $('#filterProductTypeList').val(),
-        isShow: ($('#isHasShown').attr('class') == 'icheckbox_square-green checked' ? 'yes' : 'no'),
-        notShow: ($('#notHasShown').attr('class') == 'icheckbox_square-green checked' ? 'yes' : 'no')
+    };
+    if (isShow == 'no' && notShow == 'no') {
+        swal('是否上架 属性不能为空', '', 'error');
+        return undefined;
+    }
+    if (isShow == 'no') {
+        result.productIsShow = 0;
+    }
+    if (notShow == 'no') {
+        result.productIsShow = 1;
     }
     return result;
 }
@@ -867,13 +886,12 @@ function statisticInfOfProductList(t) {
 }
 
 // 统计并加载当前显示的商品集的简要信息
-function loadInfOfProductList(t) {
-    var temp = statisticInfOfProductList(t);
-    $('#infProAmount').text(temp.amount);
-    $('#infProAmount_isShow').text(temp.amount_isShow);
-    $('#infProAmount_stock').text(temp.amount_stock);
-    $('#infProAmount_picture').text(temp.amount_picture);
-    $('#infProAmount_type').text(temp.amount_type);
+function loadInfOfProductList(temp) {
+    $('#infProAmount').text(temp.total);
+    $('#infProAmount_isShow').text(temp.productIsShow);
+    $('#infProAmount_stock').text(temp.productStock);
+    $('#infProAmount_picture').text(temp.productImgName);
+    $('#infProAmount_type').text(temp.productTypeId);
 }
 // 库存字段的控制函数
 function onNeedStockChange() {
@@ -918,20 +936,58 @@ function requestAllProductType() {
         }
     });
 }
-//请求所有商品数据，并加载到页面-------------------ajax请求，获取所有商品数据
-function requestAllProduct() {
+// 获取所有商品的统计数据
+function requestTargetCountInfo() {
+    var targetData = undefined;
     $.ajax({
-        url: url + "/Vita_Back/queryAllProduct",
+        url : GlobalConfig.serverAddress + "/mProduct/targetCountInfo",
+        type : 'GET',
+        cache : false,
+        dataType : 'json',
+        async: false, //设置同步
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        data : null,
+        success : function(data) {
+            if (data.code != 0) {
+                swal('获取商品统计数据失败', data.desc, 'error');
+            } else {
+                targetData = data.data;
+            }
+        },
+        error : function() {
+            swal('服务器连接失败', '请检查网络是否通畅', 'warning');
+        }
+    });
+    return targetData;
+}
+//请求所有商品数据，并加载到页面-------------------ajax请求，获取所有商品数据
+function requestProductList(pagingInfo) {
+    var targetData = getProductFilterCondition();
+    if (undefined == targetData) {
+        return;
+    }
+    targetData.pageIndex = pagingInfo.currentPageIndex;
+    targetData.maxSize = pagingInfo.maxAmountOfData;
+    $.ajax({
+        url: GlobalConfig.serverAddress + "/mProduct/pagingList",
         type: 'POST',
         cache: false,
-        //dataType:'json',
-        dataType: 'text',
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify({}),
-        //data:temp,
+        dataType:'json',
+        // dataType: 'text',
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        // contentType: "application/json; charset=utf-8",
+        // data: JSON.stringify(targetData),
+        data: targetData,
         //processData: false,
         //contentType: false,
         success: function(data) {
+            if (data.code == 0) {
+                loadProductTable(data.data);
+            } else {
+                swal(data.desc, '', 'error');
+            }
+            return;
+
             //将json字符串转换为json对象
             data = JSON.parse(data);
             //console.log(data);
@@ -951,7 +1007,7 @@ function requestAllProduct() {
 //请求指定编号的商品信息
 function requestTargetProduct(t) {
     $.ajax({
-        url: url + "/Vita_Back/getTargetProduct",
+        url: url + "/Vita_Back/targetCountInfo",
         type: 'POST',
         cache: false,
         //dataType:'json',

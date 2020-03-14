@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductServiceImpl {
@@ -24,10 +26,17 @@ public class ProductServiceImpl {
 
     }
 
-    public List<ProductEntity> getProductPagingList() {
+    public Map<String, Object> getProductTargetCountInfo() {
+        return productDao.countProductTargetInfo();
+    }
+
+    public List<ProductEntity> getProductPagingList(Integer productTypeId, Integer isShow, Integer startIndex, Integer maxSize) {
         ProductEntity entity = new ProductEntity();
-        entity.setIsDelete(0);
-        return productDao.selectProduct(entity);
+        if (productTypeId != null && productTypeId.intValue() != -1) {
+            entity.setProductTypeId(productTypeId);
+        }
+        entity.setProductIsShow(isShow);
+        return productDao.selectProduct(entity, startIndex, maxSize);
     }
 
 }
