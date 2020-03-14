@@ -22,17 +22,24 @@ public class ProductController {
     @PostMapping("add")
     public ResponseResult addProduct(@Valid NewProductDto newProductDto, BindingResult bindingResult) {
         out.println("kkk");
-        if (bindingResult.hasErrors())
-            out.println(bindingResult.getFieldError().getDefaultMessage());
+        out.println(newProductDto);
+        if (bindingResult.hasErrors()) {
+            return defeat(bindingResult.getFieldError().getDefaultMessage());
+        }
         out.println(newProductDto );
         MultipartFile multipartFile = newProductDto.getFile();
-        if (null == multipartFile) {
+        if (null == multipartFile && null == newProductDto.getProductImgName()) {
             return defeat("图片为空");
         }
-        out.println(multipartFile.getContentType());
+        if (null != multipartFile) {
+            String str = multipartFile.getName() + ", " + multipartFile.getSize() + ", " + multipartFile.getContentType() + ", " + multipartFile.getOriginalFilename();
+            out.println(str);
+        }
+        return success();
+        /*out.println(multipartFile.getContentType());
         out.println(multipartFile.getName() + ", " + multipartFile.getOriginalFilename());
         out.println(multipartFile.getSize());
-        return success(newProductDto);
+        return success(newProductDto);*/
     }
 
 
@@ -59,7 +66,7 @@ public class ProductController {
         ProductEntity productEntity = new ProductEntity();
         productEntity.setProductName(productName);
         productEntity.setProductTypeId(productTypeId);
-        productEntity.setProductAttributeId(productAttributeId);
+        productEntity.setProductAttributeTypeId(productAttributeId);
         productEntity.setProductPrice(productPrice);
         productEntity.setProductStockFlag(productStockFlag);
         productEntity.setProductStock(productStock);

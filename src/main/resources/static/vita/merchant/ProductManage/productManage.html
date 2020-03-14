@@ -37,6 +37,11 @@
 			var BASE_URL = '../../res/js/plugins/webuploader';
 			var url = "/Vita_war_exploded";
 		</script>
+		<style>
+			.red-font{
+				color:red;
+			}
+		</style>
 
 		<!-- <script src="../../res/js/demo/webuploader-demo.js"></script>-->
 
@@ -173,7 +178,7 @@
 
 		<div class="modal inmodal fade" id="myModal5" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
+				<div class="modal-content" style="min-width:900px;">
 					<div class="modal-header">
 						<span id='myModal5Title'>商品信息-新增</span>
 						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -183,31 +188,29 @@
 					</div>
 					<div class="modal-body">
 						<div style="margin-top:3px;">
-							<span>商品名称：</span>
+							<span class="red-font">商品名称：</span>
 							<div class="btn-group open"><input id='newProductName' type="text" placeholder="请输入商品名称" class="form-control" style="width:70%; "></div>
-							<span>商品类型：</span>
+							<span class="red-font">商品类型：</span>
 							<div class="btn-group open">
-								<select id='newProductTypeId' class="form-control" style="font-size:10px; ">
-                            <!--<option>选项一</option>
-                            <option>选项二</option>-->
+								<select id='newProductTypeId' class="form-control" style="font-size:10px; height:40px;">
+                            		<option value="-1">未选择</option>
                         		</select>
 							</div>
 						</div>
 						<div style="margin-top:3px;">
-							<span>商品单价：</span>
-							<div class="btn-group open"><input id='newProductPrice' type="text" placeholder="请输入商品单价" class="form-control" style="width:70%; "></div>
+							<span class="red-font">商品单价：</span>
+							<div class="btn-group open"><input id='newProductPrice' type="number" placeholder="请输入商品单价" class="form-control" style="width:70%; "></div>
 							<span>商品属性：</span>
 							<div class="btn-group open">
-								<select id='newProductAttributeTypeId' class="form-control" style="font-size:10px; ">
-                            <!--<option>选项一</option>
-                            <option>选项二</option>-->
+								<select id='newProductAttributeTypeId' class="form-control" style="font-size:10px; height:40px; ">
+                            		<option value="-1">未选择</option>
                         		</select>
 							</div>
 						</div>
 						<div style="margin-top:3px;">
-							<span>商品库存：</span>
+							<span id="stockLabel">商品库存：</span>
 							<div class="btn-group open"><input id='newProductStock' type="text" readonly="true" placeholder="默认无库存限制" class="form-control" style="width:70%; "></div>
-							<span>不需要库存：</span>
+							<span class="red-font">不需要库存：</span>
                     		<input type='checkbox' id='needStock' onchange="onNeedStockChange()" class="i-checks" checked />
 						</div>
 						<div style="margin-top:3px;">
@@ -218,7 +221,7 @@
 						</div>
 						<div style="margin-top:3px;">
 							<span>商品备注：</span></br>
-							<textarea id='newProductRemark' style='resize:none; height:80px; width:80%; ' placeholder="请输入商品备注"></textarea>
+							<textarea id='newProductRemark' style='resize:none; height:80px; width:80%; border-color: #cfdadd;' placeholder="请输入商品备注"></textarea>
 						</div>
 
 						<div class="page-container">

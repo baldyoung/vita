@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baldyoung.vita.common.dao.ProductTypeDao">
+
+    <resultMap id="productTypeEntity" type="com.baldyoung.vita.common.pojo.entity.ProductTypeEntity">
+        <id property="productTypeId" column="productTypeId"></id>
+        <!--非主键字段的对应-->
+        <result property="productTypeName" column="productTypeName"></result>
+        <result property="productTypeGrade" column="productTypeGrade"></result>
+    </resultMap>
+
+    <select id="selectAll" resultMap="productTypeEntity">
+        SELECT productTypeId, productTypeName, productTypeGrade FROM v_productType
+    </select>
+
+</mapper>

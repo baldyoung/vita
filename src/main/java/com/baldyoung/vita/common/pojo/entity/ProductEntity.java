@@ -14,7 +14,7 @@ import java.util.Objects;
 productId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]商品编号：唯一、非空',
 	productName VARCHAR(50) UNIQUE NOT NULL COMMENT'商品名称：唯一、非空',
 	productTypeId INT UNSIGNED COMMENT'商品类别编号',
-	productAttributeId INT UNSIGNED COMMENT'商品属性编号',
+	productAttributeTypeId INT UNSIGNED COMMENT'商品属性编号',
 	productPrice DECIMAL(10,1) NOT NULL COMMENT'商品单价：非空',
 	productStockFlag TINYINT NOT NULL COMMENT'商品库存标识（0/无库存限制, 1/有库存限制）：非空',
 	productStock INT UNSIGNED COMMENT'商品库存',
@@ -30,7 +30,7 @@ productId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]商品编�
 public class ProductEntity {
     private Integer productId;
     private Integer productTypeId;
-    private Integer productAttributeId;
+    private Integer productAttributeTypeId;
     private String productName;
     private BigDecimal productPrice;
     private Integer productStockFlag;
@@ -85,12 +85,12 @@ public class ProductEntity {
         this.productTypeId = productTypeId;
     }
 
-    public Integer getProductAttributeId() {
-        return productAttributeId;
+    public Integer getProductAttributeTypeId() {
+        return productAttributeTypeId;
     }
 
-    public void setProductAttributeId(Integer productAttributeId) {
-        this.productAttributeId = productAttributeId;
+    public void setProductAttributeTypeId(Integer productAttributeId) {
+        this.productAttributeTypeId = productAttributeId;
     }
 
     public String getProductName() {
@@ -194,7 +194,7 @@ public class ProductEntity {
         return "ProductEntity{" +
                 "productId=" + productId +
                 ", productTypeId=" + productTypeId +
-                ", productAttributeId=" + productAttributeId +
+                ", productAttributeTypeId=" + productAttributeTypeId +
                 ", productName='" + productName + '\'' +
                 ", productPrice=" + productPrice +
                 ", productStockFlag=" + productStockFlag +

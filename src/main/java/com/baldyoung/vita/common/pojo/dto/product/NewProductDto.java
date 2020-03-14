@@ -30,26 +30,55 @@ import java.math.BigDecimal;
 public class NewProductDto {
 
     private Integer productId;
-    @Length(max=10, message = "商品名称不能超过10个字")
+
+    @Length(min=1, max=10, message = "商品名称不能为空，且不能超过10个字")
     private String productName;
+
     @NotNull(message = "必须指定商品类型")
     private Integer productTypeId;
+
     private Integer attributeTypeId;
+
+    @NotNull(message = "必须指定商品单价")
     private BigDecimal productPrice;
+
     @NotNull(message = "必须指定商品库存标识")
     private Integer productStockFlag;
+
     private Integer productStock;
     // private Integer productSalesVolume;
     @NotNull(message = "必须指定上架标识")
     private Integer productIsShow;
+
     // @Length(max=100, message = "图片名称不能超过100个字")
     private String productImgName;
+
     @Length(max=200, message = "商品介绍不能超过200个字")
     private String productInfo;
+
     @Max(value = 65535, message = "排序超过最大值")
     private Integer productGrade;
 
     private MultipartFile file;
+
+
+    @Override
+    public String toString() {
+        return "NewProductDto{" +
+                "productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", productTypeId=" + productTypeId +
+                ", attributeTypeId=" + attributeTypeId +
+                ", productPrice=" + productPrice +
+                ", productStockFlag=" + productStockFlag +
+                ", productStock=" + productStock +
+                ", productIsShow=" + productIsShow +
+                ", productImgName='" + productImgName + '\'' +
+                ", productInfo='" + productInfo + '\'' +
+                ", productGrade=" + productGrade +
+                ", file=" + file +
+                '}';
+    }
 
     public MultipartFile getFile() {
         return file;
