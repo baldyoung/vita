@@ -46,7 +46,7 @@ public class ProductController {
     @PostMapping("pagingList")
     public ResponseResult getProductPagingList(@RequestParam(value = "productTypeId", required = false)Integer productTypeId,
                                                @RequestParam(value = "isShow", required = false)Integer isShow,
-                                               @RequestParam(value = "startIndex")Integer pageIndex,
+                                               @RequestParam(value = "pageIndex")Integer pageIndex,
                                                @RequestParam(value = "maxSize")Integer maxSize) {
         if (pageIndex.intValue() < 0 || maxSize.intValue() < 0) {
             return defeat("参数格式不正确");
