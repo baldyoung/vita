@@ -27,6 +27,9 @@ var OptionModule = {
 			});
 		},
 		submitNewProductInfo: function() {},
+		initProductList : function() {
+
+		},
 		refreshProductList: function(pagingInfo) { // 刷新商品集
 			// 获取商品过滤条件
 			var targetData = FilterModule.packageData();
@@ -44,6 +47,26 @@ var DataModule = {
 	productListBuffer: [],
 	productAttributeTypeListBuffer: [],
 	productCountInfo : {},
+	getProductTypeNameByTypeId : function(productTypeId) {
+		var i, item;
+		for(i=0; i<DataModule.productTypeListBuffer.length; i++) {
+			item = DataModule.productTypeListBuffer[i];
+			if (item.productTypeId == productTypeId) {
+				return item.productTypeName;
+			}
+		}
+		return ' ';
+	},
+	getProductAttributeTypeNameByAttributeTypeId : function(attributeId) {
+		var i, item;
+		for(i=0; i<DataModule.productAttributeTypeListBuffer.length; i++) {
+			item = DataModule.productAttributeTypeListBuffer[i];
+			if (item.productAttributeTypeId == attributeId) {
+				return item.productAttributeTypeId;
+			}
+		}
+		return ' ';
+	},
 	requestCountInfo: function() {
 		var targetData = undefined;
 		$.ajax({
@@ -107,6 +130,15 @@ var DataModule = {
 			success: function(data) {
 				if (data.code == 0) {
 					targetData = data.data;
+					var i, item;
+					for(i=0; i<targetData.length; i++) {
+						item = targetData[i];
+						item.productTypeName = DataModule.getProductTypeNameByTypeId(item.productTypeId);
+						item.productAttributeTypeName = ' ';
+						item.productStockStatus = item.productStock != undefined ? item.productStock : '';
+						item.productIsShowStatus = item.productIsShow != 0 ? '上架' : '下架';
+						item.productPicture = item.productImgName;
+					}
 				} else {
 					swal('商品数据获取失败', data.desc, 'error');
 				}
@@ -204,13 +236,13 @@ var ProductModule = {
 				}, {
 					data: 'productTypeName'
 				}, {
-					data: 'productAttributeName'
+					data: 'productAttributeTypeName'
 				}, {
 					data: 'productPrice'
 				}, {
 					data: 'productStockStatus'
 				}, {
-					data: 'productIsShow'
+					data: 'productIsShowStatus'
 				}, {
 					data: 'productPicture'
 				}, {
