@@ -11,7 +11,7 @@ import java.util.Map;
 public interface ProductDao {
 
    // void insertProduct(@Param("product")ProductEntity productEntity);
-    Map<String, Object> countProductTargetInfo();
+    Map<String, Object> countProductTargetInfo(@Param("product")ProductEntity productEntity);
 
     List<ProductEntity> selectProduct(@Param("product")ProductEntity productEntity, @Param("startIndex")Integer startIndex, @Param("maxSize")Integer maxSize);
 }

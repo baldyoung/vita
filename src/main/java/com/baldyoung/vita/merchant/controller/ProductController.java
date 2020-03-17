@@ -31,8 +31,9 @@ public class ProductController {
      * @return
      */
     @GetMapping("targetCountInfo")
-    public ResponseResult getTargetCountInfo() {
-        return success(productService.getProductTargetCountInfo());
+    public ResponseResult getTargetCountInfo(@RequestParam(value = "productTypeId", required = false)Integer productTypeId,
+                                             @RequestParam(value = "productIsShow", required = false)Integer isShow) {
+        return success(productService.getProductTargetCountInfo(productTypeId, isShow));
     }
 
     /**
@@ -45,7 +46,7 @@ public class ProductController {
      */
     @PostMapping("pagingList")
     public ResponseResult getProductPagingList(@RequestParam(value = "productTypeId", required = false)Integer productTypeId,
-                                               @RequestParam(value = "isShow", required = false)Integer isShow,
+                                               @RequestParam(value = "productIsShow", required = false)Integer isShow,
                                                @RequestParam(value = "pageIndex")Integer pageIndex,
                                                @RequestParam(value = "maxSize")Integer maxSize) {
         if (pageIndex.intValue() < 0 || maxSize.intValue() < 0) {

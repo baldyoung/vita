@@ -26,8 +26,13 @@ public class ProductServiceImpl {
 
     }
 
-    public Map<String, Object> getProductTargetCountInfo() {
-        return productDao.countProductTargetInfo();
+    public Map<String, Object> getProductTargetCountInfo(Integer productTypeId, Integer isShow) {
+        ProductEntity entity = new ProductEntity();
+        if (productTypeId != null && productTypeId.intValue() != -1) {
+            entity.setProductTypeId(productTypeId);
+        }
+        entity.setProductIsShow(isShow);
+        return productDao.countProductTargetInfo(entity);
     }
 
     public List<ProductEntity> getProductPagingList(Integer productTypeId, Integer isShow, Integer startIndex, Integer maxSize) {

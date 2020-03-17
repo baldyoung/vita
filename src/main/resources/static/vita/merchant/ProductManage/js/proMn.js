@@ -4,31 +4,41 @@ $(function() {
 });
 var OptionModule = {
 		init: function() {
-			// 获取并加载商品统计信息
-			var targetData = DataModule.requestCountInfo();
-			if (undefined == targetData) {
-				return;
-			}
-			CountInfoModule.loadData(targetData);
 			// 获取并加载商品类型信息
-			targetData = DataModule.requestProductTypeList();
+			var targetData = DataModule.requestProductTypeList();
 			if (undefined == targetData) {
 				return;
 			}
 			ProductTypeModule.loadData(targetData);
+			// 获取指定条件的商品集，并加载
+			OptionModule.initProductList();
+		},
+		submitNewProductInfo: function() { // 新增或修改商品
+
+		},
+		initProductList : function() { // 初始化商品集合
+			// 获取商品筛选条件
+			var targetData = FilterModule.packageData();
+			if (undefined == targetData) {
+				return;
+			}
+			// 获取并加载商品统计信息
+			targetData = DataModule.requestCountInfo(targetData);
+			if (undefined == targetData) {
+				return;
+			}
+			CountInfoModule.loadData(targetData);
 			// 创建一个分页条，并请求第1页
+			$('#pagingBtnDisplayArea').html('');
+			PagingBarModule.currentPageIndex = undefined;
 			PagingBarModule.build({
 				pageOptionalAreaId: 'pagingBtnDisplayArea',
-				totalAmountOfData: DataModule.productCountInfo.total,
+				totalAmountOfData: DataModule.productCountInfoBuffer.total,
 				maxNumberOfDisplayPageButton: 6, //
 				maxAmountOfOnePage: 20,
 				loadPageIndex : 1,
 				run : OptionModule.refreshProductList
 			});
-		},
-		submitNewProductInfo: function() {},
-		initProductList : function() {
-
 		},
 		refreshProductList: function(pagingInfo) { // 刷新商品集
 			// 获取商品过滤条件
@@ -46,7 +56,7 @@ var DataModule = {
 	productTypeListBuffer: [],
 	productListBuffer: [],
 	productAttributeTypeListBuffer: [],
-	productCountInfo : {},
+	productCountInfoBuffer : {},
 	getProductTypeNameByTypeId : function(productTypeId) {
 		var i, item;
 		for(i=0; i<DataModule.productTypeListBuffer.length; i++) {
@@ -67,7 +77,7 @@ var DataModule = {
 		}
 		return ' ';
 	},
-	requestCountInfo: function() {
+	requestCountInfo: function(filterData) {
 		var targetData = undefined;
 		$.ajax({
 			url: GlobalConfig.serverAddress + "/mProduct/targetCountInfo",
@@ -76,7 +86,7 @@ var DataModule = {
 			dataType: 'json',
 			async: false, //设置同步
 			contentType: "application/x-www-form-urlencoded;charset=utf-8",
-			data: null,
+			data: filterData,
 			success: function(data) {
 				if (data.code != 0) {
 					swal('获取商品统计数据失败', data.desc, 'error');
@@ -88,7 +98,7 @@ var DataModule = {
 				swal('服务器连接失败', '请检查网络是否通畅', 'warning');
 			}
 		});
-		DataModule.productCountInfo = targetData;
+		DataModule.productCountInfoBuffer = targetData;
 		return targetData;
 	},
 	requestProductTypeList: function() {
