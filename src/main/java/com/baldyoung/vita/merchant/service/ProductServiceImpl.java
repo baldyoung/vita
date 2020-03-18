@@ -44,4 +44,9 @@ public class ProductServiceImpl {
         return productDao.selectProduct(entity, startIndex, maxSize);
     }
 
+    public ProductEntity getProductByProductId(Integer productId) {
+        ProductEntity productEntity = productDao.findProductByProductId(productId);
+        return productEntity;
+    }
+
 }

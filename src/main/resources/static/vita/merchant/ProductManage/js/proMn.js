@@ -1,6 +1,16 @@
+
+var uploaderX; //webuploader对象
+
 $(function() {
 	OptionModule.init();
 
+	var _$modal = $('#myModal5');
+	_$modal.css('display', 'block');
+	_$modal.addClass("webuploader-element-invisible");
+	uploaderX = readyForWebUploader();
+	_$modal.on('show.bs.modal', function() {
+		_$modal.removeClass("webuploader-element-invisible");
+	});
 });
 var OptionModule = {
 		init: function() {
@@ -17,6 +27,7 @@ var OptionModule = {
 
 		},
 		initProductList : function() { // 初始化商品集合
+
 			// 获取商品筛选条件
 			var targetData = FilterModule.packageData();
 			if (undefined == targetData) {
@@ -41,6 +52,7 @@ var OptionModule = {
 			});
 		},
 		refreshProductList: function(pagingInfo) { // 刷新商品集
+
 			// 获取商品过滤条件
 			var targetData = FilterModule.packageData();
 			targetData.pageIndex = pagingInfo.currentPageIndex;
@@ -48,6 +60,7 @@ var OptionModule = {
 			targetData = DataModule.requestProductList(targetData);
 			ProductModule.loadData(targetData);
 		}
+
 	}
 	/*
 	 * 数据模块
@@ -163,7 +176,7 @@ var DataModule = {
 	createOrUpdateProduct: function(productInfo) {
 		var targetData = false;
 		$.ajax({
-			url: GlobalConfig.serverAddress + "/mProduct/add",
+			url: GlobalConfig.serverAddress + "/mProduct/addOrUpdate",
 			type: 'POST',
 			cache: false,
 			dataType: 'json',
@@ -184,12 +197,39 @@ var DataModule = {
 			}
 		});
 		return targetData;
+	},
+	requestProduct : function(tProductId) { // 获取指定商品的信息
+		var targetData = undefined;
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mProduct/getProduct",
+			type: 'GET',
+			cache: false,
+			dataType: 'json',
+			async: false, //设置同步
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				productId : tProductId
+			},
+			success: function(data) {
+				if (data.code == 0) {
+					targetData = data.data;
+				} else {
+					swal(data.desc, '', 'error');
+				}
+			},
+			error: function() {
+				swal('服务器连接失败', '请检查网络是否通畅', 'warning');
+			}
+		});
+		return targetData;
 	}
 }
 var ProductEditModule = {
 		currentProductInfo: undefined,
+		currentProductId : undefined,
 		packageData: function() { // 获取编辑区的商品数据
 			var temp = {
+				productId : ProductEditModule.currentProductId,
 				productPrice: $('#newProductPrice').val(),
 				productTypeId: $('#newProductTypeId').val(),
 				productName: $('#newProductName').val(),
@@ -199,10 +239,6 @@ var ProductEditModule = {
 				productStockFlag: $('#needStock').is(':checked') ? 0 : 1,
 			};
 			if (GlobalMethod.isEmpty(temp.productInfo)) temp.productInfo = '';
-			if (-1 != currentProductId) {
-				temp.productId = currentProductId;
-				temp.productImgName = currentProductImg;
-			}
 			return temp;
 		},
 		resetEditArea: function() { // 重置编辑区
@@ -213,6 +249,61 @@ var ProductEditModule = {
 			$('#newProductRemark').val("");
 			$('#newProductStock').val("");
 			$('#needStock').prop('checked', true);
+		},
+		initProductEditWindow: function(tProductId) { // 初始化商品编辑界面
+			if (undefined == tProductId) { //新增商品
+				ProductEditModule.currentProductId = undefined;
+				$('#changeProPicBtn').hide();
+				$('#myModal5Title').css('display', '');
+				$('#myModal5Title').text("新增商品")
+				$('#productPicture').attr('src', '')
+				$('#productPictureDiv').hide();
+				$('#updateProPicWindow').show();
+				ProductEditModule.readyForProductInf();
+				ProductEditModule.resetEditArea();
+			} else { //修改商品
+				ProductEditModule.currentProductId = tProductId;
+				ProductEditModule.loadProductInfo(tProductId);
+				$('#myModal5Title').css('display', 'none');
+				$('#updateProPicWindow').hide();
+				$('#productPictureDiv').show();
+				$('#changeProPicBtn').show();
+				$('#changeProPicBtn').show();
+			}
+		},
+		readyForProductInf : function() { //恢复WebUploader到初始状态
+			var _$modal = $('#myModal5');
+			_$modal.css('display', 'block');
+			_$modal.addClass("webuploader-element-invisible");
+			closeUploader();
+			uploaderX.destroy();
+			uploaderX = readyForWebUploader();
+			closeUploader();
+			_$modal.on('show.bs.modal', function() {
+				_$modal.removeClass("webuploader-element-invisible");
+			});
+		},
+		loadProductInfo : function(productId) { // 加载指定商品的信息
+			var productInfo = DataModule.requestProduct(productId);
+			if (undefined == productInfo) {
+				return ;
+			}
+			ProductEditModule.currentProductInfo = productInfo;
+			$('#productPicture').attr('src', GlobalConfig.productImgRelativePath + productInfo.productImgName);
+			$('#newProductName').val(productInfo.productName);
+			$('#newProductTypeId').val(productInfo.productId);
+			$('#newProductPrice').val(productInfo.productPrice);
+			// $('#newProductPriceUnit').val(t.priceUnit);
+			$('#newProductRemark').val(productInfo.productInfo);
+			$('#newProductStock').val(productInfo.productStock);
+			// $("#showInMenu").prop("checked", 1 == productInfo.ProductIsShow ? true : false); //使用attr控制状态选中失败，采用prop调用可行
+		},
+		submit : function() {
+			var targetData = ProductEditModule.packageData();
+			if (undefined == targetData) {
+				return;
+			}
+			DataModule.createOrUpdateProduct(targetData);
 		}
 	}
 	/*
@@ -261,12 +352,9 @@ var ProductModule = {
 				"columnDefs": [{
 					"render": function(data, type, row) {
 						var a = "";
-						//a += "<button type='button' class='btn btn-primary' onclick='showEditStudent(\""+0+"\")' data-toggle='modal' data-target='#myModal5' title='编辑用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-pencil-square-o'></i>&nbsp;编辑</button>"
-						//a += "<button type='button' class='btn btn-primary' style='margin-top:3px;' onclick='loadOrderForm(\""+row.id+"\")'  data-toggle='dropdown' data-target=\"#OrderFormWindow\" style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-building-o'></i>&nbsp;查看</button>"
-						//a += "<button type='button' class='btn btn-primary' onclick='courseList(\""+row.id+"\")' data-toggle='modal' data-target='#courseListDialog' title='课程列表' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-list'></i>&nbsp;课程列表</button>"
 						a += "<button class=\"btn btn-primary \" style='margin-top:3px;' type=\"button\"  onclick=\"deleteProduct('" + row.productId + "')\"><i class=\"fa fa-building-o\"></i>删除"
 						a += "</button>"
-						a += "<button class=\"btn btn-primary \" style='margin-top:3px; margin-left:5px; ' type=\"button\" data-toggle=\"modal\" data-target=\"#myModal5\" onclick=\"readyProWin('" + row.productId + "')\"><i class=\"fa fa-building-o\"></i>修改"
+						a += "<button class=\"btn btn-primary \" style='margin-top:3px; margin-left:5px; ' type=\"button\" data-toggle=\"modal\" data-target=\"#myModal5\" onclick=\"ProductEditModule.initProductEditWindow('" + row.productId + "')\"><i class=\"fa fa-building-o\"></i>修改"
 						a += "</button>"
 						return a;
 					},
@@ -342,7 +430,7 @@ var FilterModule = {
 
 /*************************************************** *************************************************/
 
-var uploaderX; //webuploader对象
+
 var newProductInf; //新增或修改时，商品的信息对象
 var currentProductId; //当前商品详情窗口里打开的商品编号
 var currentProductImg; //当前商品的图片

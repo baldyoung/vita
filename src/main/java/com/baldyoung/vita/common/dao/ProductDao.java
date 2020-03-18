@@ -14,4 +14,10 @@ public interface ProductDao {
     Map<String, Object> countProductTargetInfo(@Param("product")ProductEntity productEntity);
 
     List<ProductEntity> selectProduct(@Param("product")ProductEntity productEntity, @Param("startIndex")Integer startIndex, @Param("maxSize")Integer maxSize);
+
+    ProductEntity findProductByProductId(@Param("productId")Integer productId);
+
+
+
+
 }

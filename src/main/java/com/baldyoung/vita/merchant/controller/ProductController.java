@@ -56,7 +56,13 @@ public class ProductController {
         return success(productService.getProductPagingList(productTypeId, isShow, startIndex, maxSize));
     }
 
-    @PostMapping("add")
+    /**
+     * 新增或修改指定商品信息
+     * @param newProductDto
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping("addOrUpdate")
     public ResponseResult addProduct(@Valid NewProductDto newProductDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return defeat(bindingResult.getFieldError().getDefaultMessage());
@@ -75,6 +81,39 @@ public class ProductController {
         out.println(multipartFile.getSize());
         return success(newProductDto);*/
     }
+    @GetMapping("getProduct")
+    public ResponseResult getProduct(@RequestParam("productId")Integer productId) {
+        ProductEntity productEntity = productService.getProductByProductId(productId);
+        if (null == productEntity) {
+            return defeat();
+        }
+        return success(productEntity);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

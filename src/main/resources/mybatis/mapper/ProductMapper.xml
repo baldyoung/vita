@@ -52,4 +52,11 @@
         </if>
     </select>
 
+    <select id="findProductByProductId" resultMap="baseMap">
+        SELECT productId, productTypeId, productName, productAttributeTypeId, productPrice, productStockFlag, productStock, productSalesVolume, productIsShow, productImgName, productInfo, productGrade, isDelete, createDateTime, updateDateTime
+        from V_Product
+        where
+          productId = #{productId}
+    </select>
+
 </mapper>
