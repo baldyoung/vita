@@ -32,7 +32,17 @@ public class ProductServiceImpl {
             entity.setProductTypeId(productTypeId);
         }
         entity.setProductIsShow(isShow);
-        return productDao.countProductTargetInfo(entity);
+        Map<String, Object> result = new HashMap();
+        result.put("total", productDao.countProductTargetAmount(entity));
+        entity.setProductIsShow(1);
+        result.put("productIsShow", productDao.countProductTargetAmount(entity));
+        entity.setProductIsShow(isShow);
+        entity.setProductStock(0);
+        result.put("productStock", productDao.countProductTargetAmount(entity));
+        entity.setProductStock(null);
+        entity.setProductImgName("default.gif");
+        result.put("productImgName", productDao.countProductTargetAmount(entity));
+        return result;
     }
 
     public List<ProductEntity> getProductPagingList(Integer productTypeId, Integer isShow, Integer startIndex, Integer maxSize) {

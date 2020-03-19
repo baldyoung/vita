@@ -29,27 +29,33 @@
         SELECT productId, productTypeId, productName, productAttributeTypeId, productPrice, productStockFlag, productStock, productSalesVolume, productIsShow, productImgName, productInfo, productGrade, isDelete, createDateTime, updateDateTime
         FROM V_Product
         where
-          isDelete = 0
-          <if test="product.productTypeId != null">
-              and productTypeId = #{product.productTypeId}
-          </if>
-          <if test="product.productIsShow != null">
-              and productIsShow = #{product.productIsShow}
-          </if>
-        limit #{startIndex}, #{maxSize}
+              isDelete = 0
+              <if test="product.productTypeId != null">
+                  and productTypeId = #{product.productTypeId}
+              </if>
+              <if test="product.productIsShow != null">
+                  and productIsShow = #{product.productIsShow}
+              </if>
+            limit #{startIndex}, #{maxSize}
     </select>
 
-    <select id="countProductTargetInfo" resultType="map">
-        SELECT COUNT(*) 'total', COUNT(productIsShow = 1) 'productIsShow', COUNT(productStock = 0 AND productStockFlag = 1) 'productStock', COUNT(productImgName = 'default.gif') 'productImgName', COUNT(productTypeId = NULL) 'productTypeId'
+    <select id="countProductTargetAmount" resultType="int">
+        SELECT count(*)
         FROM V_Product
         where
-        isDelete = 0
-        <if test="product.productTypeId != null">
-            and productTypeId = #{product.productTypeId}
-        </if>
-        <if test="product.productIsShow != null">
-            and productIsShow = #{product.productIsShow}
-        </if>
+            isDelete = 0
+            <if test="product.productIsShow != null">
+                and productIsShow = #{product.productIsShow}
+            </if>
+            <if test="product.productStock != null">
+                AND productStock = #{product.productStock} and productStockFlag = 1
+            </if>
+            <if test="product.productImgName != null">
+                AND productImgName = #{product.productImgName}
+            </if>
+            <if test="product.productTypeId != null">
+                AND productTypeId = #{product.productTypeId}
+            </if>
     </select>
 
     <select id="findProductByProductId" resultMap="baseMap">

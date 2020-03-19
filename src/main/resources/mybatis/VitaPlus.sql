@@ -59,6 +59,7 @@ CREATE TABLE V_ProductAttributeType (
 	productAttributeTypeName VARCHAR(30) UNIQUE NOT NULL COMMENT'商品属性类的名称：唯一、非空',
 	PRIMARY KEY (productAttributeTypeId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'商品属性类型表';
+INSERT V_ProductAttributeType(productAttributeTypeName) VALUES('菜品'),('酒水温度');
 -- 商品属性值表
 DROP TABLE IF EXISTS V_ProductAttributeValue;
 CREATE TABLE V_ProductAttributeValue (
@@ -67,6 +68,7 @@ CREATE TABLE V_ProductAttributeValue (
 	productAttributeValueName VARCHAR(30) NOT NULL COMMENT'商品属性类型值的名称：非空',
 	PRIMARY KEY (productAttributeValueId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'商品属性类型值表';
+INSERT INTO V_ProductAttributeValue(productAttributeTypeId, productAttributeValueName) VALUES(1, '清淡'), (1, '正常'), (1, '咸辣'), (2, '常温'), (2, '冰冻');
 -- 商品图片表
 DROP TABLE IF EXISTS V_ProductImg;
 CREATE TABLE V_ProductImg (

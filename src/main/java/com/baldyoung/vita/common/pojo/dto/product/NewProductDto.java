@@ -47,7 +47,7 @@ public class NewProductDto {
 
     private Integer productStock;
     // private Integer productSalesVolume;
-    @NotNull(message = "必须指定上架标识")
+    // @NotNull(message = "必须指定上架标识")
     private Integer productIsShow;
 
     // @Length(max=100, message = "图片名称不能超过100个字")

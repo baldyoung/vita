@@ -20,8 +20,15 @@ var OptionModule = {
 				return;
 			}
 			ProductTypeModule.loadData(targetData);
+			// 获取商品属性数据并加载
+			targetData = DataModule.requestProductAttributeList();
+			if (undefined == targetData) {
+				return;
+			}
+			ProductAttributeModule.loadData(targetData);
 			// 获取指定条件的商品集，并加载
 			OptionModule.initProductList();
+
 		},
 		submitNewProductInfo: function() { // 新增或修改商品
 
@@ -41,6 +48,7 @@ var OptionModule = {
 			CountInfoModule.loadData(targetData);
 			// 创建一个分页条，并请求第1页
 			$('#pagingBtnDisplayArea').html('');
+			ProductModule.loadData([]);
 			PagingBarModule.currentPageIndex = undefined;
 			PagingBarModule.build({
 				pageOptionalAreaId: 'pagingBtnDisplayArea',
@@ -138,9 +146,31 @@ var DataModule = {
 		DataModule.productTypeListBuffer = targetData;
 		return targetData;
 	},
+	requestProductAttributeList :function() {
+		var targetData = [];
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mProductAttribute/attributeTypeList",
+			type: 'GET',
+			cache: false,
+			dataType: 'json',
+			async: false, //设置同步
+			contentType: "application/json; charset=utf-8",
+			data: null,
+			success: function(data) {
+				if (data.code == 0) {
+					targetData = data.data;
+				} else {
+					swal('获取商品属性数据失败', data.desc, 'error');
+				}
+			},
+			error: function() {
+				swal('服务器连接失败', '请检查网络是否通畅', 'warning');
+			}
+		});
+		DataModule.productAttributeTypeListBuffer = targetData;
+		return targetData;
+	},
 	requestProductList: function(filterInfo) {
-		// targetData.pageIndex = pagingInfo.currentPageIndex;
-		// targetData.maxSize = pagingInfo.maxAmountOfData;
 		var targetData = [];
 		$.ajax({
 			url: GlobalConfig.serverAddress + "/mProduct/pagingList",
@@ -156,8 +186,14 @@ var DataModule = {
 					var i, item;
 					for(i=0; i<targetData.length; i++) {
 						item = targetData[i];
+						if (item.productAttributeTypeId == undefined) {
+							item.productAttributeTypeId = 0;
+						}
+						if (item.productTypeId == undefined) {
+							item.productTypeId = 0;
+						}
 						item.productTypeName = DataModule.getProductTypeNameByTypeId(item.productTypeId);
-						item.productAttributeTypeName = ' ';
+						item.productAttributeTypeName = DataModule.getProductAttributeTypeNameByAttributeTypeId(item.productAttributeTypeId);
 						item.productStockStatus = item.productStock != undefined ? item.productStock : '';
 						item.productIsShowStatus = item.productIsShow != 0 ? '上架' : '下架';
 						item.productPicture = item.productImgName;
@@ -212,6 +248,13 @@ var DataModule = {
 			},
 			success: function(data) {
 				if (data.code == 0) {
+					var item = data.data;
+					if (item.productAttributeTypeId == undefined) {
+						item.productAttributeTypeId = 0;
+					}
+					if (item.productTypeId == undefined) {
+						item.productTypeId = 0;
+					}
 					targetData = data.data;
 				} else {
 					swal(data.desc, '', 'error');
@@ -235,7 +278,7 @@ var ProductEditModule = {
 				productName: $('#newProductName').val(),
 				productStock: $('#newProductStock').val(),
 				productInfo: $('#newProductRemark').val(),
-				productIsShow: 0,
+				// productIsShow: 0,
 				productStockFlag: $('#needStock').is(':checked') ? 0 : 1,
 			};
 			if (GlobalMethod.isEmpty(temp.productInfo)) temp.productInfo = '';
@@ -243,7 +286,7 @@ var ProductEditModule = {
 		},
 		resetEditArea: function() { // 重置编辑区
 			$('#newProductName').val("");
-			$('#newProductTypeId').val("-1");
+			$('#newProductTypeId').val("0");
 			$('#newProductAttributeTypeId').val('0');
 			$('#newProductPrice').val("");
 			$('#newProductRemark').val("");
@@ -289,9 +332,11 @@ var ProductEditModule = {
 				return ;
 			}
 			ProductEditModule.currentProductInfo = productInfo;
+			ProductEditModule.currentProductId = productId;
 			$('#productPicture').attr('src', GlobalConfig.productImgRelativePath + productInfo.productImgName);
 			$('#newProductName').val(productInfo.productName);
-			$('#newProductTypeId').val(productInfo.productId);
+			$('#newProductTypeId').val(productInfo.productTypeId);
+			$('#newProductAttributeTypeId').val(productInfo.productAttributeTypeId);
 			$('#newProductPrice').val(productInfo.productPrice);
 			// $('#newProductPriceUnit').val(t.priceUnit);
 			$('#newProductRemark').val(productInfo.productInfo);
@@ -303,7 +348,12 @@ var ProductEditModule = {
 			if (undefined == targetData) {
 				return;
 			}
-			DataModule.createOrUpdateProduct(targetData);
+			if (0 == $('.imgWrap').length) { //未选择图片
+				// console.log('未上传图片,将调用自定义ajax调用')
+				DataModule.createOrUpdateProduct(targetData);
+			} else { //选择了图片
+				uploaderX.upload();
+			}
 		}
 	}
 	/*
@@ -377,6 +427,18 @@ var ProductTypeModule = {
 		}
 	}
 }
+var ProductAttributeModule = {
+	loadData : function(productAttributeTypeList) {
+		var target = $('#newProductAttributeTypeId');
+		var i, item, html;
+		for(i=0; i<productAttributeTypeList.length; i++) {
+			item = productAttributeTypeList[i];
+			html = '<option value="' + item.productAttributeTypeId + '">' + item.productAttributeTypeName + '</option>';
+			target.append(html);
+		}
+	}
+}
+
 	/*
 	 * 商品集数据统计模块
 	 */
@@ -386,7 +448,7 @@ var CountInfoModule = {
 			$('#infProAmount_isShow').text(countInfo.productIsShow);
 			$('#infProAmount_stock').text(countInfo.productStock);
 			$('#infProAmount_picture').text(countInfo.productImgName);
-			$('#infProAmount_type').text(countInfo.productTypeId);
+			// $('#infProAmount_type').text(countInfo.productTypeId);
 		}
 	}
 	/*
@@ -646,7 +708,7 @@ function readyForWebUploader() {
 		disableGlobalDnd: true,
 		chunked: true,
 		// server: 'http://webuploader.duapp.com/server/fileupload.php',
-		server: GlobalConfig.serverAddress + "/mProduct/add",
+		server: GlobalConfig.serverAddress + "/mProduct/addOrUpdate",
 		//限制，一次只能上传一个文件
 		fileNumLimit: 1,
 		fileSizeLimit: 50 * 1024 * 1024, // 50 M
@@ -988,7 +1050,7 @@ function readyForWebUploader() {
 		console.log(response)
 		if (response.code == 0) { //添加商品信息提交成功
 
-			requestAllProduct();
+			OptionModule.initProductList();
 			$('#btnCloseProductInfWin').trigger('click');
 			swal("保存成功", "商品集已变更", "success");
 		} else {
@@ -1029,6 +1091,7 @@ function readyForWebUploader() {
 		//console.log('uploader befor ')
 		//console.log(newProductInf)
 		//传入表单参数
+		var newProductInf = ProductEditModule.packageData();
 		data = $.extend(data, {
 			productId: newProductInf.productId,
 			productPrice: newProductInf.productPrice,
