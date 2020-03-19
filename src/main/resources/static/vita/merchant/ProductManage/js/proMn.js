@@ -352,6 +352,7 @@ var ProductEditModule = {
 			if (0 == $('.imgWrap').length) { //未选择图片
 				// console.log('未上传图片,将调用自定义ajax调用')
 				if(DataModule.createOrUpdateProduct(targetData)) {
+					OptionModule.initProductList();
 					$('#btnCloseProductInfWin').click();
 				}
 			} else { //选择了图片
