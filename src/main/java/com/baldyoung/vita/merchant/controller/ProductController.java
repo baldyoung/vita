@@ -3,10 +3,14 @@ package com.baldyoung.vita.merchant.controller;
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.dto.product.NewProductDto;
 import com.baldyoung.vita.common.pojo.entity.ProductEntity;
+import com.baldyoung.vita.common.utility.FileDataSaveModule;
 import com.baldyoung.vita.merchant.service.ProductServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.ClassUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,12 +20,17 @@ import javax.validation.Valid;
 import static com.baldyoung.vita.common.pojo.dto.ResponseResult.*;
 import static java.lang.System.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
 
 @RestController
 @RequestMapping("mProduct")
 public class ProductController {
+
+    // 商品图片存储路径
+    private static String ProductImgPath = createProductImgPath();
 
     @Autowired
     private ProductServiceImpl productService;
@@ -63,23 +72,37 @@ public class ProductController {
      * @return
      */
     @PostMapping("addOrUpdate")
-    public ResponseResult addProduct(@Valid NewProductDto newProductDto, BindingResult bindingResult) {
+    public ResponseResult addProduct(@Valid NewProductDto newProductDto, BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors()) {
             return defeat(bindingResult.getFieldError().getDefaultMessage());
         }
         MultipartFile multipartFile = newProductDto.getFile();
-        if (null == multipartFile && null == newProductDto.getProductImgName()) {
+        if (null == newProductDto.getProductId() && null == multipartFile && null == newProductDto.getProductImgName()) {
             return defeat("图片为空");
         }
         if (null != multipartFile) {
-            String str = multipartFile.getName() + ", " + multipartFile.getSize() + ", " + multipartFile.getContentType() + ", " + multipartFile.getOriginalFilename();
-            out.println(str);
+            String fileName = multipartFile.getOriginalFilename();
+            String fileType = fileName.substring(fileName.lastIndexOf("."));
+            out.println(fileType);
+            out.println(ProductImgPath);
+            FileDataSaveModule fileDataSaveModule = FileDataSaveModule.createTargetInstance(multipartFile.getInputStream(), ProductImgPath, fileType);
+            out.println(fileDataSaveModule.getPathName());
+            Boolean result = fileDataSaveModule.save();
+            if (!result) {
+                return defeat("商品图片保存失败！");
+            }
+            String temp = fileDataSaveModule.getPathName();
+            fileName = temp.substring(temp.lastIndexOf(File.separator) + 1);
+            newProductDto.setProductImgName(fileName);
+        }
+        if (null == newProductDto.getProductId()) {
+            // 新增
+            productService.addProduct(newProductDto);
+        } else {
+            // 修改
+            productService.updateProduct(newProductDto);
         }
         return success();
-        /*out.println(multipartFile.getContentType());
-        out.println(multipartFile.getName() + ", " + multipartFile.getOriginalFilename());
-        out.println(multipartFile.getSize());
-        return success(newProductDto);*/
     }
     @GetMapping("getProduct")
     public ResponseResult getProduct(@RequestParam("productId")Integer productId) {
@@ -112,48 +135,11 @@ public class ProductController {
 
 
 
-
-
-
-
-
-    public ResponseResult addProduct2(@RequestParam("newProductInfo") @Valid NewProductDto newProductDto, @RequestParam(value = "file", required = false)MultipartFile multipartFile) {
-        out.println(newProductDto );
-        out.println(multipartFile.getContentType());
-        out.println(multipartFile.getName() + ", " + multipartFile.getOriginalFilename());
-        out.println(multipartFile.getSize());
-        return success(newProductDto);
+    static private String createProductImgPath() {
+        String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+        return FileDataSaveModule.adjustPathNameSeparator(staticPath+"/vita/resource/productImg/");
     }
 
-    @PostMapping("add2")
-    public Map addProduct2(@RequestParam("productName")String productName,
-                          @RequestParam(value = "productTypeId", required = false)Integer productTypeId,
-                          @RequestParam(value = "productAttributeId", required = false)Integer productAttributeId,
-                          @RequestParam("productPrice")BigDecimal productPrice,
-                          @RequestParam("productStockFlag")Integer productStockFlag,
-                          @RequestParam(value = "productStock", required = false)Integer productStock,
-                          @RequestParam("productIsShow")Integer productIsShow,
-                          @RequestParam(value = "productInfo", required = false)String productInfo,
-                          @RequestParam(value = "productGrade", required = false)Integer productGrade,
-                          @RequestParam("file")MultipartFile multipartFile) {
-        ProductEntity productEntity = new ProductEntity();
-        productEntity.setProductName(productName);
-        productEntity.setProductTypeId(productTypeId);
-        productEntity.setProductAttributeTypeId(productAttributeId);
-        productEntity.setProductPrice(productPrice);
-        productEntity.setProductStockFlag(productStockFlag);
-        productEntity.setProductStock(productStock);
-        productEntity.setProductIsShow(productIsShow);
-        productEntity.setProductInfo(productInfo);
-        productEntity.setProductGrade(productGrade);
 
-        out.println(productEntity);
-
-        out.println(multipartFile.getContentType());
-        out.println(multipartFile.getName() + ", " + multipartFile.getOriginalFilename());
-        out.println(multipartFile.getSize());
-
-        return null;
-    }
 
 }

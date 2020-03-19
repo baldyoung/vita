@@ -17,7 +17,7 @@ public interface ProductDao {
 
     ProductEntity findProductByProductId(@Param("productId")Integer productId);
 
+    void insertProduct(@Param("product")ProductEntity productEntity);
 
-
-
+    void updateProduct(@Param("product")ProductEntity productEntity);
 }

@@ -1,5 +1,6 @@
 package com.baldyoung.vita.common.pojo.entity;
 
+import com.baldyoung.vita.common.pojo.dto.product.NewProductDto;
 import com.baldyoung.vita.common.pojo.exception.EntityCheckException;
 import com.baldyoung.vita.common.pojo.exception.ServiceException;
 import com.baldyoung.vita.common.utility.CommonMethod;
@@ -44,10 +45,9 @@ public class ProductEntity {
     private Date createDateTime;
     private Date updateDateTime;
 
-    public boolean check() throws EntityCheckException {
 
-        throw new EntityCheckException();
-    }
+
+
 
     public static ProductEntity createInstanceFromMap(Map<String, Object> map, String... paramNotNull) throws ServiceException{
         //

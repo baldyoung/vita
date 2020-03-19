@@ -65,4 +65,40 @@
           productId = #{productId}
     </select>
 
+
+    <insert id="insertProduct" >
+        INSERT V_Product(productName, productTypeId, productAttributeTypeId, productPrice, productStockFlag, productStock, productSalesVolume, productIsShow, productInfo, productGrade, isDelete, productImgName)
+        VALUES(#{product.productName}, #{product.productTypeId}, #{product.productAttributeTypeId}, #{product.productPrice}, #{product.productStockFlag}, #{product.productStock}, 0, #{product.productIsShow}, #{product.productInfo}, 100, 0, #{product.productImgName})
+    </insert>
+
+    <update id="updateProduct">
+        update V_Product
+        set productId = #{product.productId}
+        <if test="product.productName != null">
+            , productName = #{product.productName}
+        </if>
+        <if test="product.productTypeId != null">
+            , productTypeId = #{product.productTypeId}
+        </if>
+        <if test="product.productAttributeTypeId != null">
+            , productAttributeTypeId = #{product.productAttributeTypeId}
+        </if>
+        <if test="product.productPrice != null">
+            , productPrice = #{product.productPrice}
+        </if>
+        <if test="product.productStock != null">
+            , productStock = #{product.productStock}
+        </if>
+        <if test="product.productStockFlag != null">
+            , productStockFlag = #{product.productStockFlag}
+        </if>
+        <if test="product.productInfo != null">
+            , productInfo = #{product.productInfo}
+        </if>
+        <if test="product.productImgName != null">
+            , productImgName = #{product.productImgName}
+        </if>
+        where productId = #{product.productId}
+    </update>
+
 </mapper>

@@ -93,7 +93,7 @@ var DataModule = {
 		for(i=0; i<DataModule.productAttributeTypeListBuffer.length; i++) {
 			item = DataModule.productAttributeTypeListBuffer[i];
 			if (item.productAttributeTypeId == attributeId) {
-				return item.productAttributeTypeId;
+				return item.productAttributeTypeName;
 			}
 		}
 		return ' ';
@@ -275,6 +275,7 @@ var ProductEditModule = {
 				productId : ProductEditModule.currentProductId,
 				productPrice: $('#newProductPrice').val(),
 				productTypeId: $('#newProductTypeId').val(),
+				productAttributeTypeId : $('#newProductAttributeTypeId').val(),
 				productName: $('#newProductName').val(),
 				productStock: $('#newProductStock').val(),
 				productInfo: $('#newProductRemark').val(),
@@ -350,7 +351,9 @@ var ProductEditModule = {
 			}
 			if (0 == $('.imgWrap').length) { //未选择图片
 				// console.log('未上传图片,将调用自定义ajax调用')
-				DataModule.createOrUpdateProduct(targetData);
+				if(DataModule.createOrUpdateProduct(targetData)) {
+					$('#btnCloseProductInfWin').click();
+				}
 			} else { //选择了图片
 				uploaderX.upload();
 			}

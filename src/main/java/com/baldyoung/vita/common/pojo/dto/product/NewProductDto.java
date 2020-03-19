@@ -37,7 +37,8 @@ public class NewProductDto {
     @NotNull(message = "必须指定商品类型")
     private Integer productTypeId;
 
-    private Integer attributeTypeId;
+    private Integer productAttributeTypeId;
+
 
     @NotNull(message = "必须指定商品单价")
     private BigDecimal productPrice;
@@ -68,7 +69,7 @@ public class NewProductDto {
                 "productId=" + productId +
                 ", productName='" + productName + '\'' +
                 ", productTypeId=" + productTypeId +
-                ", attributeTypeId=" + attributeTypeId +
+                ", productAttributeTypeId=" + productAttributeTypeId +
                 ", productPrice=" + productPrice +
                 ", productStockFlag=" + productStockFlag +
                 ", productStock=" + productStock +
@@ -78,6 +79,14 @@ public class NewProductDto {
                 ", productGrade=" + productGrade +
                 ", file=" + file +
                 '}';
+    }
+
+    public Integer getProductAttributeTypeId() {
+        return productAttributeTypeId;
+    }
+
+    public void setProductAttributeTypeId(Integer productAttributeTypeId) {
+        this.productAttributeTypeId = productAttributeTypeId;
     }
 
     public MultipartFile getFile() {
@@ -112,13 +121,6 @@ public class NewProductDto {
         this.productTypeId = productTypeId;
     }
 
-    public Integer getAttributeTypeId() {
-        return attributeTypeId;
-    }
-
-    public void setAttributeTypeId(Integer attributeTypeId) {
-        this.attributeTypeId = attributeTypeId;
-    }
 
     public BigDecimal getProductPrice() {
         return productPrice;

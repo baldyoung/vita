@@ -21,9 +21,16 @@ public class ProductServiceImpl {
     private ProductDao productDao;
 
     public void addProduct(NewProductDto newProductDto) {
+        ProductEntity productEntity = toNewProductEntity(newProductDto);
+        productEntity.setProductIsShow(0);
+        productDao.insertProduct(productEntity);
 
+    }
 
-
+    public void updateProduct(NewProductDto newProductDto) {
+        ProductEntity productEntity = toNewProductEntity(newProductDto);
+        productEntity.setProductIsShow(null);
+        productDao.updateProduct(productEntity);
     }
 
     public Map<String, Object> getProductTargetCountInfo(Integer productTypeId, Integer isShow) {
@@ -56,6 +63,23 @@ public class ProductServiceImpl {
 
     public ProductEntity getProductByProductId(Integer productId) {
         ProductEntity productEntity = productDao.findProductByProductId(productId);
+        return productEntity;
+    }
+
+
+
+    private ProductEntity toNewProductEntity(NewProductDto newProductDto) {
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setProductId(newProductDto.getProductId());
+        productEntity.setProductName(newProductDto.getProductName());
+        productEntity.setProductTypeId(newProductDto.getProductTypeId());
+        productEntity.setProductAttributeTypeId(newProductDto.getProductAttributeTypeId());
+        productEntity.setProductInfo(newProductDto.getProductInfo());
+        productEntity.setProductPrice(newProductDto.getProductPrice());
+        productEntity.setProductStockFlag(newProductDto.getProductStockFlag());
+        productEntity.setProductStock(newProductDto.getProductStock());
+        productEntity.setProductImgName(newProductDto.getProductImgName());
+        // productEntity.setProductIsShow(newProductDto.getProductIsShow());
         return productEntity;
     }
 
