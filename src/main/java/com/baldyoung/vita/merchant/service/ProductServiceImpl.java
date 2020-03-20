@@ -66,6 +66,10 @@ public class ProductServiceImpl {
         return productEntity;
     }
 
+    public void deleteProduct(Integer productId) {
+        productDao.deleteProduct(productId);
+    }
+
 
 
     private ProductEntity toNewProductEntity(NewProductDto newProductDto) {

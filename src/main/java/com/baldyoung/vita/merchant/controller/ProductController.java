@@ -95,6 +95,9 @@ public class ProductController {
             fileName = temp.substring(temp.lastIndexOf(File.separator) + 1);
             newProductDto.setProductImgName(fileName);
         }
+        if (0 == newProductDto.getProductStockFlag().intValue()) {
+            newProductDto.setProductStock(0);
+        }
         if (null == newProductDto.getProductId()) {
             // 新增
             productService.addProduct(newProductDto);
@@ -111,6 +114,12 @@ public class ProductController {
             return defeat();
         }
         return success(productEntity);
+    }
+
+    @GetMapping("deleteProduct")
+    public ResponseResult deleteProduct(@RequestParam("productId")Integer productId) {
+        productService.deleteProduct(productId);
+        return success();
     }
 
 

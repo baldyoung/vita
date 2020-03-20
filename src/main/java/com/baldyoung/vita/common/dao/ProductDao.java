@@ -20,4 +20,6 @@ public interface ProductDao {
     void insertProduct(@Param("product")ProductEntity productEntity);
 
     void updateProduct(@Param("product")ProductEntity productEntity);
+
+    void deleteProduct(@Param("productId")Integer productId);
 }

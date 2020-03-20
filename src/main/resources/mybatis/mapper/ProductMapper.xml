@@ -101,4 +101,8 @@
         where productId = #{product.productId}
     </update>
 
+    <delete id="deleteProduct">
+        DELETE FROM V_Product WHERE productId = #{productId}
+    </delete>
+
 </mapper>
