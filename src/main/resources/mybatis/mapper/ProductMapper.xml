@@ -65,6 +65,13 @@
           productId = #{productId}
     </select>
 
+    <select id="findProductByProductName" resultMap="baseMap">
+        SELECT productId, productTypeId, productName, productAttributeTypeId, productPrice, productStockFlag, productStock, productSalesVolume, productIsShow, productImgName, productInfo, productGrade, isDelete, createDateTime, updateDateTime
+        from V_Product
+        where
+            productName = #{productName}
+    </select>
+
 
     <insert id="insertProduct" >
         INSERT V_Product(productName, productTypeId, productAttributeTypeId, productPrice, productStockFlag, productStock, productSalesVolume, productIsShow, productInfo, productGrade, isDelete, productImgName)

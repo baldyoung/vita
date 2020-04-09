@@ -1,6 +1,6 @@
 package com.baldyoung.vita.common.utility;
 
-import com.baldyoung.vita.common.pojo.exception.UtilityException;
+import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
 
 public class StringCheckOut {
 

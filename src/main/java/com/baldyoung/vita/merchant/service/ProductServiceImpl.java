@@ -3,7 +3,7 @@ package com.baldyoung.vita.merchant.service;
 import com.baldyoung.vita.common.dao.ProductDao;
 import com.baldyoung.vita.common.pojo.dto.product.NewProductDto;
 import com.baldyoung.vita.common.pojo.entity.ProductEntity;
-import com.baldyoung.vita.merchant.controller.ProductController;
+import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.*;
+
 @Service
 public class ProductServiceImpl {
 
@@ -20,15 +22,27 @@ public class ProductServiceImpl {
     @Autowired
     private ProductDao productDao;
 
-    public void addProduct(NewProductDto newProductDto) {
+    public void addProduct(NewProductDto newProductDto) throws ServiceException {
         ProductEntity productEntity = toNewProductEntity(newProductDto);
+        ProductEntity existsObject = productDao.findProductByProductName(productEntity.getProductName());
+        if (null != existsObject && null != existsObject.getProductId()) {
+            // 如果该商品名称已存在，则抛出业务异常
+            throw new ServiceException(PRODUCT_NAME_EXISTS);
+        }
         productEntity.setProductIsShow(0);
         productDao.insertProduct(productEntity);
 
     }
 
-    public void updateProduct(NewProductDto newProductDto) {
+    public void updateProduct(NewProductDto newProductDto) throws ServiceException {
         ProductEntity productEntity = toNewProductEntity(newProductDto);
+        ProductEntity existsObject = productDao.findProductByProductName(productEntity.getProductName());
+        if (null != existsObject && null != existsObject.getProductId()) {
+            // 如果该商品名称已存在，则抛出业务异常
+            if (!existsObject.getProductId().equals(productEntity.getProductId())) {
+                throw new ServiceException(PRODUCT_NAME_EXISTS);
+            }
+        }
         productEntity.setProductIsShow(null);
         productDao.updateProduct(productEntity);
     }

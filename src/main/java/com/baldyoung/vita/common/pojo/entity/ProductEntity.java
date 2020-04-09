@@ -1,10 +1,7 @@
 package com.baldyoung.vita.common.pojo.entity;
 
-import com.baldyoung.vita.common.pojo.dto.product.NewProductDto;
-import com.baldyoung.vita.common.pojo.exception.EntityCheckException;
-import com.baldyoung.vita.common.pojo.exception.ServiceException;
+import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.utility.CommonMethod;
-import com.baldyoung.vita.common.utility.StringCheckOut;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -54,7 +51,7 @@ public class ProductEntity {
         if (paramNotNull.length > 0) {
             for (String param : paramNotNull) {
                 if (Objects.isNull(map.get(param))) {
-                    throw new ServiceException();
+                    throw new ServiceException("");
                 }
             }
         }

@@ -3,6 +3,8 @@ package com.baldyoung.vita.merchant.controller;
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.dto.product.NewProductDto;
 import com.baldyoung.vita.common.pojo.entity.ProductEntity;
+import com.baldyoung.vita.common.pojo.exception.ExceptionBase;
+import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.utility.FileDataSaveModule;
 import com.baldyoung.vita.merchant.service.ProductServiceImpl;
 import org.slf4j.Logger;
@@ -72,7 +74,7 @@ public class ProductController {
      * @return
      */
     @PostMapping("addOrUpdate")
-    public ResponseResult addProduct(@Valid NewProductDto newProductDto, BindingResult bindingResult) throws IOException {
+    public ResponseResult addProduct(@Valid NewProductDto newProductDto, BindingResult bindingResult) throws IOException, ExceptionBase {
         if (bindingResult.hasErrors()) {
             return defeat(bindingResult.getFieldError().getDefaultMessage());
         }
