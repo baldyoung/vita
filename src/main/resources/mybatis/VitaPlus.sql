@@ -49,6 +49,7 @@ CREATE TABLE V_ProductType (
 	productTypeId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]商品类型编号：唯一、非空',
 	productTypeName VARCHAR(30) UNIQUE NOT NULL COMMENT'商品类型名称：唯一、非空',
 	productTypeGrade SMALLINT UNSIGNED NOT NULL COMMENT'商品类型的优先级：非空，其为用于类型排序的首要标准',
+	isShow SMALLINT DEFAULT 0 NOT NULL COMMENT'是否上架标识：非空, 0/否, 1/是',
 	PRIMARY KEY (productTypeId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'商品类型表';
 INSERT V_ProductType(productTypeName, productTypeGrade) VALUES('主食', 50), ('炒菜', 50), ('小吃', 50), ('汤类', 50);

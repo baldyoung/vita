@@ -8,10 +8,64 @@
         <!--非主键字段的对应-->
         <result property="productTypeName" column="productTypeName"></result>
         <result property="productTypeGrade" column="productTypeGrade"></result>
+        <result property="isShow" column="isShow"></result>
     </resultMap>
 
+    <sql id="allField">
+        productTypeId, productTypeName, productTypeGrade, isShow
+    </sql>
+
     <select id="selectAll" resultMap="productTypeEntity">
-        SELECT productTypeId, productTypeName, productTypeGrade FROM v_productType
+        SELECT productTypeId, productTypeName, productTypeGrade, isShow
+        FROM v_productType
+        ORDER BY productTypeGrade DESC, productTypeId DESC
+    </select>
+
+    <insert id="insertProductType" >
+        INSERT INTO v_productType(productTypeName, productTypeGrade, isShow)
+        VALUES (#{productType.productTypeName}, #{productType.productTypeGrade}, #{productType.isShow})
+    </insert>
+
+    <update id="updateProductType" >
+        UPDATE v_productType
+        SET productTypeId = productTypeId
+        <if test="productType.isShow != null">
+            , isShow = #{productType.isShow}
+        </if>
+        <if test="productType.productTypeName != null">
+            , productTypeName = #{productType.productTypeName}
+        </if>
+        <if test="productType.productTypeGrade != null">
+            , productTypeGrade = #{productType.productTypeGrade}
+        </if>
+        where productTypeId = #{productType.productTypeId}
+    </update>
+
+    <delete id="deleteProductType" >
+        DELETE FROM v_productType
+        WHERE productTypeId = #{productTypeId}
+    </delete>
+
+    <select id="selectWithCondition" resultMap="productTypeEntity">
+        SELECT
+        <include refid="allField"></include>
+        FROM v_productType
+        <choose>
+            <when test="productType.productTypeName != null">
+                where productTypeName = #{productType.productTypeName}
+            </when>
+            <when test="productType.isShow != null">
+                where isShow = #{productType.isShow}
+            </when>
+        </choose>
+        ORDER BY productTypeGrade DESC, productTypeId DESC
+    </select>
+
+    <select id="selectByProductTypeName" resultMap="productTypeEntity">
+        SELECT
+        <include refid="allField"></include>
+        FROM v_productType
+        WHERE productTypeName = #{productTypeName}
     </select>
 
 </mapper>

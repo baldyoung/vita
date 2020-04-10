@@ -10,6 +10,7 @@ public enum ServiceExceptionEnum implements EnumBase {
 
     // 商品类型相关100200***
     PRODUCT_TYPE_FORMAT_WRONG("商品类型编号格式错误", 100200000),
+    PRODUCT_TYPE_NAME_EXISTS("名称已存在", 100200001),
 
     ;
     private String desc;

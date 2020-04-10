@@ -25,6 +25,9 @@
     <script src="../../res/js/plugins/dataTables/dataTables.bootstrap.js"></script>
     <script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
     <script src="../../res/js/plugins/toastr/toastr.min.js"></script>
+    <!-- 自定义js -->
+    <script src="js/proTMn.js"></script>
+    <script src="../../resource/configFile/globalConfig.js"></script>
 
 </head>
 
@@ -38,7 +41,7 @@
                 <div class="ibox-title">
                     <h5>当前可查阅商品类型</h5>
                     <div class="ibox-tools">
-                        <button type='button' class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModaladd" onclick="readForAddProType()">新增</button>
+                        <button type='button' class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModaladd" onclick="EditPTModule.resetData()">新增</button>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -47,10 +50,10 @@
                             <thead>
                                 <tr>
                                     <td width="10%">编号</td>
+                                    <td width="30%">名称</td>
                                     <td width="10%">优先级</td>
-                                    <td width="20%">类型名</td>
-                                    <td width="35%">备注信息</td>
-                                    <td width="22%">操作</td>
+                                    <td width="10%">状态</td>
+                                    <td width="30%">操作</td>
                                 </tr>
                             </thead>
                         </table>
@@ -72,14 +75,13 @@
 
             </div>
             <div class="modal-body">
-                <div class="form-group"><label>商品类型等级</label> <input id='gradeText' type="text" placeholder="商品类型等级" class="form-control" style="width:70%; "></div>
-                <div class="form-group"><label>类型名：</label> <input id='NAMEText' type="text" placeholder="请输入类型名" class="form-control" style="width:70%; "></div>
-                <div class="form-group"><label>备注信息：</label> <input id='remarkText' type="text" placeholder="请输入备注信息" class="form-control" style="width:70%; "></div>
-                
+                <div class="form-group"><label>类型名</label> <input id='PTNameText' type="text" placeholder="请输入类型名" class="form-control" style="width:70%; "></div>
+                <div class="form-group"><label>优先级</label> <input id='PTGradeText' type="text" placeholder="优先级高的类型优先展示" class="form-control" style="width:70%; " readonly></div>
+                <div class="form-group"><label>状态</label> <input id='PTIsShowText' type="text" placeholder="上下架的状态" class="form-control" style="width:70%; " readonly></div>
             </div>
             <div class="modal-footer">
                 <button id='btnSaveInfWin' type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="saveProTypeInf()">保存</button>
+                <button type="button" class="btn btn-primary" onclick="EditPTModule.sendData()">保存</button>
             </div>
 
         </div>
@@ -97,14 +99,15 @@
 
             </div>
             <div class="modal-body">
-                <div class="form-group"><label>商品类型等级</label> <input id='addgradeText' type="text" placeholder="商品类型等级" class="form-control" style="width:70%; " ></div>
-                <div class="form-group"><label>类型名：</label> <input id='addNAMEText' type="text" placeholder="请输入类型名" class="form-control" style="width:70%; "></div>
-                <div class="form-group"><label>备注信息：</label> <input id='addremarkText' type="text" placeholder="请输入备注信息" class="form-control" style="width:70%; "></div>
-
+                <div class="form-group"><label>类型名</label> <input id='NewPTNameText' type="text" placeholder="请输入类型名" class="form-control" style="width:70%; "></div>
+                <!--
+                <div class="form-group"><label>优先级</label> <input id='addgradeText' type="text" placeholder="优先级高将优先被展示" class="form-control" style="width:70%; " ></div>
+                <div class="form-group"><label>状态</label> <input id='addremarkText' type="text" placeholder="默认为下架" class="form-control" style="width:70%; "></div>
+                -->
             </div>
             <div class="modal-footer">
                 <button id='btnCloseAddWin' type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="addProTypeInf()">保存</button>
+                <button type="button" class="btn btn-primary" onclick="EditPTModule.sendData()">保存</button>
             </div>
 
         </div>
@@ -112,9 +115,7 @@
 </div>
 
 
-<!-- 自定义js -->
 
-<script src="js/proTMn.js"></script>
 
 
 

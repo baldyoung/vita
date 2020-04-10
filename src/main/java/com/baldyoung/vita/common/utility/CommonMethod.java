@@ -8,4 +8,24 @@ public class CommonMethod {
         }
         return object.toString();
     }
+
+    public static boolean isEmpty(Object object) {
+        if (null == object) {
+            return true;
+        }
+        String str = object.toString();
+        return str.trim().equals("");
+    }
+
+    public static boolean isAnyEmpty(Object... objects) {
+        if (null == objects) {
+            return true;
+        }
+        for (Object object : objects) {
+            if (isEmpty(object)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
