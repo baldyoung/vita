@@ -112,4 +112,10 @@
         DELETE FROM V_Product WHERE productId = #{productId}
     </delete>
 
+    <select id="selectAllProduct" resultMap="baseMap">
+        SELECT productId, productTypeId, productName, productAttributeTypeId, productPrice, productStockFlag, productStock, productSalesVolume, productIsShow, productImgName, productInfo, productGrade, isDelete, createDateTime, updateDateTime
+        FROM V_Product
+        where isDelete = 0
+    </select>
+
 </mapper>

@@ -84,7 +84,9 @@ public class ProductServiceImpl {
         productDao.deleteProduct(productId);
     }
 
-
+    public List<ProductEntity> getAllProduct() {
+        return productDao.selectAllProduct();
+    }
 
     private ProductEntity toNewProductEntity(NewProductDto newProductDto) {
         ProductEntity productEntity = new ProductEntity();

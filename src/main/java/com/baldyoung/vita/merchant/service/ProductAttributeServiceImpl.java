@@ -21,6 +21,10 @@ public class ProductAttributeServiceImpl {
     @Autowired
     private ProductAttributeValueDao productAttributeValueDao;
 
+    /**
+     * 获取所有商品属性类型
+     * @return
+     */
     public List<ProductAttributeTypeEntity> getAllAttributeType() {
         List<ProductAttributeTypeEntity> productAttributeTypeEntityList = productAttributeTypeDao.selectAll();
         return productAttributeTypeEntityList;

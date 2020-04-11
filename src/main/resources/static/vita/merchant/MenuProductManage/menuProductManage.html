@@ -1,328 +1,237 @@
 <!DOCTYPE html>
 <html>
 
-	<head>
+<head>
 
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<title> 商品操作</title>
-		<meta name="keywords" content="">
-		<meta name="description" content="">
+    <title> 商品操作</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
 
-		<link href="../../res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
-		<link href="../../res/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="../../res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../res/css/font-awesome.css?v=4.4.0" rel="stylesheet">
 
-		<link href="../../res/css/animate.css" rel="stylesheet">
-		<link href="../../res/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="../../res/css/animate.css" rel="stylesheet">
+    <link href="../../res/css/style.css?v=4.1.0" rel="stylesheet">
 
-		<!-- 全局js -->
-		<script src="../../res/js/jquery.min.js?v=2.1.4"></script>
-		<script src="../../res/js/bootstrap.min.js?v=3.3.6"></script>
-		<script src="../../res/js/jquery-ui-1.10.4.min.js"></script>
-		<style>
-			.productListArea {
-				border-bottom: 1px solid #ADADAD;
-				height: 100%;
-				margin: 0 0 0 0;
-			}
-		</style>
+    <!-- 全局js -->
+    <script src="../../res/js/jquery.min.js?v=2.1.4"></script>
+    <script src="../../res/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="../../res/js/jquery-ui-1.10.4.min.js"></script>
+    <!-- swal -->
+    <link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- 配置文件 -->
+    <script src="../../resource/configFile/globalConfig.js"></script>
+    <!-- 自定义 -->
+    <script src="js/menuProductManage.js"></script>
+    <style>
+        .productListArea {
+            border-bottom: 1px solid #ADADAD;
+            height: 100%;
+            margin: 0 0 0 0;
+        }
+    </style>
 
-		<script>
-			$(document).ready(function() {
-				$(".sortable-list").sortable({
-					connectWith: ".connectList"
-				}).disableSelection();
+    <script>
+        $(document).ready(function() {
+            $(".sortable-list").sortable({
+                connectWith: ".connectList"
+            }).disableSelection();
 
-			});
-		</script>
+        });
+    </script>
 
-	</head>
+</head>
 
-	<body class="gray-bg">
-		<div class="modal-dialog" style="width:1640px; background:#EED1B3; padding: 20px 2px 0 9px;">
-			<h3>菜单-商品操作</h3>
-			<div style="height:1060px; width:1630px;">
-				<!-- 已下架商品栏 -->
-				<div class="col-sm-3" style="width:575px; height:1050px; background:#F7ECB5; padding-top:20px; padding-bottom: 20px; ">
-					<h3>已下架商品</h3>
-					<p class="small"><i class="fa fa-warning"></i> 该列表下的商品不会展示在菜单栏</p>
-					<!-- 本期不做搜索框
-						<div class="input-group" >
-							<input type="text" placeholder="输入商品名称进行查询" class="input input-sm form-control" style="height:100%;">
-							<span class="input-group-btn">
-                            	<button type="button" class="btn btn-sm btn-white">搜索</button>
-                        	</span>
-						</div>
-						-->
-					<div class="tabs-container" style="height:950px;">
-						<div class="tabs-left" style="height:100%;">
-							<ul class="nav nav-tabs" style="height:100%; width:119px; overflow:auto;">
-								<li class="active" style="width:110px;">
-									<a data-toggle="tab" href="#tab-x1" style="padding-left:2px; padding-right:0px; " aria-expanded="true"> 所有商品</a>
-								</li>
-								<li class="" style="width:110px;">
-									<a data-toggle="tab" href="#tab-x2" style="padding-left:2px; padding-right:0px; " aria-expanded="false"> 品类二</a>
-								</li>
-							</ul>
-							<div class="tab-content " style="height:100%; ">
-								<div id="tab-x1" class="tab-pane active" style="height:100%; ">
-									<div class="panel-body" style="height:100%; ">
-										<div class="ibox" style="border: 0px solid; height:100%; overflow:auto;">
-											<ul class="sortable-list connectList agile-list productListArea">
-												<li class="info-element">
-													<img style="width:100px; height:100px; border: 1px solid #D3D4D3;" src="../../resource/productImg/3.png" />
-													<div style="width:260px; padding-left:3px;  float:right; ">
-														<div style="width:260px; height:33px; font-size:23px; font-weight: bold; overflow: hidden;">
-															赣南橙子
-														</div>
-														<div style="width:260px; height:27px; overflow: hidden;">
-															<i style="float:left;">库存:无</i>
-															<i style="float:right;">7.00</i>
-														</div>
-														<div style="width:260px; height:39px; overflow: hidden; padding-top:5px; ">
-															<a class="pull-right btn btn-xs btn-primary" data-toggle="modal" data-target="#updateProductPanel">修改</a>
-														</div>
-													</div>
-												</li>
-												<li class="info-element">
-													<img style="width:100px; height:100px; border: 1px solid #D3D4D3;" src="../../resource/productImg/1.png" />
-													<div style="width:260px; padding-left:3px;  float:right; ">
-														<div style="width:260px; height:33px; font-size:23px; font-weight: bold; overflow: hidden;">
-															赣南苹果
-														</div>
-														<div style="width:260px; height:27px; overflow: hidden;">
-															<i style="float:left;">库存:无</i>
-															<i style="float:right;">6.00</i>
-														</div>
-														<div style="width:260px; height:39px; overflow: hidden; padding-top:5px; ">
-															<a class="pull-right btn btn-xs btn-primary" data-toggle="modal" data-target="#updateProductPanel">修改</a>
-														</div>
-													</div>
-												</li>
-												<li class="info-element">
-													<img style="width:100px; height:100px; border: 1px solid #D3D4D3;" src="../../resource/productImg/1.png" />
-													<div style="width:260px; padding-left:3px;  float:right; ">
-														<div style="width:260px; height:33px; font-size:23px; font-weight: bold; overflow: hidden;">
-															赣南苹果
-														</div>
-														<div style="width:260px; height:27px; overflow: hidden;">
-															<i style="float:left;">库存:无</i>
-															<i style="float:right;">6.00</i>
-														</div>
-														<div style="width:260px; height:39px; overflow: hidden; padding-top:5px; ">
-															<a class="pull-right btn btn-xs btn-primary" data-toggle="modal" data-target="#updateProductPanel">修改</a>
-														</div>
-													</div>
-												</li>
-												<li class="info-element">
-													<img style="width:100px; height:100px; border: 1px solid #D3D4D3;" src="../../resource/productImg/1.png" />
-													<div style="width:260px; padding-left:3px;  float:right; ">
-														<div style="width:260px; height:33px; font-size:23px; font-weight: bold; overflow: hidden;">
-															赣南苹果
-														</div>
-														<div style="width:260px; height:27px; overflow: hidden;">
-															<i style="float:left;">库存:无</i>
-															<i style="float:right;">6.00</i>
-														</div>
-														<div style="width:260px; height:39px; overflow: hidden; padding-top:5px; ">
-															<a class="pull-right btn btn-xs btn-primary" data-toggle="modal" data-target="#updateProductPanel">修改</a>
-														</div>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div id="tab-x2" class="tab-pane">
-									<div class="panel-body">
-										<div class="ibox" style="border: 0px solid;">
-											<ul class="sortable-list connectList agile-list productListArea">
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- 编辑时的暂存区 -->
-				<div class="col-sm-3" style="width:470px; height:1050px; background:#F7ECB5; padding-top:20px; padding-bottom: 20px;">
-					<h3>编辑时的暂存区</h3>
-					<p class="small"><i class="fa fa-warning"></i> 该列表下的商品状态还是其原来的状态！</p>
-					<div class="tabs-container" style="height:950px;">
-						<div class="tabs-below" style="height:100%;">
-							<div class="tab-content " style="height:100%; ">
-								<div id="tab-t1" class="tab-pane active" style="height:100%; ">
-									<div class="panel-body" style="height:100%; ">
-										<div class="ibox" style="border: 0px solid; height:100%; overflow:auto;">
-											<ul class="sortable-list connectList agile-list productListArea">
-												<li class="info-element">
-													<img style="width:100px; height:100px; border: 1px solid #D3D4D3;" src="../../resource/productImg/3.png" />
-													<div style="width:260px; padding-left:3px;  float:right; ">
-														<div style="width:260px; height:33px; font-size:23px; font-weight: bold; overflow: hidden;">
-															赣南橙子
-														</div>
-														<div style="width:260px; height:27px; overflow: hidden;">
-															<i style="float:left;">库存:无</i>
-															<i style="float:right;">7.00</i>
-														</div>
-														<div style="width:260px; height:39px; overflow: hidden; padding-top:5px; ">
-															<a class="pull-right btn btn-xs btn-primary" data-toggle="modal" data-target="#updateProductPanel">修改</a>
-														</div>
-													</div>
-												</li>
-												<li class="info-element">
-													<img style="width:100px; height:100px; border: 1px solid #D3D4D3;" src="../../resource/productImg/1.png" />
-													<div style="width:260px; padding-left:3px;  float:right; ">
-														<div style="width:260px; height:33px; font-size:23px; font-weight: bold; overflow: hidden;">
-															赣南苹果
-														</div>
-														<div style="width:260px; height:27px; overflow: hidden;">
-															<i style="float:left;">库存:无</i>
-															<i style="float:right;">6.00</i>
-														</div>
-														<div style="width:260px; height:39px; overflow: hidden; padding-top:5px; ">
-															<a class="pull-right btn btn-xs btn-primary" data-toggle="modal" data-target="#updateProductPanel">修改</a>
-														</div>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- 上架商品栏 -->
-				<div class="col-sm-3" style="width:575px; height:1050px; background:#F7ECB5; padding-top:20px; padding-bottom: 20px; margin-left:2px; ">
-					<h3>菜单</h3>
-					<p class="small"><i class="fa fa-warning"></i> 该列表下的商品展示效果等同与顾客看得的效果！</p>
-					<div class="tabs-container" style="height:950px;">
-						<div class="tabs-left" style="height:100%;">
-							<ul class="nav nav-tabs" style="height:100%; width:119px; overflow:auto; ">
-								<li class="active" style="width:110px;">
-									<a data-toggle="tab" href="#tab-s1" style="padding-left:0px; padding-right:0px; " aria-expanded="true"> 品类一</a>
-								</li>
-								<li class="" style="width:110px;">
-									<a data-toggle="tab" href="#tab-s2" style="padding-left:0px; padding-right:0px; " aria-expanded="false"> 品类二</a>
-								</li>
-							</ul>
-							<div class="tab-content " style="height:100%; ">
-								<div id="tab-s1" class="tab-pane active" style="height:100%; ">
-									<div class="panel-body" style="height:100%; ">
-										<div class="ibox" style="border: 0px solid; height:100%; overflow:auto;">
-											<ul class="sortable-list connectList agile-list productListArea">
-												<li class="info-element">
-													<img style="width:100px; height:100px; border: 1px solid #D3D4D3;" src="../../resource/productImg/3.png" />
-													<div style="width:260px; padding-left:3px;  float:right; ">
-														<div style="width:260px; height:33px; font-size:23px; font-weight: bold; overflow: hidden;">
-															赣南橙子
-														</div>
-														<div style="width:260px; height:27px; overflow: hidden;">
-															<i style="float:left;">库存:无</i>
-															<i style="float:right;">7.00</i>
-														</div>
-														<div style="width:260px; height:39px; overflow: hidden; padding-top:5px; ">
-															<a class="pull-right btn btn-xs btn-primary" data-toggle="modal" data-target="#updateProductPanel">修改</a>
-														</div>
-													</div>
-												</li>
-												<li class="info-element">
-													<img style="width:100px; height:100px; border: 1px solid #D3D4D3;" src="../../resource/productImg/1.png" />
-													<div style="width:260px; padding-left:3px;  float:right; ">
-														<div style="width:260px; height:33px; font-size:23px; font-weight: bold; overflow: hidden;">
-															赣南苹果
-														</div>
-														<div style="width:260px; height:27px; overflow: hidden;">
-															<i style="float:left;">库存:无</i>
-															<i style="float:right;">6.00</i>
-														</div>
-														<div style="width:260px; height:39px; overflow: hidden; padding-top:5px; ">
-															<a class="pull-right btn btn-xs btn-primary" data-toggle="modal" data-target="#updateProductPanel">修改</a>
-														</div>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div id="tab-s2" class="tab-pane">
-									<div class="panel-body">
-										<div class="ibox" style="border: 0px solid;">
-											<ul class="sortable-list connectList agile-list productListArea">
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
-				<a data-toggle="modal" class="btn btn-primary" onclick="">保存</a>
-			</div>
-		</div>
+<body class="gray-bg">
+<div class="modal-dialog" style="width:1640px; background:#EED1B3; padding: 20px 2px 0 9px;">
+    <h3>菜单-商品操作</h3>
+    <div style="height:1100px; width:1630px; background:#F7ECB5;">
+        <!-- 已下架商品栏 -->
+        <div class="col-sm-3" style="width:575px; height:1050px; background:#F7ECB5; padding-top:20px; padding-bottom: 20px; ">
+            <h3>已下架商品</h3>
+            <p class="small"><i class="fa fa-warning"></i> 该列表下的商品不会展示在菜单栏</p>
+            <!-- 本期不做搜索框
+                <div class="input-group" >
+                    <input type="text" placeholder="输入商品名称进行查询" class="input input-sm form-control" style="height:100%;">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-sm btn-white">搜索</button>
+                    </span>
+                </div>
+                -->
+            <div class="tabs-container" style="height:950px;">
+                <div class="tabs-left" style="height:100%;">
+                    <ul id="S_OFF_TYPE_LIST" class="nav nav-tabs" style="height:100%; width:119px; overflow:auto;">
+                        <li class="active" style="width:110px;">
+                            <a data-toggle="tab" href="#tab-x1" style="padding-left:2px; padding-right:0px; " aria-expanded="true"> 所有商品</a>
+                        </li>
+                        <li class="" style="width:110px;">
+                            <a data-toggle="tab" href="#tab-x2" style="padding-left:2px; padding-right:0px; " aria-expanded="false"> 品类二</a>
+                        </li>
+                    </ul>
+                    <div id="S_OFF_AREA_LIST" class="tab-content " style="height:100%; ">
+                        <div id="tab-x1" class="tab-pane active" style="height:100%; ">
+                            <div class="panel-body" style="height:100%; ">
+                                <div class="ibox" style="border: 0px solid; height:100%; overflow:auto;">
+                                    <ul  class="sortable-list connectList agile-list productListArea">
 
-		<!-- 修改商品菜单信息 -->
-		<div class="modal inmodal" id="updateProductPanel" tabindex="-1" role="dialog" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content animated bounceInDown">
-					<div class="modal-header" style="padding-bottom: 15px; padding-top:10px; ">
-						<button type="button" class="close" data-dismiss="modal">
-							<span aria-hidden="true">&times;</span>
-							<span class="sr-only">关闭</span>
-                        </button>
-						<span class="pull-left" style="font-size:17px; font-weight: bold;">商品数据修改</span>
-					</div>
-					<div class="modal-body" style="padding:0  0 0 0;">
-						<table id="OrderFormList" style="width:100%;" class="table table-striped table-bordered table-hover  dataTable">
-							<thead>
-								<tr>
-									<td width="20%">类型</td>
-									<td width="40%">原值</td>
-									<td width="30%">新值</td>
-								</tr>
-							</thead>
-							<tr class="gradeA ">
-								<td class="sorting_1">商品名称</td>
-								<td class=" ">孜然牛肉</td>
-								<td class=" ">
-									<input type="text" class="form-control" placeholder="不可修改" readonly="true">
-								</td>
-							</tr>
-							<tr class="gradeA" style="background:white;">
-								<td class="sorting_1">单价</td>
-								<td class=" ">38.00</td>
-								<td class=" ">
-									<input type="number" class="form-control" placeholder="38.00">
-								</td>
-							</tr>
-							<tr class="gradeA " style="background:white;">
-								<td class="sorting_1">库存</td>
-								<td class=" ">未设置库存</td>
-								<td class=" ">
-									<span style="font-size:18px; cursor:pointer;">
-										<input type="checkbox" id="stockSetBtn" style="height:20px; width:20px; margin: 0 0 0 0;"/>
-										<span onclick="stockSetBtn.click()">设置库存</span>
-									</span>
-									</br>
-									<input type="number" class="form-control" placeholder="库存值" readonly="true">
-								</td>
-							</tr>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
-						<a data-toggle="modal" class="btn btn-primary" onclick="">保存</a>
-					</div>
-				</div>
-			</div>
-		</div>
+                                        <li class="info-element">
+                                            <img style="width:100px; height:100px; border: 1px solid #D3D4D3;" src="../../resource/productImg/1.png" />
+                                            <div style="width:260px; padding-left:3px;  float:right; ">
+                                                <div style="width:260px; height:33px; font-size:23px; font-weight: bold; overflow: hidden;">
+                                                    赣南苹果
+                                                </div>
+                                                <div style="width:260px; height:27px; overflow: hidden;">
+                                                    <i style="float:left;">库存:无</i>
+                                                    <i style="float:right;">6.00</i>
+                                                </div>
+                                                <div style="width:260px; height:39px; overflow: hidden; padding-top:5px; ">
+                                                    <a class="pull-right btn btn-xs btn-primary" data-toggle="modal" data-target="#updateProductPanel">修改</a>
+                                                </div>
+                                            </div>
+                                        </li>
 
-	</body>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-x2" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="ibox" style="border: 0px solid;">
+                                    <ul class="sortable-list connectList agile-list productListArea">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 编辑时的暂存区 -->
+        <div class="col-sm-3" style="width:470px; height:1050px; background:#F7ECB5; padding-top:20px; padding-bottom: 20px;">
+            <h3>编辑时的暂存区</h3>
+            <p class="small"><i class="fa fa-warning"></i> 该位置下的商品状态不会改变！</p>
+            <div class="tabs-container" style="height:950px;">
+                <div class="tabs-below" style="height:100%;">
+                    <div class="tab-content " style="height:100%; ">
+                        <div id="tab-t1" class="tab-pane active" style="height:100%; ">
+                            <div class="panel-body" style="height:100%; ">
+                                <div class="ibox" style="border: 0px solid; height:100%; overflow:auto;">
+                                    <ul class="sortable-list connectList agile-list productListArea">
+
+
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 上架商品栏 -->
+        <div class="col-sm-3" style="border-left:3px solid #953b39; width:575px; height:1050px; background:#F7ECB5; padding-top:20px; padding-bottom: 20px; margin-left:2px; ">
+            <h3>菜单</h3>
+            <p class="small"><i class="fa fa-warning"></i> 该区域的商品将会展示给客户！</p>
+            <div class="tabs-container" style="height:950px;">
+                <div class="tabs-left" style="height:100%;">
+                    <ul id="S_ON_TYPE_LIST" class="nav nav-tabs" style="height:100%; width:119px; overflow:auto; ">
+                        <li class="active" style="width:110px;">
+                            <a data-toggle="tab" href="#tab-s1" style="padding-left:0px; padding-right:0px; " aria-expanded="true"> 品类一</a>
+                        </li>
+                        <li class="" style="width:110px;">
+                            <a data-toggle="tab" href="#tab-s2" style="padding-left:0px; padding-right:0px; " aria-expanded="false"> 品类二</a>
+                        </li>
+                    </ul>
+                    <div id="S_ON_AREA_LIST" class="tab-content " style="height:100%; ">
+                        <div id="tab-s1" class="tab-pane active" style="height:100%; ">
+                            <div class="panel-body" style="height:100%; ">
+                                <div class="ibox" style="border: 0px solid; height:100%; overflow:auto;">
+                                    <ul class="sortable-list connectList agile-list productListArea">
+
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-s2" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="ibox" style="border: 0px solid;">
+                                    <ul class="sortable-list connectList agile-list productListArea">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
+        <a data-toggle="modal" class="btn btn-primary" onclick="DataModule.saveData()">保存</a>
+    </div>
+</div>
+
+<!-- 修改商品菜单信息 -->
+<div class="modal inmodal" id="updateProductPanel" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInDown">
+            <div class="modal-header" style="padding-bottom: 15px; padding-top:10px; ">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">关闭</span>
+                </button>
+                <span class="pull-left" style="font-size:17px; font-weight: bold;">商品数据修改</span>
+            </div>
+            <div class="modal-body" style="padding:0  0 0 0;">
+                <table id="OrderFormList" style="width:100%;" class="table table-striped table-bordered table-hover  dataTable">
+                    <thead>
+                    <tr>
+                        <td width="20%">类型</td>
+                        <td width="40%">原值</td>
+                        <td width="30%">新值</td>
+                    </tr>
+                    </thead>
+                    <tr class="gradeA ">
+                        <td class="sorting_1">商品名称</td>
+                        <td id="productNameText" class=" ">孜然牛肉</td>
+                        <td class=" ">
+                            <input type="text" class="form-control" placeholder="不可修改" readonly="true">
+                        </td>
+                    </tr>
+                    <tr class="gradeA" style="background:white;">
+                        <td class="sorting_1">单价</td>
+                        <td id="productPriceText" class=" ">38.00</td>
+                        <td class=" ">
+                            <input id="newProductPriceText" type="text" class="form-control" placeholder="新单价">
+                        </td>
+                    </tr>
+                    <tr class="gradeA " style="background:white;">
+                        <td class="sorting_1">库存</td>
+                        <td id="productStockText" class=" ">未设置库存</td>
+                        <td class=" ">
+                            <span style="font-size:18px; cursor:pointer;">
+                                <input onclick="ProductEditModule.updateCheckedStatus()" type="checkbox" id="stockSetBtn" style="height:20px; width:20px; margin: 0 0 0 0;"/>
+                                <span onclick="stockSetBtn.click()">设置库存</span>
+                            </span>
+                            </br>
+                            <input id="newProductStockText" type="number" class="form-control" placeholder="库存值" readonly="true">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
+                <a data-toggle="modal" class="btn btn-primary" onclick="ProductEditModule.saveData()">保存</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
 
 </html>

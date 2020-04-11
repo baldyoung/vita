@@ -1,6 +1,7 @@
 package com.baldyoung.vita.merchant.controller;
 
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
+import com.baldyoung.vita.common.pojo.dto.menu.NewMenuDto;
 import com.baldyoung.vita.common.pojo.dto.product.NewProductDto;
 import com.baldyoung.vita.common.pojo.entity.ProductEntity;
 import com.baldyoung.vita.common.pojo.exception.ExceptionBase;
@@ -27,6 +28,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
 
+/**
+ * 商品管理-后端接口
+ */
 @RestController
 @RequestMapping("mProduct")
 public class ProductController {
@@ -121,6 +125,21 @@ public class ProductController {
     @GetMapping("deleteProduct")
     public ResponseResult deleteProduct(@RequestParam("productId")Integer productId) {
         productService.deleteProduct(productId);
+        return success();
+    }
+
+    @GetMapping("all")
+    public ResponseResult getAllProduct() {
+        return success(productService.getAllProduct());
+    }
+
+    @PostMapping("updateSimple")
+    public ResponseResult updateSimple(@RequestParam("productId")Integer productId,
+                                       @RequestParam("productStockFlag")Integer productStockFlag,
+                                       @RequestParam(value = "productStock", required = false)Integer productStock,
+                                       @RequestParam(value = "productPrice", required = false)BigDecimal productPrice
+                                       ) {
+
         return success();
     }
 
