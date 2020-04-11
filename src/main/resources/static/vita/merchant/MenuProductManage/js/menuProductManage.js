@@ -407,12 +407,16 @@ var ProductEditModule = {
         $('#productNameText').text(data.productName);
         $('#productPriceText').text(data.productPrice);
         $('#newProductPriceText').val('');
+        $('#productStockText').text(data.productStockName);
         if (data.productStockFlag == 1) {
             // 有库存限制
             $('#stockSetBtn').prop('checked', 'true');
             $('#newProductStockText').removeAttr('readonly');
+            $('#newProductStockText').val(data.productStock);
+        } else {
+            $('#stockSetBtn').removeAttr('checked');
+            $('#newProductStockText').prop('readonly', 'true');
             $('#newProductStockText').val('');
-            $('#productStockText').val(data.productStockName);
         }
     },
     requestAndLoadData : function (pId) {
@@ -432,7 +436,7 @@ var ProductEditModule = {
                     swal('获取商品信息失败', data.desc, 'error');
                 } else {
                     data = data.data;
-                    data.productStockName = data.productStockFlag == 1 ? data.productStock : "无库存限制";
+                    data.productStockName = (data.productStockFlag == 1 ? data.productStock : "无库存限制");
                     ProductEditModule.loadData(data);
                 }
             },
