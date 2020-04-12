@@ -34,9 +34,17 @@ public class ProductServiceImpl {
 
     }
 
+    /**
+     * 修改商品信息
+     * @param newProductDto
+     * @throws ServiceException
+     */
     public void updateProduct(NewProductDto newProductDto) throws ServiceException {
         ProductEntity productEntity = toNewProductEntity(newProductDto);
-        ProductEntity existsObject = productDao.findProductByProductName(productEntity.getProductName());
+        ProductEntity existsObject = null;
+        if (null != productEntity.getProductName()) {
+            existsObject = productDao.findProductByProductName(productEntity.getProductName());
+        }
         if (null != existsObject && null != existsObject.getProductId()) {
             // 如果该商品名称已存在，则抛出业务异常
             if (!existsObject.getProductId().equals(productEntity.getProductId())) {

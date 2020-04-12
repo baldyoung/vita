@@ -118,4 +118,17 @@
         where isDelete = 0
     </select>
 
+    <update id="updateSimpleProductList" >
+        UPDATE v_product
+        SET
+            productTypeId = productTypeId,
+            productGrade = productGrade,
+            productIsShow = productIsShow
+        WHERE
+            productId IN
+            <foreach collection="productList" item="item" index="index" open="(" separator=", " close=")" >
+                item
+            </foreach>
+    </update>
+
 </mapper>

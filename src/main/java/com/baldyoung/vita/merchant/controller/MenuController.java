@@ -1,6 +1,8 @@
 package com.baldyoung.vita.merchant.controller;
 
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
+import com.baldyoung.vita.merchant.service.ProductServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,8 @@ import static java.lang.System.out;
 @RequestMapping("mMenu")
 public class MenuController {
 
+    @Autowired
+    private ProductServiceImpl productService;
 
     @PostMapping("menuUpdate")
     public ResponseResult updateMenu(@RequestBody Map param) {

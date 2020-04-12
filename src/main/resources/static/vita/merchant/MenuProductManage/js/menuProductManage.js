@@ -135,6 +135,10 @@ var DataModule = {
                     swal('获取商品数据失败', data.desc, 'error');
                 } else {
                     targetData = data.data;
+                    for (var i=0; i<targetData.length; i++) {
+                        var item = targetData[i];
+                        item.productStockName = (item.productStockFlag == 1 ? ("库存:"+item.productStock) : "无库存限制");
+                    }
                 }
             },
             error: function() {
@@ -257,8 +261,8 @@ var OFFModule = {
             '<div style="width:255px; height:33px; font-size:23px; font-weight: bold; overflow: hidden;">' + data.productName +
             '</div>' +
             '<div style="width:255px; height:27px; overflow: hidden;">' +
-            '<i style="float:left; font-style:normal;">单价:</i>' +
-            '<i style="float:right;">'+data.productPrice+'</i>' +
+            '<i id="pUnitStockText'+data.productId+'" style="float:left; font-style:normal;">'+data.productStockName+'</i>' +
+            '<i id="pUnitPriceText'+data.productId+'" style="float:right;">'+data.productPrice+'</i>' +
             '</div>' +
             '<div style="width:255px; height:39px; overflow: hidden; padding-top:5px; ">' +
             '<a onclick="ProductEditModule.requestAndLoadData('+data.productId+')" class="pull-right btn btn-xs btn-primary" data-toggle="modal" data-target="#updateProductPanel">修改</a>' +
@@ -360,8 +364,8 @@ var ONModule = {
             '<div style="width:255px; height:33px; font-size:23px; font-weight: bold; overflow: hidden;">' + data.productName +
             '</div>' +
             '<div style="width:255px; height:27px; overflow: hidden;">' +
-            '<i style="float:left; font-style:normal;">单价:</i>' +
-            '<i style="float:right;">'+data.productPrice+'</i>' +
+            '<i id="pUnitStockText'+data.productId+'" style="float:left; font-style:normal;">'+data.productStockName+'</i>' +
+            '<i id="pUnitPriceText'+data.productId+'" style="float:right;">'+data.productPrice+'</i>' +
             '</div>' +
             '<div style="width:255px; height:39px; overflow: hidden; padding-top:5px; ">' +
             '<a onclick="ProductEditModule.requestAndLoadData('+data.productId+')" class="pull-right btn btn-xs btn-primary" data-toggle="modal" data-target="#updateProductPanel">修改</a>' +
@@ -459,9 +463,14 @@ var ProductEditModule = {
                 if (data.code != 0) {
                     swal('修改失败', data.desc, 'error');
                 } else {
+                    $('#btnCloseProductEdit').click();
                     swal('修改成功', '', 'success');
                     // --------------------------------------------------------------------- 修改本地对应的展示单元
-
+                    t.productStockName = (t.productStockFlag == 1 ? ("库存:"+t.productStock) : "无库存限制");
+                    $('#pUnitStockText'+t.productId).text(t.productStockName);
+                    if (!GlobalMethod.isEmpty(t.productPrice)) {
+                        $('#pUnitPriceText'+t.productId).text(t.productPrice);
+                    }
                 }
             },
             error: function() {

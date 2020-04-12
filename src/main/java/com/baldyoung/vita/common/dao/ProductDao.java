@@ -26,4 +26,6 @@ public interface ProductDao {
     void deleteProduct(@Param("productId")Integer productId);
 
     List<ProductEntity> selectAllProduct();
+
+    void updateSimpleProductList(@Param("productTypeId")Integer typeId, @Param("productIsShow")Integer productIsShow, @Param("productIdList")List<Integer> productIdList);
 }

@@ -133,13 +133,31 @@ public class ProductController {
         return success(productService.getAllProduct());
     }
 
+    /**
+     * 为菜单编辑时提供商品的简要属性（价格、库存）修改
+     * @param productId
+     * @param productStockFlag
+     * @param productStock
+     * @param productPrice
+     * @return
+     * @throws ServiceException
+     */
     @PostMapping("updateSimple")
     public ResponseResult updateSimple(@RequestParam("productId")Integer productId,
                                        @RequestParam("productStockFlag")Integer productStockFlag,
                                        @RequestParam(value = "productStock", required = false)Integer productStock,
                                        @RequestParam(value = "productPrice", required = false)BigDecimal productPrice
-                                       ) {
-
+                                       ) throws ServiceException {
+        boolean invalid = (0 != productStockFlag.intValue() && 1 != productStockFlag.intValue()) || (1 == productStockFlag.intValue() && null == productStock);
+        if (invalid) {
+            return defeat("非法数据");
+        }
+        NewProductDto newProductDto = new NewProductDto();
+        newProductDto.setProductId(productId);
+        newProductDto.setProductStock(productStock);
+        newProductDto.setProductStockFlag(productStockFlag);
+        newProductDto.setProductPrice(productPrice);
+        productService.updateProduct(newProductDto);
         return success();
     }
 
