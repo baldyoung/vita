@@ -27,5 +27,12 @@ public interface ProductDao {
 
     List<ProductEntity> selectAllProduct();
 
+    /**
+     * 统一修改商品的类型和上下架标识
+     * @param typeId
+     * @param productIsShow
+     * @param productIdList
+     */
     void updateSimpleProductList(@Param("productTypeId")Integer typeId, @Param("productIsShow")Integer productIsShow, @Param("productIdList")List<Integer> productIdList);
+
 }
