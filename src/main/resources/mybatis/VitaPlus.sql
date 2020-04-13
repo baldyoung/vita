@@ -35,7 +35,7 @@ CREATE TABLE V_Product (
 	productIsShow TINYINT NOT NULL COMMENT'商品上架标识（0/未上架, 1/已上架）：非空',
 	productImgName VARCHAR(100) NOT NULL COMMENT'商品图片：非空',
 	productInfo VARCHAR(200) COMMENT'商品描述',
-	productGrade SMALLINT UNSIGNED NOT NULL COMMENT'商品优先级：非空，其为用于商品排序的首要标准',
+	productGrade SMALLINT UNSIGNED COMMENT'[弃用]商品优先级：非空，其为用于商品排序的首要标准',
 	isDelete TINYINT DEFAULT 0 NOT NULL COMMENT'删除标识（0/未删除, 1/已删除）：非空',
 	createDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT'创建时间：非空',
 	updateDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT'修改时间：非空',

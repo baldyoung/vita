@@ -18,6 +18,7 @@ public class ProductSortServiceImpl {
 
     private Map<Integer, Integer> productSortMap;
 
+    public static final Integer DEFAULT_PRODUCT_GRADE = 0;
 
     @PostConstruct
     public void init() {
@@ -31,7 +32,7 @@ public class ProductSortServiceImpl {
      */
     public Integer getProductGradeByProductId(Integer productId) {
         if (null == productSortMap) {
-            return 0;
+            return DEFAULT_PRODUCT_GRADE;
         }
         return productSortMap.get(productId);
     }
@@ -55,6 +56,39 @@ public class ProductSortServiceImpl {
             map.put(entity.getProductId(), entity.getProductGrade());
         }
         return map;
+    }
+
+    /**
+     * 新增一个商品的排序记录
+     * @param productId
+     */
+    public void setProductGrade(Integer productId) {
+        setProductGrade(productId, DEFAULT_PRODUCT_GRADE);
+    }
+
+    /**
+     * 新增一个商品的排序记录
+     * @param productId
+     * @param productGrade
+     */
+    public void setProductGrade(Integer productId, Integer productGrade) {
+        ProductSortEntity entity = new ProductSortEntity();
+        entity.setProductId(productId);
+        entity.setProductGrade(productGrade);
+        productSortDao.insert(entity);
+        productSortMap.put(productId, productGrade);
+    }
+
+    /**
+     * 设置一堆的商品排序记录（这个描述非常棒！）
+     * @param list
+     */
+    public void setProductGradeList(List<ProductSortEntity> list) {
+        productSortDao.insertList(list);
+        productSortMap.clear();
+        for (ProductSortEntity entity : list) {
+            productSortMap.put(entity.getProductId(), entity.getProductGrade());
+        }
     }
 
 }

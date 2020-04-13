@@ -80,20 +80,23 @@ var GlobalMethod = {
 				}
 			)
 		}
-	},
-	base64ToImg : function(dataurl, filename) {
-
-		var arr = dataurl.split(',')
-		var mime = arr[0].match(/:(.*?);/)[1]
-		var suffix = mime.split('/')[1]
-		var bstr = atob(arr[1])
-		var n = bstr.length
-		var u8arr = new Uint8Array(n)
-		while (n--) {
-			u8arr[n] = bstr.charCodeAt(n)
-		}
-		return new File([u8arr], `${filename}.${suffix}`, {
-			type: mime
-		})
 	}
+
+}
+
+function sortProductList(list) {
+	var data = [], k = 0;
+	while (list.length > 0) {
+		var t = 0, cell = list[t];
+		for (var i=t+1; i<list.length; i++) {
+			var item = list[i];
+			if (cell.productGrade < item.productGrade) {
+				t = i;
+				cell = item;
+			}
+		}
+		data[k++] = cell;
+		list.splice(t, 1);
+	}
+	return data;
 }

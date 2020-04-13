@@ -11,6 +11,8 @@ public interface ProductSortDao {
 
     List<ProductSortEntity> selectAll();
 
+    void insert(@Param("productSort")ProductSortEntity productSortEntity);
+
     void insertList(@Param("sortList")List<ProductSortEntity> productSortEntityList);
 
     void deleteAll();

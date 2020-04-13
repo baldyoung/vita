@@ -60,7 +60,7 @@ var DataModule = {
             for (var j=0; j<productList.length; j++) {
                 if (productList[j].productTypeId == typeId) {
                     var temp = productList[j];
-                    if (temp.isShow == 1) {
+                    if (temp.productIsShow == 1) {
                         onList[onList.length] = temp;
                     } else {
                         offList[offList.length] = temp;
@@ -135,6 +135,7 @@ var DataModule = {
                     swal('获取商品数据失败', data.desc, 'error');
                 } else {
                     targetData = data.data;
+                    targetData = sortProductList(targetData);
                     for (var i=0; i<targetData.length; i++) {
                         var item = targetData[i];
                         item.productStockName = (item.productStockFlag == 1 ? ("库存:"+item.productStock) : "无库存限制");
@@ -149,7 +150,7 @@ var DataModule = {
     },
     sendData : function(t) {
         $.ajax({
-            url: GlobalConfig.serverAddress + "/mMenu/menuUpdate",
+            url: GlobalConfig.serverAddress + "/mMenu/menuProductUpdate",
             type: 'POST',
             cache: false,
             // dataType: 'json',
@@ -199,7 +200,7 @@ var OFFModule = {
             for (var j=0; j<productUnitList.length; j++) {
                 var cell = $(productUnitList[j]);
                 var productId = cell.attr("productid");
-                pIdList[pIdList.length] = productId;
+                pIdList[pIdList.length] = parseInt(productId);
             }
             var temp = {
                 productTypeId : typeId,
@@ -299,7 +300,7 @@ var ONModule = {
             for (var j=0; j<productUnitList.length; j++) {
                 var cell = $(productUnitList[j]);
                 var productId = cell.attr("productid");
-                pIdList[pIdList.length] = productId;
+                pIdList[pIdList.length] = parseInt(productId);
             }
             var temp = {
                 productTypeId : typeId,
@@ -325,7 +326,7 @@ var ONModule = {
         targetB.append(OFFModule.createTypeAreaHTML(temp));*/
         for(var i=0; i<data.length; i++) {
             var item = data[i];
-            if (item.productTypeId == "null") {
+            if (item.productTypeId == "noType") {
                 continue;
             }
             target.append(ONModule.createTypeUnitHTML(item));
@@ -334,7 +335,7 @@ var ONModule = {
         }
     },
     loadProduct : function (ptId, productList) {
-        var target = $('#offProductList'+ptId);
+        var target = $('#onProductList'+ptId);
         for (var i=0; i<productList.length; i++) {
             var item = productList[i];
             target.append(ONModule.createProductUnitHTML(item));

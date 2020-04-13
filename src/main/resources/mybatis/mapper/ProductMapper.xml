@@ -121,11 +121,16 @@
     <update id="updateSimpleProductList" >
         UPDATE v_product
         SET
-            productTypeId = productTypeId,
-            productIsShow = productIsShow
+            <if test="productTypeId == null">
+                productTypeId = null,
+            </if>
+            <if test="productTypeId != null">
+                productTypeId = #{productTypeId},
+            </if>
+            productIsShow = #{productIsShow}
         WHERE
             productId IN
-            <foreach collection="productList" item="item" index="index" open="(" separator=", " close=")" >
+            <foreach collection="productIdList" item="item" index="index" open="(" separator=", " close=")" >
                 #{item}
             </foreach>
     </update>

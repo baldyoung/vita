@@ -22,6 +22,9 @@ public class ProductServiceImpl {
     @Autowired
     private ProductDao productDao;
 
+    @Autowired
+    private ProductSortServiceImpl productSortService;
+
     public void addProduct(NewProductDto newProductDto) throws ServiceException {
         ProductEntity productEntity = toNewProductEntity(newProductDto);
         ProductEntity existsObject = productDao.findProductByProductName(productEntity.getProductName());
@@ -55,6 +58,12 @@ public class ProductServiceImpl {
         productDao.updateProduct(productEntity);
     }
 
+    /**
+     * 获取特定的商品统计数据
+     * @param productTypeId
+     * @param isShow
+     * @return
+     */
     public Map<String, Object> getProductTargetCountInfo(Integer productTypeId, Integer isShow) {
         ProductEntity entity = new ProductEntity();
         if (productTypeId != null && productTypeId.intValue() != -1) {
@@ -74,6 +83,14 @@ public class ProductServiceImpl {
         return result;
     }
 
+    /**
+     * 获取分页的商品集合
+     * @param productTypeId
+     * @param isShow
+     * @param startIndex
+     * @param maxSize
+     * @return
+     */
     public List<ProductEntity> getProductPagingList(Integer productTypeId, Integer isShow, Integer startIndex, Integer maxSize) {
         ProductEntity entity = new ProductEntity();
         if (productTypeId != null && productTypeId.intValue() != -1) {
@@ -83,19 +100,45 @@ public class ProductServiceImpl {
         return productDao.selectProduct(entity, startIndex, maxSize);
     }
 
+    /**
+     * 通过商品编号获取商品信息
+     * @param productId
+     * @return
+     */
     public ProductEntity getProductByProductId(Integer productId) {
         ProductEntity productEntity = productDao.findProductByProductId(productId);
         return productEntity;
     }
 
+    /**
+     * 删除指定商品
+     * @param productId
+     */
     public void deleteProduct(Integer productId) {
         productDao.deleteProduct(productId);
     }
 
+    /**
+     * 获取所有商品，附带每个商品的排序值
+     * @return
+     */
     public List<ProductEntity> getAllProduct() {
-        return productDao.selectAllProduct();
+        List<ProductEntity> list = productDao.selectAllProduct();
+        for (ProductEntity entity : list) {
+            entity.setProductGrade(productSortService.getProductGradeByProductId(entity.getProductId()));
+        }
+        return list;
     }
 
+    public void updateSimpleProductList(Integer typeId, Integer isShow, List<Integer> productIdList) {
+        productDao.updateSimpleProductList(typeId, isShow, productIdList);
+    }
+
+    /**
+     * 将NewProductDto转换为ProductEntity
+     * @param newProductDto
+     * @return
+     */
     private ProductEntity toNewProductEntity(NewProductDto newProductDto) {
         ProductEntity productEntity = new ProductEntity();
         productEntity.setProductId(newProductDto.getProductId());

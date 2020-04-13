@@ -1,5 +1,7 @@
 package com.baldyoung.vita.common.utility;
 
+import java.util.Collection;
+
 public class CommonMethod {
 
     public static String ObjectToString(Object  object) {
@@ -27,5 +29,25 @@ public class CommonMethod {
             }
         }
         return false;
+    }
+
+    public static boolean isEmptyCollection(Collection collection) {
+        if (null == collection) {
+            return true;
+        }
+        return collection.size() == 0;
+    }
+
+    public static Integer toInteger(Object object) {
+        if (null == object) {
+            return null;
+        }
+        Integer result;
+        try {
+            result = Integer.parseInt(String.valueOf(object));
+        } catch (NumberFormatException e) {
+            return null;
+        }
+        return result;
     }
 }

@@ -13,7 +13,7 @@
     </sql>
 
 
-    <select id="selectAll" resultMap="">
+    <select id="selectAll" resultMap="baseMap">
         select
         <include refid="allFiled"></include>
         from v_productSort
@@ -22,6 +22,12 @@
     <delete id="deleteAll">
         delete from v_productSort
     </delete>
+
+    <insert id="insert">
+        insert v_productSort(productId, productGrade)
+        values
+        (#{productSort.productId}, #{productSort.productGrade})
+    </insert>
 
     <insert id="insertList">
         insert v_productSort (productId, productGrade)
