@@ -113,6 +113,12 @@ public class ProductController {
         }
         return success();
     }
+
+    /**
+     * 获取指定商品信息
+     * @param productId
+     * @return
+     */
     @GetMapping("getProduct")
     public ResponseResult getProduct(@RequestParam("productId")Integer productId) {
         ProductEntity productEntity = productService.getProductByProductId(productId);
@@ -122,12 +128,21 @@ public class ProductController {
         return success(productEntity);
     }
 
+    /**
+     * 删除指定商品
+     * @param productId
+     * @return
+     */
     @GetMapping("deleteProduct")
     public ResponseResult deleteProduct(@RequestParam("productId")Integer productId) {
         productService.deleteProduct(productId);
         return success();
     }
 
+    /**
+     * 获取所有商品
+     * @return
+     */
     @GetMapping("all")
     public ResponseResult getAllProduct() {
         return success(productService.getAllProduct());
