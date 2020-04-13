@@ -108,6 +108,7 @@ var DataModule = {
                     swal('获取商品类型数据失败', data.desc, 'error');
                 } else {
                     targetData = data.data;
+                    targetData = sortProductTypeList(targetData);
                     targetData[targetData.length] = {
                         productTypeId : "noType",
                         productTypeName : '【无类型】'

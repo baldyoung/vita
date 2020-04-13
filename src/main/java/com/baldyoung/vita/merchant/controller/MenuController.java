@@ -93,16 +93,17 @@ public class MenuController {
             productTypeService.updateSimpleProductTypeList(onTypeList, 1);
         }
         // 修改品类排序记录
+        Integer grade = 0;
         List<ProductTypeSortEntity> list = new ArrayList(onTypeList.size() + offTypeList.size());
-        for (int i=onTypeList.size()-1, grade = 1; i>=0; i--) {
+        for (int i=offTypeList.size()-1; i>=0; i--) {
             ProductTypeSortEntity entity = new ProductTypeSortEntity();
-            entity.setProductTypeId(onTypeList.get(i));
+            entity.setProductTypeId(offTypeList.get(i));
             entity.setProductTypeGrade(grade++);
             list.add(entity);
         }
-        for (int i=offTypeList.size()-1, grade = 1; i>=0; i--) {
+        for (int i=onTypeList.size()-1; i>=0; i--) {
             ProductTypeSortEntity entity = new ProductTypeSortEntity();
-            entity.setProductTypeId(offTypeList.get(i));
+            entity.setProductTypeId(onTypeList.get(i));
             entity.setProductTypeGrade(grade++);
             list.add(entity);
         }
