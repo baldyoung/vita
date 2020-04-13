@@ -39,5 +39,7 @@ public interface ProductTypeDao {
 
     ProductTypeEntity selectByProductTypeId(@Param("productTypeId")Integer productTypeId);
 
+    void updateSimpleProductType(@Param("isShow")Integer isShow, @Param("productTypeIdList")List<Integer> productTypeIdList);
+
 
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baldyoung.vita.common.dao.ProductTypeSortDao">
+
+    <resultMap id="baseMap" type="com.baldyoung.vita.common.pojo.entity.ProductTypeSortEntity">
+        <id property="productTypeSortId" column="productTypeSortId"></id>
+        <result property="productTypeId" column="productTypeId"></result>
+        <result property="productTypeGrade" column="productTypeGrade"></result>
+    </resultMap>
+    <sql id="allFiled" >
+        productTypeSortId, productTypeId, productTypeGrade
+    </sql>
+
+
+    <select id="selectAll" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from v_productTypeSort
+    </select>
+
+    <delete id="deleteAll">
+        delete from v_productTypeSort
+    </delete>
+
+    <insert id="insert">
+        insert v_productTypeSort(productTypeId, productTypeGrade)
+        values
+        (#{productTypeSort.productTypeId}, #{productTypeSort.productTypeGrade})
+    </insert>
+
+    <insert id="insertList">
+        insert v_productTypeSort (productTypeId, productTypeGrade)
+        values
+        <foreach collection="sortList" item="item" index="index" open="" separator="," close="">
+            (#{item.productTypeId}, #{item.productTypeGrade})
+        </foreach>
+    </insert>
+
+</mapper>

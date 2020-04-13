@@ -2,16 +2,24 @@ package com.baldyoung.vita.merchant.service;
 
 import com.baldyoung.vita.common.dao.ProductSortDao;
 import com.baldyoung.vita.common.pojo.entity.ProductSortEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 商品排序服务
+ */
 @Service
 public class ProductSortServiceImpl {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     ProductSortDao productSortDao;
@@ -23,6 +31,7 @@ public class ProductSortServiceImpl {
     @PostConstruct
     public void init() {
         productSortMap = getAllProductSortMapFromDB();
+        productSortMap = Collections.synchronizedMap(productSortMap);
     }
 
     /**
@@ -31,10 +40,11 @@ public class ProductSortServiceImpl {
      * @return
      */
     public Integer getProductGradeByProductId(Integer productId) {
-        if (null == productSortMap) {
+        Map<Integer, Integer> temp = productSortMap;
+        if (null == temp) {
             return DEFAULT_PRODUCT_GRADE;
         }
-        return productSortMap.get(productId);
+        return temp.get(productId);
     }
 
     /**
@@ -75,6 +85,7 @@ public class ProductSortServiceImpl {
         ProductSortEntity entity = new ProductSortEntity();
         entity.setProductId(productId);
         entity.setProductGrade(productGrade);
+        logger.warn("新增一条商品排序记录>>>"+entity.toString());
         productSortDao.insert(entity);
         productSortMap.put(productId, productGrade);
     }
@@ -84,10 +95,12 @@ public class ProductSortServiceImpl {
      * @param list
      */
     public void setProductGradeList(List<ProductSortEntity> list) {
+        Map<Integer, Integer> temp = productSortMap;
+        logger.warn("新增多条商品排序记录>>>"+list.toString());
         productSortDao.insertList(list);
-        productSortMap.clear();
+        temp.clear();
         for (ProductSortEntity entity : list) {
-            productSortMap.put(entity.getProductId(), entity.getProductGrade());
+            temp.put(entity.getProductId(), entity.getProductGrade());
         }
     }
 

@@ -20,6 +20,13 @@
 		<script src="../../res/js/jquery.min.js?v=2.1.4"></script>
 		<script src="../../res/js/bootstrap.min.js?v=3.3.6"></script>
 		<script src="../../res/js/jquery-ui-1.10.4.min.js"></script>
+		<!-- swal -->
+		<link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+		<script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
+		<!-- 配置文件 -->
+		<script src="../../resource/configFile/globalConfig.js"></script>
+		<!-- 自定义 -->
+		<script src="js/menuProductTypeManage.js"></script>
 		<style>
 			.productListArea {
 				border-bottom: 1px solid #ADADAD;
@@ -42,35 +49,34 @@
 			<div class="modal-dialog" style="width:800px; height:1050px; background:#EED1B3; padding: 20px 20px 10px 20px;">
 				<h3>菜单-品类操作</h3>
 				<div class="row" style="width:790px; height:900px;">
-					<div class="col-sm-6" style="height:100%; ">
-						<div class="ibox" style="height:100%; ">
-							<div class="ibox-content" style="height:100%; ">
-								<h3>上架品类</h3>
-								<p class="small"><i class="fa fa-bookmark"></i> 顾客可以看到的品类</p>
-								<ul class="sortable-list connectList agile-list productListArea" style="height:800px; overflow: auto;">
-									<li class="warning-element">
-										主食
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
+					<!-- 下架区 -->
 					<div class="col-sm-6" style="height:100%; ">
 						<div class="ibox" style="height:100%; ">
 							<div class="ibox-content" style="height:100%; ">
 								<h3>下架品类</h3>
 								<p class="small"><i class="fa fa-bookmark-o"></i> 顾客不可见的品类</p>
-								<ul class="sortable-list connectList agile-list productListArea" style="height:800px; overflow: auto;">
-									
+								<ul id="offProductTypeArea" class="sortable-list connectList agile-list productListArea" style="height:800px; overflow: auto;">
+
 								</ul>
 							</div>
 						</div>
 					</div>
+					<!-- 上架区 -->
+					<div class="col-sm-6" style="height:100%; ">
+						<div class="ibox" style="height:100%; ">
+							<div class="ibox-content" style="height:100%; ">
+								<h3>上架品类</h3>
+								<p class="small"><i class="fa fa-bookmark"></i> 顾客可以看到的品类</p>
+								<ul id="onProductTypeArea" class="sortable-list connectList agile-list productListArea" style="height:800px; overflow: auto;">
 
+								</ul>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
-					<a data-toggle="modal" class="btn btn-primary" onclick="">保存</a>
+					<a data-toggle="modal" class="btn btn-primary" onclick="DataModule.saveAction()">保存</a>
 				</div>
 			</div>
 		</div>

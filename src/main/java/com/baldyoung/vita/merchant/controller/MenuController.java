@@ -2,8 +2,11 @@ package com.baldyoung.vita.merchant.controller;
 
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.entity.ProductSortEntity;
+import com.baldyoung.vita.common.pojo.entity.ProductTypeSortEntity;
 import com.baldyoung.vita.merchant.service.ProductServiceImpl;
 import com.baldyoung.vita.merchant.service.ProductSortServiceImpl;
+import com.baldyoung.vita.merchant.service.ProductTypeServiceImpl;
+import com.baldyoung.vita.merchant.service.ProductTypeSortServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +32,13 @@ public class MenuController {
     private ProductServiceImpl productService;
 
     @Autowired
+    private ProductTypeServiceImpl productTypeService;
+
+    @Autowired
     private ProductSortServiceImpl productSortService;
+
+    @Autowired
+    private ProductTypeSortServiceImpl productTypeSortService;
 
     @PostMapping("menuProductUpdate")
     public ResponseResult updateMenu(@RequestBody Map param) {
@@ -68,6 +77,36 @@ public class MenuController {
             sortList.add(entity);
         }
         productSortService.setProductGradeList(sortList);
+        return success();
+    }
+
+    @PostMapping("menuProductTypeUpdate")
+    public ResponseResult updateMenuProductType(@RequestBody Map param) {
+        out.println(param.toString());
+        List<Integer> onTypeList = (List<Integer>) param.get("onTypeList");
+        List<Integer> offTypeList = (List<Integer>) param.get("offTypeList");
+        // 修改品类上下架标识
+        if (!isEmptyCollection(offTypeList)) {
+            productTypeService.updateSimpleProductTypeList( offTypeList, 0);
+        }
+        if (!isEmptyCollection(onTypeList)) {
+            productTypeService.updateSimpleProductTypeList(onTypeList, 1);
+        }
+        // 修改品类排序记录
+        List<ProductTypeSortEntity> list = new ArrayList(onTypeList.size() + offTypeList.size());
+        for (int i=onTypeList.size()-1, grade = 1; i>=0; i--) {
+            ProductTypeSortEntity entity = new ProductTypeSortEntity();
+            entity.setProductTypeId(onTypeList.get(i));
+            entity.setProductTypeGrade(grade++);
+            list.add(entity);
+        }
+        for (int i=offTypeList.size()-1, grade = 1; i>=0; i--) {
+            ProductTypeSortEntity entity = new ProductTypeSortEntity();
+            entity.setProductTypeId(offTypeList.get(i));
+            entity.setProductTypeGrade(grade++);
+            list.add(entity);
+        }
+        productTypeSortService.setProductTypeGradeList(list);
         return success();
     }
 

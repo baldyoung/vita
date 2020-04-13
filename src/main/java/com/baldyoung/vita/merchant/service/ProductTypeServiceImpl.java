@@ -8,6 +8,7 @@ import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceExceptio
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,9 @@ public class ProductTypeServiceImpl {
     @Autowired
     private ProductTypeDao productTypeDao;
 
+    @Autowired
+    private ProductTypeSortServiceImpl productTypeSortService;
+
     public List<ProductTypeDto> getAllProductType() {
         List<ProductTypeEntity> productTypeEntityList = productTypeDao.selectAll();
         List<ProductTypeDto> result = new ArrayList(productTypeEntityList.size());
@@ -29,7 +33,7 @@ public class ProductTypeServiceImpl {
             productTypeDto = new ProductTypeDto();
             productTypeDto.setProductTypeId(entity.getProductTypeId());
             productTypeDto.setProductTypeName(entity.getProductTypeName());
-            productTypeDto.setProductTypeGrade(entity.getProductTypeGrade());
+            productTypeDto.setProductTypeGrade(productTypeSortService.getProductTypeGradeByProductTypeId(entity.getProductTypeId()));
             productTypeDto.setIsShow(entity.getIsShow());
             result.add(productTypeDto);
         }
@@ -63,5 +67,9 @@ public class ProductTypeServiceImpl {
 
     public ProductTypeEntity findByProductTypeId(Integer productTypeId) {
         return productTypeDao.selectByProductTypeId(productTypeId);
+    }
+
+    public void updateSimpleProductTypeList(List<Integer> list, Integer isShow) {
+        productTypeDao.updateSimpleProductType(isShow, list);
     }
 }

@@ -84,6 +84,11 @@ var GlobalMethod = {
 
 }
 
+/**
+ * 按商品等级排序商品集
+ * @param list
+ * @returns {Array}
+ */
 function sortProductList(list) {
 	var data = [], k = 0;
 	while (list.length > 0) {
@@ -100,3 +105,26 @@ function sortProductList(list) {
 	}
 	return data;
 }
+
+/**
+ * 按品类等级排序品类集合
+ * @param list
+ * @returns {Array}
+ */
+function sortProductTypeList(list) {
+	var data = [], k = 0;
+	while (list.length > 0) {
+		var t = 0, cell = list[t];
+		for (var i=t+1; i<list.length; i++) {
+			var item = list[i];
+			if (cell.productTypeGrade < item.productTypeGrade) {
+				t = i;
+				cell = item;
+			}
+		}
+		data[k++] = cell;
+		list.splice(t, 1);
+	}
+	return data;
+}
+

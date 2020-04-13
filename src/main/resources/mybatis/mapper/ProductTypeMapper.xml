@@ -68,4 +68,14 @@
         WHERE productTypeName = #{productTypeName}
     </select>
 
+    <update id="updateSimpleProductType">
+        update v_productType
+        set isShow = #{isShow}
+        where
+        productTypeId in
+        <foreach collection="productTypeIdList" index="index" item="item" open="(" separator=", " close=")">
+            #{item}
+        </foreach>
+    </update>
+
 </mapper>
