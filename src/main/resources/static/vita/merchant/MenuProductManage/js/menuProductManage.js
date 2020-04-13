@@ -327,7 +327,7 @@ var ONModule = {
         targetB.append(OFFModule.createTypeAreaHTML(temp));*/
         for(var i=0; i<data.length; i++) {
             var item = data[i];
-            if (item.productTypeId == "noType") {
+            if (item.productTypeId == "noType" || item.isShow == 0) {
                 continue;
             }
             target.append(ONModule.createTypeUnitHTML(item));
