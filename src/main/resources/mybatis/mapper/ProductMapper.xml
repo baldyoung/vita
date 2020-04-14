@@ -135,6 +135,19 @@
             </foreach>
     </update>
 
+    <select id="selectProductWithCondition" resultMap="baseMap">
+        SELECT productId, productTypeId, productName, productAttributeTypeId, productPrice, productStockFlag, productStock, productSalesVolume, productIsShow, productImgName, productInfo, productGrade, isDelete, createDateTime, updateDateTime
+        FROM V_Product
+        where isDelete = 0
+        <if test="condition.productTypeId != null">
+            and productTypeId = #{condition.productTypeId}
+        </if>
+        <if test="condition.productIsShow != null">
+            and productIsShow = #{condition.productIsShow}
+        </if>
+        order by productId desc
+    </select>
+
 
 
 </mapper>

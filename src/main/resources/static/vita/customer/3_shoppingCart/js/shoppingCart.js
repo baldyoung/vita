@@ -155,8 +155,7 @@ var ShopingCartModule = {
 	},
 	readySubmitOrder: function() { // 准备生成预订单
 		console.log(JSON.stringify(ShopingCartModule.productListBuffer));
-		//return;
-		if (GlobalConfig.currentServiceType == 'take-out') {
+		if (false && GlobalConfig.currentServiceType == 'take-out') {
 			layer.open({
 				content : '当前为外卖服务，稍后需要您提供位置信息！',
 				btn : ['好的', '拒绝'],

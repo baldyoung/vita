@@ -35,4 +35,6 @@ public interface ProductDao {
      */
     void updateSimpleProductList(@Param("productTypeId")Integer typeId, @Param("productIsShow")Integer productIsShow, @Param("productIdList")List<Integer> productIdList);
 
+    List<ProductEntity> selectProductWithCondition(@Param("condition")ProductEntity entity);
+
 }

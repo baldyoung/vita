@@ -11,7 +11,7 @@
 
 
 /**
- * 商品类型控制模块
+ * 品类控制模块
  */
 var ProductTypeModule = {
 	displayAreaId : '#typeDisplayArea',
@@ -21,10 +21,30 @@ var ProductTypeModule = {
 		ProductTypeModule.requestData();
 	},
 	requestData : function() {
-		// 异步的ajax請求
-		var temp = test_productTypeList;
-		ProductTypeModule.showData(temp);
-		ProductTypeModule.selectUnit(temp[0].typeId);
+		var targetData = [];
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/productType/list",
+			type: 'GET',
+			cache: false,
+			dataType: 'json',
+			//async: false, //设置同步
+			contentType: "application/json; charset=utf-8",
+			data: null,
+			success: function(data) {
+				if (data.code == 0) {
+					targetData = data.data;
+					targetData = sortProductTypeList(targetData);
+					ProductTypeModule.showData(targetData);
+					ProductTypeModule.selectUnit(targetData[0].productTypeId);
+				} else {
+					swal('获取品类数据失败', data.desc, 'error');
+				}
+			},
+			error: function() {
+				swal('服务器连接失败', '请检查网络是否通畅', 'warning');
+			}
+		});
+		//return targetData;
 	},
 	showData : function(t) {
 		var str = '<div class="classify-perch"></div>';
@@ -39,30 +59,18 @@ var ProductTypeModule = {
 		$(ProductTypeModule.displayAreaId).html(str);
 	},
 	createDisplayCellHTML : function(t) {
-		var str = '<span id="typeUnit' + t.typeId + '" class="classify-text1" onclick="ProductTypeModule.selectUnit(' + t.typeId + ')" >' + t.typeName + '</span>';
+		var str = '<span id="typeUnit' + t.productTypeId + '" class="classify-text1" onclick="ProductTypeModule.selectUnit(' + t.productTypeId + ')" >' + t.productTypeName + '</span>';
 		return str;
 	},
 	selectUnit : function(t) {
+		console.log("t:"+t);
 		$('#typeUnit'+ProductTypeModule.selectedTypeId).removeClass('pitch-on2');
 		ProductTypeModule.selectedTypeId = t;
 		$('#typeUnit'+t).addClass('pitch-on2');
-		ProductModule.requestData(ProductTypeModule.selectedTypeId);
+		ProductModule.requestAndLoadData(ProductTypeModule.selectedTypeId);
 	}
 };
 
-
-/*
-[{
-	productId : ,
-	productImg : ,
-	productName : ,
-	productPrice : ,
-	productStock : (undefined:无限制/Integer:剩余库存),
-	productAmountInCart : 当前商品在该用户所在购物车的数量,
-	productGrade : 默认的排序等级,
-	productSalesAmount : 该商品的销售总量,
-	
- */
 /**
  * 商品控制模块
  */
@@ -71,22 +79,46 @@ var ProductModule = {
 	productListBuffer : [], // 第一个数组存储的是可以下单的商品，第二个商品存储的是无法下单的商品
 	sortType : 'productGrade',
 	sortRule : 'desc', // 默认从大到下, 从小到大为asc
-	requestData : function(tProductTypeId) {
+	requestAndLoadData : function(tProductTypeId) {
+		console.log("request typeId "+tProductTypeId);
 		// 同步ajax获取指定类型的商品数据
-		var temp = test_productList;
-		var i, j=0, k=0;
-		ProductModule.productListBuffer[0] = [];
-		ProductModule.productListBuffer[1] = [];
-		for (i=0; i<temp.length; i++) {
-			if (undefined != temp[i].productStock && temp[i].productStock <= 0) {
-				// 无效商品
-				ProductModule.productListBuffer[1][j++] = temp[i];
-			} else {
-				// 有效商品
-				ProductModule.productListBuffer[0][k++] = temp[i];
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/product/validProductForType",
+			type: 'GET',
+			cache: false,
+			dataType : 'json',
+			async: false, //设置同步
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			// contentType : 'application/json; charset=utf-8',
+			data: {
+				t : tProductTypeId
+			},
+			success: function(data) {
+				if (data.code != 0) {
+					//swal('获取商品信息失败', data.desc, 'error');
+				} else {
+					var temp = data.data;
+					temp = sortProductList(temp);
+					var i, j=0, k=0;
+					ProductModule.productListBuffer[0] = [];
+					ProductModule.productListBuffer[1] = [];
+					for (i=0; i<temp.length; i++) {
+						if (1 == temp[i].productStockFlag && temp[i].productStock <= 0) {
+							// 无效商品
+							ProductModule.productListBuffer[1][j++] = temp[i];
+						} else {
+							// 有效商品
+							ProductModule.productListBuffer[0][k++] = temp[i];
+						}
+					}
+					ProductModule.showData();
+				}
+			},
+			error: function() {
+				//swal('服务器连接失败', '请检查网络是否通畅', 'warning');
 			}
-		}
-		ProductModule.showData();
+		});
+
 	},
 	sortProductList : function(tProductList) { // 商品排序规则
 		var i, itemF, itemE, item;
@@ -133,7 +165,7 @@ var ProductModule = {
 		var forbidColor = '#F0E0E0';
 		var forbidOption = (undefined != t.productStock && t.productStock <= 0);
 		var str = '<div class="classify-box1" ' + (forbidOption ? ' style="background:#F0E0E0;" ' : '') + ' >';
-            str += '<span class="classify-box1-img1"><img src="' + GlobalConfig.productImgRelativePath + t.productImg + '" alt=""></span>';
+            str += '<span class="classify-box1-img1"><img src="' + GlobalConfig.productImgRelativePath + t.productImgName + '" alt=""></span>';
             str += '<div class="classify-box2">';
             str += '<span class="classify-box2-text1">' + t.productName + '</span>';
             str += '<span class="classify-box2-text2">' + t.productPrice + '</span>';
@@ -162,7 +194,10 @@ var ProductModule = {
 	}
 }
 
-
+/**
+ * 购物车控制模块
+ * @type {{delProduct: ShoppingCartModule.delProduct, addProduct: ShoppingCartModule.addProduct, forbidOption: ShoppingCartModule.forbidOption, requestUpdateShoppingCart: (function(*, *): boolean)}}
+ */
 var ShoppingCartModule = {
 	
 	addProduct : function(t) {
