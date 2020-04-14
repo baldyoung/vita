@@ -1,12 +1,4 @@
-/*
-[{
-	typeId : 1,
-	typeName : '主食',
-}]
 
-
-
- */
 
 
 
@@ -80,7 +72,6 @@ var ProductModule = {
 	sortType : 'productGrade',
 	sortRule : 'desc', // 默认从大到下, 从小到大为asc
 	requestAndLoadData : function(tProductTypeId) {
-		console.log("request typeId "+tProductTypeId);
 		// 同步ajax获取指定类型的商品数据
 		$.ajax({
 			url: GlobalConfig.serverAddress + "/product/validProductForType",
@@ -163,11 +154,11 @@ var ProductModule = {
 	},
 	createDisplayCellHTML : function(t) { // 每个商品的展示效果生成
 		var forbidColor = '#F0E0E0';
-		var forbidOption = (undefined != t.productStock && t.productStock <= 0);
+		var forbidOption = (1 == t.productStockFlag && t.productStock <= 0);
 		var str = '<div class="classify-box1" ' + (forbidOption ? ' style="background:#F0E0E0;" ' : '') + ' >';
             str += '<span class="classify-box1-img1"><img src="' + GlobalConfig.productImgRelativePath + t.productImgName + '" alt=""></span>';
             str += '<div class="classify-box2">';
-            str += '<span class="classify-box2-text1">' + t.productName + '</span>';
+            str += '<span class="classify-box2-text1">' + t.productName + (forbidOption ? '[已售罄]' : '') + '</span>';
             str += '<span class="classify-box2-text2">' + t.productPrice + '</span>';
             str += '<div class="shop-cart-box3">';
             if (forbidOption) {
