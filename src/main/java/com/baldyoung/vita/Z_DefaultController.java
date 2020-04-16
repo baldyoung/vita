@@ -47,6 +47,7 @@ public class Z_DefaultController {
     public String redistTest(HttpServletResponse response) throws IOException {
         redisService.setTestAction();
         redisService.getTestAction();
+        redisService.test();
         PrintWriter writer = response.getWriter();
         writer.println("当你看到这串字符时，代表redis服务正常");
         return null;
