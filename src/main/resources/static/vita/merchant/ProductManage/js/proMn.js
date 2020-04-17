@@ -250,7 +250,10 @@ var DataModule = {
 				console.warn(data);
 				if (data.code == 0) {
 					targetData = true;
-					swal('保存成功', '', 'success');
+					if (undefined == data.desc) {
+						data.desc = "";
+					}
+					swal('保存成功', data.desc, 'success');
 				} else {
 					swal(data.desc, '', 'error');
 				}
@@ -1017,10 +1020,13 @@ function readyForWebUploader() {
 		console.log("上传成功后，后台返回")
 		console.log(response)
 		if (response.code == 0) { //添加商品信息提交成功
-
+			if (undefined == response.desc) {
+				response.desc = "";
+			}
 			OptionModule.initProductList();
 			$('#btnCloseProductInfWin').trigger('click');
-			swal("保存成功", "商品集已变更", "success");
+			swal('保存成功', response.desc, 'success');
+			// swal("保存成功", "商品集已变更", "success");
 		} else {
 			swal(response.desc, '', 'error');
 		}

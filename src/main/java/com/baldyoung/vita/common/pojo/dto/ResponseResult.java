@@ -21,6 +21,10 @@ public class ResponseResult<T> {
         return new ResponseResult(DefaultSuccessCode, DefaultSuccessDesc, data);
     }
 
+    public static <T> ResponseResult success(T data, String desc) {
+        return new ResponseResult(DefaultSuccessCode, desc, data);
+    }
+
     public static ResponseResult success() {
         return success(null);
     }

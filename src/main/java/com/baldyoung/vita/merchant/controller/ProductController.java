@@ -1,32 +1,28 @@
 package com.baldyoung.vita.merchant.controller;
 
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
-import com.baldyoung.vita.common.pojo.dto.menu.NewMenuDto;
 import com.baldyoung.vita.common.pojo.dto.product.NewProductDto;
 import com.baldyoung.vita.common.pojo.entity.ProductEntity;
 import com.baldyoung.vita.common.pojo.exception.ExceptionBase;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.utility.FileDataSaveModule;
 import com.baldyoung.vita.merchant.service.ProductServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.util.ClassUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.validation.Valid;
-
-import static com.baldyoung.vita.common.pojo.dto.ResponseResult.*;
-import static java.lang.System.*;
-
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Map;
+
+import static com.baldyoung.vita.common.pojo.dto.ResponseResult.defeat;
+import static com.baldyoung.vita.common.pojo.dto.ResponseResult.success;
+import static java.lang.System.out;
 
 /**
  * 商品管理-后端接口
@@ -79,6 +75,7 @@ public class ProductController {
      */
     @PostMapping("addOrUpdate")
     public ResponseResult addProduct(@Valid NewProductDto newProductDto, BindingResult bindingResult) throws IOException, ExceptionBase {
+        String desc = "";
         if (bindingResult.hasErrors()) {
             return defeat(bindingResult.getFieldError().getDefaultMessage());
         }
@@ -87,6 +84,14 @@ public class ProductController {
             return defeat("图片为空");
         }
         if (null != multipartFile) {
+            // 判读图片的长宽
+            BufferedImage bi= ImageIO.read(multipartFile.getInputStream());
+            Integer width = bi.getWidth();
+            Integer height = bi.getHeight();
+            out.println("(W:"+width+", H:"+height+")");
+            if (Math.abs(width - height) > 5) {
+                desc = "图片长宽不等，展示效果可能不佳！";
+            }
             String fileName = multipartFile.getOriginalFilename();
             String fileType = fileName.substring(fileName.lastIndexOf("."));
             out.println(fileType);
@@ -111,7 +116,7 @@ public class ProductController {
             // 修改
             productService.updateProduct(newProductDto);
         }
-        return success();
+        return success(null, desc);
     }
 
     /**
