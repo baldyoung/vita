@@ -23,14 +23,24 @@ public interface ShoppingCartService {
     void clearShoppingCart(Integer shoppingCartId);
 
     /**
-     *
+     * 修改购物车商品
      * @param shoppingCartId
      * @param itemList
      */
-    void setProductForShoppingCart(Integer shoppingCartId, List<ShoppingCartItem> itemList);
+    void setProductForShoppingCart(Integer shoppingCartId, Map<Integer, Integer> itemData);
 
+    /**
+     * 获取购物车中所有的商品
+     * @param shoppingCartId
+     * @return
+     */
     Map<Integer, Integer> getAllProductFromShoppingCar(Integer shoppingCartId);
 
+    /**
+     * 整理购物车中的商品
+     * @param shoppingCartId
+     * @return
+     */
     List<ShoppingCartItem> packageData(Integer shoppingCartId);
 
 
