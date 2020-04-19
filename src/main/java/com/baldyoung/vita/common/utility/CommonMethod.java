@@ -1,5 +1,6 @@
 package com.baldyoung.vita.common.utility;
 
+import javax.servlet.http.HttpSession;
 import java.util.Collection;
 
 public class CommonMethod {
@@ -49,5 +50,14 @@ public class CommonMethod {
             return null;
         }
         return result;
+    }
+
+    public static Integer getRoomIdFromSession(HttpSession session) {
+        return 0;
+        /*Object object = session.getAttribute("roomId");
+        if (null == object) {
+            return null;
+        }
+        return Integer.parseInt(String.valueOf(object));*/
     }
 }

@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.baldyoung.vita.common.pojo.dto.ResponseResult.*;
+import javax.servlet.http.HttpServletRequest;
+
+import static com.baldyoung.vita.common.pojo.dto.ResponseResult.success;
+import static com.baldyoung.vita.common.utility.CommonMethod.getRoomIdFromSession;
 
 @RestController
 @RequestMapping("product")
@@ -24,9 +27,12 @@ public class CProductController {
      * @return
      */
     @GetMapping("validProductForType")
-    public ResponseResult getValidProductList(@RequestParam("t")Integer typeId) {
-        return success(cProductService.getValidProductForProductType(typeId));
+    public ResponseResult getValidProductList(@RequestParam("t")Integer typeId, HttpServletRequest request) {
+        Integer roomId = getRoomIdFromSession(request.getSession());
+        return success(cProductService.getValidProductForProductType(typeId, roomId));
     }
+
+
 
 
 }

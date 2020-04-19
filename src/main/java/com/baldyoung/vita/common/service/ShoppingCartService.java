@@ -25,7 +25,7 @@ public interface ShoppingCartService {
     /**
      * 修改购物车商品
      * @param shoppingCartId
-     * @param itemList
+     * @param itemData
      */
     void setProductForShoppingCart(Integer shoppingCartId, Map<Integer, Integer> itemData);
 
@@ -34,7 +34,23 @@ public interface ShoppingCartService {
      * @param shoppingCartId
      * @return
      */
-    Map<Integer, Integer> getAllProductFromShoppingCar(Integer shoppingCartId);
+    Map<Integer, Integer> getAllProductFromShoppingCart(Integer shoppingCartId);
+
+    /**
+     * 获取购物车中指定商品的数量
+     * @param shoppingCartId
+     * @param productId
+     * @return
+     */
+    Integer getProductQuantityFromShoppingCart(Integer shoppingCartId, Integer productId);
+
+    /**
+     * 设置购物车中指定商品的数量
+     * @param shoppingCartId
+     * @param productId
+     * @param quantity
+     */
+    void setProductQuantityForShoppingCart(Integer shoppingCartId, Integer productId, Integer quantity);
 
     /**
      * 整理购物车中的商品

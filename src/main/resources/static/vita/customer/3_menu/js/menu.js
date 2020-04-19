@@ -94,6 +94,7 @@ var ProductModule = {
 					ProductModule.productListBuffer[0] = [];
 					ProductModule.productListBuffer[1] = [];
 					for (i=0; i<temp.length; i++) {
+						temp[i].currentQuantity = temp[i].currentQuantity == undefined ? 0 : temp[i].currentQuantity;
 						if (1 == temp[i].productStockFlag && temp[i].productStock <= 0) {
 							// 无效商品
 							ProductModule.productListBuffer[1][j++] = temp[i];
@@ -166,7 +167,7 @@ var ProductModule = {
             } else {
             	str += '<span class="shop-cart-subtract" onclick="ShoppingCartModule.delProduct(' + t.productId + ')" ></span>';
             }
-		    str += '<input id="productAmountInCart' + t.productId + '" type="number" size="4" value="' + t.productAmountInCart + '" id="tb_count" class="shop-cart-numer"  ' + (forbidOption ? ' style="background:#F0E0E0;" ' : '') + '  readonly="true" >';
+		    str += '<input id="productAmountInCart' + t.productId + '" type="number" size="4" value="' + t.currentQuantity + '" id="tb_count" class="shop-cart-numer"  ' + (forbidOption ? ' style="background:#F0E0E0;" ' : '') + '  readonly="true" >';
 		    if (forbidOption) {
 		    	str += '<span class="shop-cart-add" onclick="ShoppingCartModule.forbidOption()" ></span>';
 		    } else {
@@ -192,18 +193,71 @@ var ProductModule = {
 var ShoppingCartModule = {
 	
 	addProduct : function(t) {
-		var target = $('#productAmountInCart'+t);
-		var currentAmount = parseInt(target.val());
-		if (currentAmount < 99 && ShoppingCartModule.requestUpdateShoppingCart(t, 1)) {
-			target.val(currentAmount+1);
-		}
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/shoppingCart/addProduct",
+			type: 'GET',
+			cache: false,
+			dataType : 'json',
+			async: false, //设置同步
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			// contentType : 'application/json; charset=utf-8',
+			data: {
+				productId : t,
+				quantity : 1
+			},
+			success: function(data) {
+				if (data.code != 0) {
+					layer.open({
+						content: ''+data.desc,
+						skin: 'msg',
+						time: 2
+					});
+				} else {
+					var target = $('#productAmountInCart'+t);
+					var currentAmount = parseInt(target.val());
+					if (currentAmount < 99 && ShoppingCartModule.requestUpdateShoppingCart(t, 1)) {
+						target.val(currentAmount+1);
+					}
+				}
+			},
+			error: function() {
+				//swal('服务器连接失败', '请检查网络是否通畅', 'warning');
+			}
+		});
 	},
 	delProduct : function(t) {
-		var target = $('#productAmountInCart'+t);
-		var currentAmount = parseInt(target.val());
-		if (currentAmount > 0 && ShoppingCartModule.requestUpdateShoppingCart(t, -1)) {
-			target.val(currentAmount-1);
-		}
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/shoppingCart/addProduct",
+			type: 'GET',
+			cache: false,
+			dataType : 'json',
+			async: false, //设置同步
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			// contentType : 'application/json; charset=utf-8',
+			data: {
+				productId : t,
+				quantity : -1
+			},
+			success: function(data) {
+				if (data.code != 0) {
+					layer.open({
+						content: ''+data.desc,
+						skin: 'msg',
+						time: 2
+					});
+				} else {
+					var target = $('#productAmountInCart'+t);
+					var currentAmount = parseInt(target.val());
+					if (currentAmount > 0 && ShoppingCartModule.requestUpdateShoppingCart(t, -1)) {
+						target.val(currentAmount-1);
+					}
+				}
+			},
+			error: function() {
+				//swal('服务器连接失败', '请检查网络是否通畅', 'warning');
+			}
+		});
+
 	},
 	requestUpdateShoppingCart : function(productId, amount) {
 		// 同步ajax请求，修改当前购物车内商品
