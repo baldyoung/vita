@@ -37,4 +37,6 @@ public interface ProductDao {
 
     List<ProductEntity> selectProductWithCondition(@Param("condition")ProductEntity entity);
 
+    List<ProductEntity> selectProductInList(@Param("productIdList")List<Integer> productIdList);
+
 }

@@ -1,6 +1,6 @@
 var GlobalConfig = {
 	shopInfo: {
-		shopName: '天天农庄',
+		shopName: 'vita门店',
 		shopLogo: ''
 	},
 	productImgRelativePath: "/vita/resource/productImg/",

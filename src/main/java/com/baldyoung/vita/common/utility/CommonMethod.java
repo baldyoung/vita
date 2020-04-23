@@ -1,7 +1,12 @@
 package com.baldyoung.vita.common.utility;
 
+import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
+import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
+
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
+
+import static com.baldyoung.vita.common.pojo.enums.systemEnums.SystemExceptionEnums.ROOM_ID_NOT_EXISTS;
 
 public class CommonMethod {
 
@@ -52,12 +57,13 @@ public class CommonMethod {
         return result;
     }
 
-    public static Integer getRoomIdFromSession(HttpSession session) {
-        return 0;
-        /*Object object = session.getAttribute("roomId");
+    public static Integer getRoomIdFromSession(HttpSession session) throws UtilityException {
+
+        Object object = session.getAttribute("roomId");
         if (null == object) {
-            return null;
+            throw new UtilityException(ROOM_ID_NOT_EXISTS);
         }
-        return Integer.parseInt(String.valueOf(object));*/
+        return Integer.parseInt(String.valueOf(object));
+        //return 0;
     }
 }

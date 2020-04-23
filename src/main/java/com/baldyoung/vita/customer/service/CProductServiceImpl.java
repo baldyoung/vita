@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.baldyoung.vita.common.utility.CommonMethod.isEmptyCollection;
 import static com.baldyoung.vita.common.utility.CommonMethod.toInteger;
 
 @Service
@@ -30,7 +31,7 @@ public class CProductServiceImpl {
         entity.setProductIsShow(1);
         List<ProductEntity> list = productDao.selectProductWithCondition(entity);
         List<CProductDto> result = new ArrayList(list.size());
-        if (null != list) {
+        if (!isEmptyCollection(list)) {
             Map currentQuantityMap = cShoppingCartService.getALLItemFromShoppingCart(roomId);
             for (ProductEntity cell : list) {
                 CProductDto dto = new CProductDto(cell);
@@ -44,4 +45,25 @@ public class CProductServiceImpl {
         }
         return result;
     }
+
+    /**
+     * 获取指定编号的商品信息
+     * @param productIds
+     * @return
+     */
+    public List<CProductDto> getProductWithProductIds(List<Integer> productIds) {
+        List<ProductEntity> productEntityList = productDao.selectProductInList(productIds);
+        List<CProductDto> result = new ArrayList(productEntityList.size());
+        if (!isEmptyCollection(productEntityList)) {
+            //Map currentQuantityMap = cShoppingCartService.getALLItemFromShoppingCart(roomId);
+            for (ProductEntity cell : productEntityList) {
+                CProductDto dto = new CProductDto(cell);
+                // 获取商品排序值
+                dto.setProductGrade(productSortService.getProductGradeByProductId(cell.getProductId()));
+                result.add(dto);
+            }
+        }
+        return result;
+    }
+
 }

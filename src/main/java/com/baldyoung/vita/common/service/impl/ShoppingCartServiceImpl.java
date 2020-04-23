@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -21,69 +22,131 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
 
-    private ReadWriteLock readWriteLock;
-
-    @PostConstruct
-    private void init() {
-        readWriteLock = new ReentrantReadWriteLock();
-    }
+    private Map<Integer, ReadWriteLock> lockMap;
 
     private static String DEFAULT_TABLE_NAME = "shoppingCart";
 
-    private void getReadLock() {
-        readWriteLock.readLock();
+    @PostConstruct
+    private void init() {
+        lockMap = new HashMap();
+        // 获取所有就餐位的编号，并为每个就餐位生成读写锁
+        Integer[] diningRoomIds = {1, 2, 3, 4, 5, 6};
+        for (Integer diningRoomId : diningRoomIds) {
+            lockMap.put(diningRoomId, new ReentrantReadWriteLock());
+        }
     }
 
-    private void getWriteLock() {
-        readWriteLock.writeLock();
+    /**
+     * 获取指定就餐位的read锁
+     * @param shoppingCartId
+     * @return
+     */
+    private Lock getReadLock(Integer shoppingCartId) {
+        ReadWriteLock readWriteLock = lockMap.get(shoppingCartId);
+        return readWriteLock.readLock();
     }
 
+    /**
+     * 获取指定就餐位的write锁
+     * @param shoppingCartId
+     * @return
+     */
+    private Lock getWriteLock(Integer shoppingCartId) {
+        ReadWriteLock readWriteLock = lockMap.get(shoppingCartId);
+        return readWriteLock.writeLock();
+    }
+
+    /**
+     * 线程安全
+     * 清空购物车
+     * @param shoppingCartId
+     */
     @Override
     public void clearShoppingCart(Integer shoppingCartId) {
-        Lock lock = readWriteLock.writeLock();
+        Lock lock = getWriteLock(shoppingCartId);
         lock.lock();
         stringRedisTemplate.opsForHash().delete(toTableName(shoppingCartId));
         lock.unlock();
     }
 
+    /**
+     * 线程安全
+     * 批量设置购物车中商品的数量
+     * @param shoppingCartId
+     * @param itemData
+     */
     @Override
     public void setProductForShoppingCart(Integer shoppingCartId, Map<Integer, Integer> itemData) {
-        Lock lock = readWriteLock.writeLock();
+        Lock lock = getWriteLock(shoppingCartId);
         lock.lock();
         stringRedisTemplate.opsForHash().putAll(toTableName(shoppingCartId), itemData);
         lock.unlock();
     }
 
+    /**
+     * 线程安全
+     * 获取指定购物车的所有商品记录
+     * @param shoppingCartId
+     * @return
+     */
     @Override
     public Map getAllProductFromShoppingCart(Integer shoppingCartId) {
-        Lock lock = readWriteLock.readLock();
+        Lock lock = getReadLock(shoppingCartId);
         lock.lock();
         Map map = stringRedisTemplate.opsForHash().entries(toTableName(shoppingCartId));
         lock.unlock();
         return map;
     }
 
+    /**
+     * 线程安全
+     * 获取指定商品在购物车中的数量
+     * @param shoppingCartId
+     * @param productId
+     * @return
+     */
     @Override
     public Integer getProductQuantityFromShoppingCart(Integer shoppingCartId, Integer productId) {
-        Lock lock = readWriteLock.readLock();
+        Lock lock = getReadLock(shoppingCartId);
         lock.lock();
         Object object = stringRedisTemplate.opsForHash().get(toTableName(shoppingCartId), String.valueOf(productId));
         lock.unlock();
         Integer currentQuantity = toInteger(object);
-        if (null == currentQuantity) {
+        if (null == currentQuantity  || currentQuantity.intValue() < 0) {
             currentQuantity = 0;
         }
         return currentQuantity;
     }
 
+    /**
+     * 线程安全
+     * 设置单个商品在购物车中的数量
+     * @param shoppingCartId
+     * @param productId
+     * @param quantity
+     */
     @Override
     public void setProductQuantityForShoppingCart(Integer shoppingCartId, Integer productId, Integer quantity) {
-        Lock lock = readWriteLock.writeLock();
+        if (0 >= quantity.intValue()) {
+            // 如果库存为空，则直接删除该条商品记录
+            Lock lock = getWriteLock(shoppingCartId);
+            lock.lock();
+            stringRedisTemplate.opsForHash().delete(toTableName(shoppingCartId), String.valueOf(productId));
+            lock.unlock();
+            return;
+        }
+        Lock lock = getWriteLock(shoppingCartId);
         lock.lock();
         stringRedisTemplate.opsForHash().put(toTableName(shoppingCartId), String.valueOf(productId), String.valueOf(quantity));
         lock.unlock();
     }
 
+    /**
+     * 线程安全
+     * 对指定购物车中的商品数据进行打包
+     * @param shoppingCartId
+     * @return
+     */
     @Override
     public List<ShoppingCartItem> packageData(Integer shoppingCartId) {
         Map<Integer, Integer> map = getAllProductFromShoppingCart(shoppingCartId);

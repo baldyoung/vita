@@ -23,6 +23,11 @@
 
     </resultMap>
 
+    <sql id="allFiled">
+        productId, productTypeId, productName, productAttributeTypeId, productPrice, productStockFlag, productStock, productSalesVolume, productIsShow, productImgName, productInfo, productGrade, isDelete, createDateTime, updateDateTime
+
+    </sql>
+
 
     <select id="selectProduct" resultMap="baseMap">
 
@@ -148,6 +153,16 @@
         order by productId desc
     </select>
 
+    <select id="selectProductInList" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from V_Product
+        where productId in (
+        <foreach collection="productIdList" index="index" item="item" open="" separator="," close="">
+            #{item}
+        </foreach>
+        )
+    </select>
 
 
 </mapper>
