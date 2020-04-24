@@ -58,12 +58,12 @@ public class CommonMethod {
     }
 
     public static Integer getRoomIdFromSession(HttpSession session) throws UtilityException {
-
-        Object object = session.getAttribute("roomId");
+        return 333;
+        /*Object object = session.getAttribute("roomId");
         if (null == object) {
             throw new UtilityException(ROOM_ID_NOT_EXISTS);
         }
         return Integer.parseInt(String.valueOf(object));
-        //return 0;
+        */
     }
 }

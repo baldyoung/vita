@@ -3,6 +3,7 @@ package com.baldyoung.vita.customer.service;
 import com.baldyoung.vita.common.dao.ProductDao;
 import com.baldyoung.vita.common.pojo.dto.product.CProductDto;
 import com.baldyoung.vita.common.pojo.entity.ProductEntity;
+import com.baldyoung.vita.common.service.ShoppingCartService;
 import com.baldyoung.vita.merchant.service.ProductSortServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,10 @@ public class CProductServiceImpl {
     @Autowired
     private CShoppingCartServiceImpl cShoppingCartService;
 
+    @Autowired
+    //@Qualifier("shoppingCartServiceImpl")
+    private ShoppingCartService shoppingCartService;
+
     public List<CProductDto> getValidProductForProductType(Integer productTypeId, Integer roomId) {
         ProductEntity entity = new ProductEntity();
         entity.setProductTypeId(productTypeId);
@@ -32,7 +37,7 @@ public class CProductServiceImpl {
         List<ProductEntity> list = productDao.selectProductWithCondition(entity);
         List<CProductDto> result = new ArrayList(list.size());
         if (!isEmptyCollection(list)) {
-            Map currentQuantityMap = cShoppingCartService.getALLItemFromShoppingCart(roomId);
+            Map currentQuantityMap = shoppingCartService.getAllProductFromShoppingCart(roomId);
             for (ProductEntity cell : list) {
                 CProductDto dto = new CProductDto(cell);
                 // 获取商品排序值

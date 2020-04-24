@@ -30,7 +30,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private void init() {
         lockMap = new HashMap();
         // 获取所有就餐位的编号，并为每个就餐位生成读写锁
-        Integer[] diningRoomIds = {1, 2, 3, 4, 5, 6};
+        Integer[] diningRoomIds = {1, 2, 3, 4, 5, 6, 333};
         for (Integer diningRoomId : diningRoomIds) {
             lockMap.put(diningRoomId, new ReentrantReadWriteLock());
         }

@@ -50,12 +50,14 @@ public class CShoppingCartServiceImpl {
      */
     public List<CProductDto> getALLItemFromShoppingCart(Integer shoppingCartId) {
         Map map = shoppingCartService.getAllProductFromShoppingCart(shoppingCartId);
+        System.out.println(map);
         List<CProductDto> result;
         if (null != map && !isEmptyCollection(map.keySet())) {
             List<Integer> productIds = new ArrayList(map.keySet());
             result = cProductService.getProductWithProductIds(productIds);
             for (CProductDto dto : result) {
-                dto.setCurrentQuantity(toInteger(map.get(dto.getProductId())));
+                System.out.println(map.get(String.valueOf(dto.getProductId())));
+                dto.setCurrentQuantity(toInteger(map.get(String.valueOf(dto.getProductId()))));
             }
         } else {
             result = new ArrayList<>(0);
