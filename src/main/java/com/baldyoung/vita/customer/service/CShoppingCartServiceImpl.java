@@ -65,4 +65,13 @@ public class CShoppingCartServiceImpl {
         return result;
     }
 
+    /**
+     * 删除购物车中的指定商品
+     * @param roomId
+     * @param productIds
+     */
+    public void deleteProduct(Integer roomId, Integer... productIds) {
+        shoppingCartService.deleteProductInShoppingCart(roomId, productIds);
+    }
+
 }

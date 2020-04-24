@@ -4,12 +4,11 @@ import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
 import com.baldyoung.vita.customer.service.CShoppingCartServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+
+import java.util.List;
 
 import static com.baldyoung.vita.common.pojo.dto.ResponseResult.success;
 import static com.baldyoung.vita.common.utility.CommonMethod.getRoomIdFromSession;
@@ -51,6 +50,21 @@ public class CShoppingCartController {
     public ResponseResult getAllProductItemFromShoppingCart(HttpSession session) throws UtilityException {
         Integer roomId = getRoomIdFromSession(session);
         return success(cShoppingCartService.getALLItemFromShoppingCart(roomId));
+    }
+
+    /**
+     * 删除指定商品
+     * @param productIdList
+     * @param session
+     * @return
+     * @throws UtilityException
+     */
+    @PostMapping("itemDelete")
+    public ResponseResult deleteProduct(@RequestParam("productIdList[]") List<Integer> productIdList,
+                                        HttpSession session) throws UtilityException {
+        Integer roomId = getRoomIdFromSession(session);
+        cShoppingCartService.deleteProduct(roomId, productIdList.toArray(new Integer[productIdList.size()]));
+        return success();
     }
 
 

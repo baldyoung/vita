@@ -23,6 +23,13 @@ public interface ShoppingCartService {
     void clearShoppingCart(Integer shoppingCartId);
 
     /**
+     * 删除购物车中的指定商品
+     * @param shoppingCartId
+     * @param productIds
+     */
+    void deleteProductInShoppingCart(Integer shoppingCartId, Integer... productIds);
+
+    /**
      * 修改购物车商品
      * @param shoppingCartId
      * @param itemData

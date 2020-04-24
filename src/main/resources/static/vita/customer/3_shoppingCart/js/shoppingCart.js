@@ -265,7 +265,8 @@ var ShopingCartModule = {
 		return str;
 	},
 	readySubmitOrder: function() { // 准备生成预订单
-		console.log(JSON.stringify(ShopingCartModule.productListBuffer));
+		var productList = ShopingCartModule.packageData();
+		console.log(JSON.stringify(productList));
 		if (false && GlobalConfig.currentServiceType == 'take-out') {
 			layer.open({
 				content : '当前为外卖服务，稍后需要您提供位置信息！',
@@ -286,19 +287,14 @@ var ShopingCartModule = {
 		layer.open({
 			content: '请选择就餐方式！',
 			btn: ['堂食', '打包'],
-			yes: function(index) {
-				layer.open({
-					content: '你选择了堂食',
-					skin: 'msg',
-					time: 3 //2秒后自动关闭
-				});
+			yes: function() {
 				window.location.href = '../4_advanceOrder/advanceOrder.html';
 			},
 			no: function() {
 				layer.open({
 					content: '你选择了打包',
 					skin: 'msg',
-					time: 3 //2秒后自动关闭
+					time: 2 //2秒后自动关闭
 				});
 			}
 		});
@@ -451,6 +447,7 @@ var ShopingCartModule = {
 			content: '确定删除所选商品？',
 			btn: ['确定', '取消'],
 			yes: function() {
+				var deleteProductIds = [];
 				var targetList = $('.ckAllA');
 				for (var i = 0; i < targetList.length; i++) {
 					var item = targetList[i];
@@ -460,15 +457,60 @@ var ShopingCartModule = {
 					var productId = item.id.split("Id")[1];
 					var productInfo = ShopingCartModule.getProductInfoByProductId(productId);
 					if (productInfo.selectedStatus == true) {
-						ShopingCartModule.deleteProduct(productId);
-						ShopingCartModule.updateItemCheckBox(productInfo.productTypeId, 1);
+						deleteProductIds[deleteProductIds.length] = productId;
 					}
 				}
-				layer.closeAll();
+				if (0 == deleteProductIds.length) {
+					return;
+				}
+				$.ajax({
+					url: GlobalConfig.serverAddress + "/shoppingCart/itemDelete",
+					type: 'POST',
+					cache: false,
+					dataType : 'json',
+					async: false, //设置同步
+					contentType: "application/x-www-form-urlencoded;charset=utf-8",
+					// contentType : 'application/json; charset=utf-8',
+					data: {
+						productIdList : deleteProductIds
+					},
+					success: function(data) {
+						if (data.code != 0) {
+							layer.open({
+								content: ''+data.desc,
+								skin: 'msg',
+								time: 2
+							});
+						} else {
+							for (var t=0; t<deleteProductIds.length; t++) {
+								var productInfo = ShopingCartModule.getProductInfoByProductId(deleteProductIds[t]);
+								ShopingCartModule.deleteProduct(deleteProductIds[t]);
+								ShopingCartModule.updateItemCheckBox(productInfo.productTypeId, 1);
+							}
+						}
+						layer.closeAll();
+					},
+					error: function() {
+						layer.closeAll();
+					}
+				});
 			},
 			no: function() {
 			}
 		});
+	},
+	packageData : function () {
+		var productList = ShopingCartModule.productListBuffer;
+		var result = [];
+		for (var i=0; i<productList.length; i++) {
+			var cell = productList[i];
+			var item = {
+				productId : cell.productId,
+				productQuantity : cell.currentQuantity
+			}
+			result[result.length] = item;
+		}
+		return result;
 	}
 
 };

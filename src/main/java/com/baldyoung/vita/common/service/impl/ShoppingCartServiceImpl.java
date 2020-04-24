@@ -69,12 +69,26 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         lock.unlock();
     }
 
+    @Override
+    public void deleteProductInShoppingCart(Integer shoppingCartId, Integer... productIds) {
+        String[] productIdArray = new String[productIds.length];
+        for (int i=0; i<productIds.length; i++) {
+            productIdArray[i] = String.valueOf(productIds[i]);
+        }
+        Lock lock = getWriteLock(shoppingCartId);
+        lock.lock();
+        stringRedisTemplate.opsForHash().delete(toTableName(shoppingCartId), productIdArray);
+        lock.unlock();
+    }
+
     /**
+     * 可能需要将itemData从Map<Integer, Integer>转换为Map<String, String>才能好使
      * 线程安全
      * 批量设置购物车中商品的数量
      * @param shoppingCartId
      * @param itemData
      */
+    @Deprecated
     @Override
     public void setProductForShoppingCart(Integer shoppingCartId, Map<Integer, Integer> itemData) {
         Lock lock = getWriteLock(shoppingCartId);
