@@ -21,8 +21,15 @@ import static com.baldyoung.vita.common.utility.CommonMethod.toInteger;
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
-
+    /**
+     * 购物车并发锁
+     */
     private Map<Integer, ReadWriteLock> lockMap;
+    /**
+     * 下单并发锁
+     *  如果有下单操作正在进行，则对应的value为true
+     */
+    private Map<Integer, Boolean> orderLockMap;
 
     private static String DEFAULT_TABLE_NAME = "shoppingCart";
 
@@ -33,6 +40,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Integer[] diningRoomIds = {1, 2, 3, 4, 5, 6, 333};
         for (Integer diningRoomId : diningRoomIds) {
             lockMap.put(diningRoomId, new ReentrantReadWriteLock());
+            orderLockMap.put(diningRoomId, Boolean.FALSE);
         }
     }
 
@@ -65,6 +73,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void clearShoppingCart(Integer shoppingCartId) {
         Lock lock = getWriteLock(shoppingCartId);
         lock.lock();
+
+
         stringRedisTemplate.opsForHash().delete(toTableName(shoppingCartId));
         lock.unlock();
     }
