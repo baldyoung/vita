@@ -1,14 +1,12 @@
 package com.baldyoung.vita.customer.service;
 
-import com.baldyoung.vita.common.dao.ProductDao;
 import com.baldyoung.vita.common.pojo.dto.product.CProductDto;
-import com.baldyoung.vita.common.pojo.entity.ProductEntity;
-import com.baldyoung.vita.common.service.ShoppingCartService;
+import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
+import com.baldyoung.vita.common.service.impl.ShoppingCartServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +21,7 @@ public class CShoppingCartServiceImpl {
 
     @Autowired
     //@Qualifier("shoppingCartServiceImpl")
-    private ShoppingCartService shoppingCartService;
+    private ShoppingCartServiceImpl shoppingCartService;
 
     @Autowired
     private CProductServiceImpl cProductService;
@@ -34,7 +32,7 @@ public class CShoppingCartServiceImpl {
      * @param productId
      * @param quantity
      */
-    public void addProductIntoShoppingCart(Integer shoppingCartId, Integer productId, Integer quantity) {
+    public void addProductIntoShoppingCart(Integer shoppingCartId, Integer productId, Integer quantity) throws ServiceException {
         Integer currentQuantity = shoppingCartService.getProductQuantityFromShoppingCart(shoppingCartId, productId);
         int result = currentQuantity.intValue() + quantity.intValue();
         if (0 >= result) {
@@ -70,8 +68,20 @@ public class CShoppingCartServiceImpl {
      * @param roomId
      * @param productIds
      */
-    public void deleteProduct(Integer roomId, Integer... productIds) {
+    public void deleteProduct(Integer roomId, Integer... productIds) throws ServiceException {
         shoppingCartService.deleteProductInShoppingCart(roomId, productIds);
     }
+
+    public void readySubmitShoppingCart(Integer roomId) throws ServiceException {
+        // 锁定购物车，操作期间不允许修改购物车数据
+        shoppingCartService.readyPreOrderShoppingCart(roomId);
+    }
+
+    public void cancelSubmitShoppingCart(Integer roomId) {
+        // 结束对购物车的锁定
+        shoppingCartService.cancelPreOrderShoppingCart(roomId);
+    }
+
+
 
 }

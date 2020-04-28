@@ -1,6 +1,7 @@
 package com.baldyoung.vita.customer.controller;
 
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
+import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
 import com.baldyoung.vita.customer.service.CShoppingCartServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class CShoppingCartController {
     @GetMapping("addProduct")
     public ResponseResult addProduct(@RequestParam("productId")Integer productId,
                                      @RequestParam("quantity")Integer quantity,
-                                     HttpSession session) throws UtilityException {
+                                     HttpSession session) throws UtilityException, ServiceException {
         Integer roomId = getRoomIdFromSession(session);
         cShoppingCartService.addProductIntoShoppingCart(roomId, productId, quantity);
         return success();
@@ -61,9 +62,38 @@ public class CShoppingCartController {
      */
     @PostMapping("itemDelete")
     public ResponseResult deleteProduct(@RequestParam("productIdList[]") List<Integer> productIdList,
-                                        HttpSession session) throws UtilityException {
+                                        HttpSession session) throws UtilityException, ServiceException {
         Integer roomId = getRoomIdFromSession(session);
         cShoppingCartService.deleteProduct(roomId, productIdList.toArray(new Integer[productIdList.size()]));
+        return success();
+    }
+
+    /**
+     * 变更购物车的状态为“提交中”
+     * 不允许购物车数据再被修改
+     * @param session
+     * @return
+     * @throws UtilityException
+     * @throws ServiceException
+     */
+    @GetMapping("readySubmit")
+    public ResponseResult readyToSubmitShoppingCart(HttpSession session) throws UtilityException, ServiceException {
+        Integer roomId = getRoomIdFromSession(session);
+        cShoppingCartService.readySubmitShoppingCart(roomId);
+        return success();
+    }
+
+    /**
+     * 变更购物车状态为“可修改”
+     * 可以修改购物车数据
+     * @param session
+     * @return
+     * @throws UtilityException
+     */
+    @GetMapping("cancelReady")
+    public ResponseResult cancelReadyForSubmitShoppingCart(HttpSession session) throws UtilityException {
+        Integer roomId = getRoomIdFromSession(session);
+        cShoppingCartService.cancelSubmitShoppingCart(roomId);
         return success();
     }
 

@@ -1,6 +1,7 @@
 package com.baldyoung.vita.common.service;
 
 import com.baldyoung.vita.common.pojo.entity.ShoppingCartItem;
+import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 
 import java.util.List;
 import java.util.Map;
@@ -20,21 +21,21 @@ public interface ShoppingCartService {
      * 清空购物车
      * @param shoppingCartId
      */
-    void clearShoppingCart(Integer shoppingCartId);
+    void clearShoppingCart(Integer shoppingCartId) throws ServiceException;
 
     /**
      * 删除购物车中的指定商品
      * @param shoppingCartId
      * @param productIds
      */
-    void deleteProductInShoppingCart(Integer shoppingCartId, Integer... productIds);
+    void deleteProductInShoppingCart(Integer shoppingCartId, Integer... productIds) throws ServiceException;
 
     /**
      * 修改购物车商品
      * @param shoppingCartId
      * @param itemData
      */
-    void setProductForShoppingCart(Integer shoppingCartId, Map<Integer, Integer> itemData);
+    void setProductForShoppingCart(Integer shoppingCartId, Map<Integer, Integer> itemData) throws ServiceException;
 
     /**
      * 获取购物车中所有的商品
@@ -57,14 +58,14 @@ public interface ShoppingCartService {
      * @param productId
      * @param quantity
      */
-    void setProductQuantityForShoppingCart(Integer shoppingCartId, Integer productId, Integer quantity);
+    void setProductQuantityForShoppingCart(Integer shoppingCartId, Integer productId, Integer quantity) throws ServiceException;
 
     /**
      * 整理购物车中的商品
      * @param shoppingCartId
      * @return
      */
-    List<ShoppingCartItem> packageData(Integer shoppingCartId);
+    List<ShoppingCartItem> packageData(Integer shoppingCartId) throws ServiceException;
 
 
 

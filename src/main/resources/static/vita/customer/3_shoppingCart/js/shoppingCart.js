@@ -288,7 +288,8 @@ var ShopingCartModule = {
 			content: '请选择就餐方式！',
 			btn: ['堂食', '打包'],
 			yes: function() {
-				window.location.href = '../4_advanceOrder/advanceOrder.html';
+				ShopingCartModule.trySubmit();
+				// window.location.href = '../4_advanceOrder/advanceOrder.html';
 			},
 			no: function() {
 				layer.open({
@@ -511,6 +512,35 @@ var ShopingCartModule = {
 			result[result.length] = item;
 		}
 		return result;
+	},
+	trySubmit : function() {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/shoppingCart/readySubmit",
+			type: 'GET',
+			cache: false,
+			// async: false, //设置同步
+			dataType: 'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {},
+			success: function(data) {
+				if (data.code != '0') {
+					layer.open({
+						content: '无法提交购物车（'+data.desc+'）',
+						skin: 'msg',
+						time: 2 //3秒后自动关闭
+					});
+				} else {
+					// --------------------------------------------- 跳转到预订单页面
+				}
+			},
+			error: function() {
+				layer.open({
+					content: '连接服务器失败，请检查网络是否通畅！',
+					skin: 'msg',
+					time: 3 //3秒后自动关闭
+				});
+			}
+		});
 	}
 
 };
