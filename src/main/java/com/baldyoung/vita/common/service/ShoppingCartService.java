@@ -42,7 +42,7 @@ public interface ShoppingCartService {
      * @param shoppingCartId
      * @return
      */
-    Map<Integer, Integer> getAllProductFromShoppingCart(Integer shoppingCartId);
+    Map<Integer, Integer> getAllProductFromShoppingCart(Integer shoppingCartId) throws ServiceException;
 
     /**
      * 获取购物车中指定商品的数量
@@ -50,7 +50,7 @@ public interface ShoppingCartService {
      * @param productId
      * @return
      */
-    Integer getProductQuantityFromShoppingCart(Integer shoppingCartId, Integer productId);
+    Integer getProductQuantityFromShoppingCart(Integer shoppingCartId, Integer productId) throws ServiceException;
 
     /**
      * 设置购物车中指定商品的数量

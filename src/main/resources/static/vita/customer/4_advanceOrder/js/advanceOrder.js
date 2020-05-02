@@ -3,9 +3,44 @@ $(function() {
 });
 
 function init() {
+	HeartBeatModule.init();
 	AdvanceOrderModule.requestAdvanceOrderData();
 }
 
+var HeartBeatModule = {
+	init : function () {
+		setInterval('HeartBeatModule.sendData()', 1000);
+	},
+	sendData : function () {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/shoppingCart/heartBeat",
+			type: 'GET',
+			cache: false,
+			dataType: 'json',
+			//async: false, //设置同步
+			contentType: "application/json; charset=utf-8",
+			data: null,
+			success: function(data) {
+				if (data.code == 0) {
+					targetData = data.data;
+				} else {
+					layer.open({
+						content: 'heart beat defeat:'+data.desc,
+						skin: 'msg',
+						time: 1 //3秒后自动关闭
+					});
+				}
+			},
+			error: function() {
+				layer.open({
+					content: '连接服务器失败，请检查网络是否通畅！',
+					skin: 'msg',
+					time: 2 //3秒后自动关闭
+				});
+			}
+		});
+	}
+}
 
 var AdvanceOrderModule = {
 	displayAreaId: "#itemDisplayArea",
@@ -133,7 +168,7 @@ var AdvanceOrderModule = {
 		var html = '<div style="width:100%; background:#e5be6b; height:100px; border-top-left-radius: 15px; border-top-right-radius: 15px;">';
 		html += '<div style="width:100%; background: #ff8a0c; border-top-left-radius: 15px; border-top-right-radius: 15px; padding: 5px 0 5px 0; text-align: center;">';
 		html += '<i style="height:30px;">请选择该菜品口味</i>';
-		html += '<a onclick="layer.closeAll()" style="top:0px; width:30px;height:30px;background:url(/customer/0_common/img/arrow-bottom.png) no-repeat center center;background-size:50%; float:right; margin-right:8px; "></a>';
+		html += '<a onclick="layer.closeAll()" style="top:0px; width:30px;height:30px;background:url(/vita/customer/0_common/img/arrow-bottom.png) no-repeat center center;background-size:50%; float:right; margin-right:8px; "></a>';
 		html += '</div>';
 		html += '<div style="width:100%; padding: 3px 20px 10px 20px;">';
 		for (var i = 0; i < labelList.length; i++) {

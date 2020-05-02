@@ -35,7 +35,7 @@ public class CShoppingCartServiceImpl {
     public void addProductIntoShoppingCart(Integer shoppingCartId, Integer productId, Integer quantity) throws ServiceException {
         Integer currentQuantity = shoppingCartService.getProductQuantityFromShoppingCart(shoppingCartId, productId);
         int result = currentQuantity.intValue() + quantity.intValue();
-        if (0 >= result) {
+        if (0 > result) {
             result = 0;
         }
         shoppingCartService.setProductQuantityForShoppingCart(shoppingCartId, productId, result);
@@ -46,15 +46,15 @@ public class CShoppingCartServiceImpl {
      * @param shoppingCartId
      * @return
      */
-    public List<CProductDto> getALLItemFromShoppingCart(Integer shoppingCartId) {
+    public List<CProductDto> getALLItemFromShoppingCart(Integer shoppingCartId) throws ServiceException {
         Map map = shoppingCartService.getAllProductFromShoppingCart(shoppingCartId);
-        System.out.println(map);
+        //System.out.println(map);
         List<CProductDto> result;
         if (null != map && !isEmptyCollection(map.keySet())) {
             List<Integer> productIds = new ArrayList(map.keySet());
             result = cProductService.getProductWithProductIds(productIds);
             for (CProductDto dto : result) {
-                System.out.println(map.get(String.valueOf(dto.getProductId())));
+                //System.out.println(map.get(String.valueOf(dto.getProductId())));
                 dto.setCurrentQuantity(toInteger(map.get(String.valueOf(dto.getProductId()))));
             }
         } else {
@@ -72,14 +72,18 @@ public class CShoppingCartServiceImpl {
         shoppingCartService.deleteProductInShoppingCart(roomId, productIds);
     }
 
-    public void readySubmitShoppingCart(Integer roomId) throws ServiceException {
+    public String readySubmitShoppingCart(Integer roomId) throws ServiceException {
         // 锁定购物车，操作期间不允许修改购物车数据
-        shoppingCartService.readyPreOrderShoppingCart(roomId);
+        return shoppingCartService.prepareSubmit(roomId);
+    }
+
+    public void doHeartBeat(Integer roomId, String key) throws ServiceException {
+        shoppingCartService.doHeartBeat(roomId, key);
     }
 
     public void cancelSubmitShoppingCart(Integer roomId) {
         // 结束对购物车的锁定
-        shoppingCartService.cancelPreOrderShoppingCart(roomId);
+        //shoppingCartService.(roomId);
     }
 
 

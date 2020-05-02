@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 import static com.baldyoung.vita.common.pojo.dto.ResponseResult.success;
+import static com.baldyoung.vita.common.utility.CommonMethod.getHeartBeatKeyFromSession;
 import static com.baldyoung.vita.common.utility.CommonMethod.getRoomIdFromSession;
 
 /**
@@ -20,6 +21,8 @@ import static com.baldyoung.vita.common.utility.CommonMethod.getRoomIdFromSessio
 @RestController
 @RequestMapping("shoppingCart")
 public class CShoppingCartController {
+
+    public static final String SHOPPING_CART_HEART_BEAT_KEY = "hb-key";
 
     @Autowired
     private CShoppingCartServiceImpl cShoppingCartService;
@@ -48,7 +51,7 @@ public class CShoppingCartController {
      * @throws UtilityException
      */
     @GetMapping("itemList")
-    public ResponseResult getAllProductItemFromShoppingCart(HttpSession session) throws UtilityException {
+    public ResponseResult getAllProductItemFromShoppingCart(HttpSession session) throws UtilityException, ServiceException {
         Integer roomId = getRoomIdFromSession(session);
         return success(cShoppingCartService.getALLItemFromShoppingCart(roomId));
     }
@@ -79,7 +82,24 @@ public class CShoppingCartController {
     @GetMapping("readySubmit")
     public ResponseResult readyToSubmitShoppingCart(HttpSession session) throws UtilityException, ServiceException {
         Integer roomId = getRoomIdFromSession(session);
-        cShoppingCartService.readySubmitShoppingCart(roomId);
+        String key = cShoppingCartService.readySubmitShoppingCart(roomId);
+        session.setAttribute(SHOPPING_CART_HEART_BEAT_KEY, key);
+        return success();
+    }
+
+    /**
+     * 心跳交互
+     * 心跳期间代表客户端还在对购物车进行下单操作
+     * @param session
+     * @return
+     * @throws UtilityException
+     * @throws ServiceException
+     */
+    @GetMapping("heartBeat")
+    public ResponseResult doHeartBeat(HttpSession session) throws UtilityException, ServiceException {
+        Integer roomId = getRoomIdFromSession(session);
+        String key = getHeartBeatKeyFromSession(session);
+        cShoppingCartService.doHeartBeat(roomId, key);
         return success();
     }
 

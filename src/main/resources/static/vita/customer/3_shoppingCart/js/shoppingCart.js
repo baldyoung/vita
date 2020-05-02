@@ -527,10 +527,11 @@ var ShopingCartModule = {
 					layer.open({
 						content: '无法提交购物车（'+data.desc+'）',
 						skin: 'msg',
-						time: 2 //3秒后自动关闭
+						time: 3 //3秒后自动关闭
 					});
 				} else {
 					// --------------------------------------------- 跳转到预订单页面
+					GlobalMethod.redirectURL("../4_advanceOrder/advanceOrder.html");
 				}
 			},
 			error: function() {

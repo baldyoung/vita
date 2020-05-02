@@ -15,7 +15,10 @@ public enum ServiceExceptionEnum implements EnumBase {
     // 订单相关100300***
 
     // 购物车相关100400***
-    SHOPPING_CART_PRE_ORDER("购物车下单中，不允许修改商品", 100400100)
+    SHOPPING_CART_PRE_ORDER("购物车下单中，不允许修改商品", 100400100),
+    SHOPPING_CART_NOT_FOUND("非法购物车", 100400101),
+    SHOPPING_CART_NO_POWER("无权限操作", 100400102),
+    SHOPPING_CART_TIME_OUT("权限超时", 100400103),
 
     ;
     private String desc;

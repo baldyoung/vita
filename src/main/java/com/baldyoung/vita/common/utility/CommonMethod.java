@@ -1,12 +1,10 @@
 package com.baldyoung.vita.common.utility;
 
-import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
+import com.baldyoung.vita.customer.controller.CShoppingCartController;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
-
-import static com.baldyoung.vita.common.pojo.enums.systemEnums.SystemExceptionEnums.ROOM_ID_NOT_EXISTS;
 
 public class CommonMethod {
 
@@ -65,5 +63,10 @@ public class CommonMethod {
         }
         return Integer.parseInt(String.valueOf(object));
         */
+    }
+
+    public static String getHeartBeatKeyFromSession(HttpSession session) {
+        Object object = session.getAttribute(CShoppingCartController.SHOPPING_CART_HEART_BEAT_KEY);
+        return String.valueOf(object);
     }
 }
