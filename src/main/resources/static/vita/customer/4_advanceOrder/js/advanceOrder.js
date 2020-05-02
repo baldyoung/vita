@@ -4,9 +4,32 @@ $(function() {
 
 function init() {
 	HeartBeatModule.init();
-	AdvanceOrderModule.requestAdvanceOrderData();
+
+	// 数据处理
+	var i, j;
+	var typeList = ProductTypeModule.productTypeBuffer;
+	var productList = ProductModule.productBuffer;
+	for (i=0; i<typeList.length; i++) {
+		var type = typeList[i];
+		type.productList = [];
+		var list = type.productList;
+		for (j=0; j<productList.length; j++) {
+			var product = productList[j];
+			if (product.valid == undefined) {
+				product.valid = true;
+			}
+			if (product.productTypeId == type.productTypeId) {
+				list[list.length] = product;
+			}
+		}
+	}
+	AdvanceOrderModule.requestAdvanceOrderData(typeList);
 }
 
+/**
+ * 心跳模块
+ * @type {{init: HeartBeatModule.init, sendData: HeartBeatModule.sendData}}
+ */
 var HeartBeatModule = {
 	init : function () {
 		setInterval('HeartBeatModule.sendData()', 1000);
@@ -41,37 +64,221 @@ var HeartBeatModule = {
 		});
 	}
 }
+/**
+ * 商品类型模块
+ * @type {{init: ProductTypeModule.init, productTypeBuffer: Array, requestData: (function(): Array), getProductTypeMap: (function()), getProductType: ProductTypeModule.getProductType}}
+ */
+var ProductTypeModule = {
+	productTypeBuffer : [],
+	init : function() {
+		ProductTypeModule.productTypeBuffer = ProductTypeModule.requestData();
+	},
+	getProductTypeMap : function() {
+		var map = {};
+		var list = ProductTypeModule.productTypeBuffer;
+		for (var i=0; i<list.length; i++) {
+			var item = list[i];
+			map[''+item.productTypeId] = item;
+		}
+		return map;
+	},
+	getProductType : function(tProductTypeId) {
+		var list = ProductTypeModule.productTypeBuffer;
+		for (var i=0; i<list.length; i++) {
+			var item = list[i];
+			if (item.productTypeId == tProductTypeId) {
+				return item;
+			}
+		}
+		return undefined;
+	},
+	requestData : function() {
+		var targetData = [];
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/productType/list",
+			type: 'GET',
+			cache: false,
+			dataType: 'json',
+			async: false, //设置同步
+			contentType: "application/json; charset=utf-8",
+			data: null,
+			success: function(data) {
+				if (data.code == 0) {
+					targetData = data.data;
+				} else {
+					layer.open({
+						content: '获取品类数据失败,'+data.desc,
+						skin: 'msg',
+						time: 2 //3秒后自动关闭
+					});
+				}
+			},
+			error: function() {
+				layer.open({
+					content: '连接服务器失败，请检查网络是否通畅！',
+					skin: 'msg',
+					time: 2 //3秒后自动关闭
+				});
+			}
+		});
+		return targetData;
+	}
+}
+/**
+ * 商品模块
+ * @type {{init: ProductModule.init, productBuffer: Array, loadData: ProductModule.loadData, requestData: ProductModule.requestData}}
+ */
+var ProductModule = {
+	productBuffer : [],
+	init : function () {
+		ProductModule.productBuffer = ProductModule.requestData();
+	},
+	loadData : function(data) {
+
+	},
+	requestData : function () {
+		var targetList = [];
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/shoppingCart/itemList",
+			type: 'GET',
+			cache: false,
+			async: false, //设置同步
+			dataType: 'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {},
+			success: function(data) {
+				if (data.code != '0') {
+					layer.open({
+						content: '获取购物车数据失败！'+data.desc,
+						skin: 'msg',
+						time: 2 //3秒后自动关闭
+					});
+				} else {
+					targetList = data.data;
+				}
+			},
+			error: function() {
+				layer.open({
+					content: '连接服务器失败，请检查网络是否通畅！',
+					skin: 'msg',
+					time: 3 //3秒后自动关闭
+				});
+			}
+		});
+		return targetList;
+	},
+	getProduct : function(tProductId) {
+		var list = ProductModule.productBuffer;
+		for (var i=0; i<list.length; i++) {
+			var item = list[i];
+			if (item.productId == tProductId) {
+				return item;
+			}
+		}
+	}
+}
+/**
+ * 商品属性模块   ----------------------------------------------- 数据获取未编写
+ * @type {{createValidItemHTML: (function(*): string), createInvalidItemHTML: (function(*): string), getLabelValueList: ProductAttributeModule.getLabelValueList, productAttributeBuffer: Array, getItem: ProductAttributeModule.getItem, getLabelValue: ProductAttributeModule.getLabelValue, selectLabel: ProductAttributeModule.selectLabel, updateItemLabel: ProductAttributeModule.updateItemLabel}}
+ */
+var ProductAttributeModule = {
+	productAttributeBuffer : [],
+	init : function() {
+		ProductAttributeModule.productAttributeBuffer = ProductAttributeModule.requestData();
+	},
+	requestData : function() {
+		var targetList = [];
+
+		return targetList;
+	},
+	getAttributeList: function(tProductId) {
+		var product = ProductModule.getProduct(tProductId);
+		if (undefined == product || undefined == product.attributeTypeId) {
+			return undefined;
+		}
+		var attributeTypeId = product.attributeTypeId;
+		var list = ProductAttributeModule.productAttributeBuffer;
+		for (var i=0; i<list.length; i++) {
+			var item = list[i];
+			if (item.attributeTypeId == attributeTypeId) {
+				return item;
+			}
+		}
+		return undefined;
+	},
+	getAttribute: function(tAttributeId) {
+		if (undefined == tAttributeId) {
+			return undefined;
+		}
+		var list = ProductAttributeModule.productAttributeBuffer;
+		for (var i=0; i<list.length; i++) {
+			var item = list[i];
+			var array = item.attributeList;
+			for (var j=0; j<array.length; j++) {
+				var cell = array[j];
+				if (cell.attributeId == tAttributeId) {
+					return cell;
+				}
+			}
+		}
+		return undefined;
+	},
+	selectAttribute : function(productId) {
+		var attributeList = ProductAttributeModule.getAttributeList(productId);
+		var html = '<div style="width:100%; background:#e5be6b; height:100px; border-top-left-radius: 15px; border-top-right-radius: 15px;">';
+		html += '<div style="width:100%; background: #ff8a0c; border-top-left-radius: 15px; border-top-right-radius: 15px; padding: 5px 0 5px 0; text-align: center;">';
+		html += '<i style="height:30px;">请选择该商品属性</i>';
+		html += '<a onclick="layer.closeAll()" style="top:0px; width:30px;height:30px;background:url(/vita/customer/0_common/img/arrow-bottom.png) no-repeat center center;background-size:50%; float:right; margin-right:8px; "></a>';
+		html += '</div>';
+		html += '<div style="width:100%; padding: 3px 20px 10px 20px;">';
+		for (var i = 0; i < attributeList.length; i++) {
+			var item = attributeList[i];
+			html += '<input onclick="ProductAttributeModule.updateItemLabel(' + itemId + ', ' + item.attributeId + ')" type="button" style="height:30px; padding:2px 10px 2px 10px; margin: 6px 5px 5px 3px; border-radius:5px; background:#' + temp.labelValueColor + '; float:left; " value="' + temp.labelValueName + '" />';
+		}
+		html += '</div>';
+		html += '</div>';
+		layer.open({
+			type: 1,
+			content: html,
+			anim: 'up',
+			style: 'position:fixed; bottom:0; left:0; width: 100%; height: 200px; border:none; border-top-left-radius: 15px; border-top-right-radius: 15px; background:#e5be6b; '
+		});
+	},
+	updateItemLabel : function(tItemId, tNewLabelValueId) {
+		var item = AdvanceOrderModule.getItem(tItemId);
+		item.labelTypeValueId = tNewLabelValueId;
+		var label = AdvanceOrderModule.getLabelValue(tNewLabelValueId);
+		var target = $('#itemLabel'+tItemId);
+		target.css("background", "#"+label.labelValueColor);
+		target.text(label.labelValueName);
+		layer.closeAll();
+		console.log("修改商品项标签:");
+		console.log(AdvanceOrderModule.orderData);
+	}
+}
 
 var AdvanceOrderModule = {
 	displayAreaId: "#itemDisplayArea",
 	orderData: undefined,
 	productLabelData: undefined,
 	requestAdvanceOrderData: function() {
-		AdvanceOrderModule.orderData = test_data.advanceOrderData;
-		AdvanceOrderModule.productLabelData = test_data.productLabelData;
-		AdvanceOrderModule.loadAdvanceOrderData();
 	},
-	loadAdvanceOrderData: function() {
-		var data = AdvanceOrderModule.orderData.itemList;
-		console.log(data);
+	loadAdvanceOrderData: function(data) {
 		var target = $(AdvanceOrderModule.displayAreaId);
-		var validCellHTML = "",
-			invalidCellHTML = "",
-			temp;
+		var temp;
+		var html = '';
 		for (var i = 0; i < data.length; i++) {
 			temp = data[i];
-			if (temp.isValid) {
-				validCellHTML += AdvanceOrderModule.createValidItemHTML(temp);
-			} else {
-				invalidCellHTML += AdvanceOrderModule.createInvalidItemHTML(temp);
+			productList = temp.productList;
+			if (productList.length <= 0) {
+				html += '<div style="width:100%; color:#EF4F4F; font-size:10px; text-align: left;"> '+temp.productTypeName+'</div>';
+			}
+			for (var j=0; j<productList.length; j++) {
+				html += AdvanceOrderModule.createValidItemHTML(productList[j]);
 			}
 		}
 		target.html('');
-		if (invalidCellHTML != "") {
-			target.html(invalidCellHTML);
-			target.append('<div style="width:100%; color:#EF4F4F; font-size:10px; text-align: right;"> 以上商品已被其它顾客抢先一步选购了！ </div>');
-		}
-		target.append(validCellHTML);
+		target.append(html);
 		data = AdvanceOrderModule.orderData;
 		$('#diningTypeName').text(data.diningTypeName);
 		$('#diningTime').text(data.diningTime);
