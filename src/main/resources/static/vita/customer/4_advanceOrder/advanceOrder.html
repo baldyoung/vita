@@ -21,7 +21,7 @@
 			<div class="header">
 				<a href="../3_shoppingCart/shoppingCart.html" class="left"></a>
 				请核对订单
-				<a href="../4_orderResult/orderResult.html" class="scart-total-text4" style='margin-right:10px;'>确定<i id="selectedTotal"></i></a>
+				<a onclick="AdvanceOrderModule.submitAction()" class="scart-total-text4" style='margin-right:10px;'>确定<i id="selectedTotal"></i></a>
 			</div>
 			<div class="jd-qrdd-bigbox">
 				<!--
@@ -76,20 +76,20 @@
 					<span class="indent-details-text4 tcolor-grey">条目数量</span>
 					<span id="itemNumber" class="indent-details-text5 tcolor-black">15</span>
 				</div>
-				<div class="indent-details-box2">
-					<span class="indent-details-text4 tcolor-grey">商品总价</span>
+				<!--<div class="indent-details-box2">
+					<span class="indent-details-text4 tcolor-grey">订单总价</span>
 					<span id="orderAmount" class="indent-details-text5 tcolor-black">￥300.00</span>
-				</div>
-				<div class="indent-details-box2">
+				</div>-->
+				<!--<div class="indent-details-box2">
 					<span class="indent-details-text4 tcolor-grey">折扣</span>
 					<span id="discount" class="indent-details-text5 tcolor-black">0.8</span>
-				</div>
-				<div class="indent-details-box2">
+				</div>-->
+				<!--<div class="indent-details-box2">
 					<span class="indent-details-text4 tcolor-grey">优惠金额</span>
 					<span id="discountAmount" class="indent-details-text5 tcolor-black">60</span>
-				</div>
+				</div>-->
 				<div class="indent-details-box2">
-					<span class="indent-details-text4">应付总额</span>
+					<span class="indent-details-text4">订单总价</span>
 					<span id="receivableAmount" class="indent-details-text5">240.00</span>
 				</div>
 				<!--订单编号部分

@@ -1,9 +1,12 @@
 $(function() {
 	init();
 });
-
+var AdvanceOrderData = [];
 function init() {
 	HeartBeatModule.init();
+	ProductAttributeModule.init();
+	ProductTypeModule.init();
+	ProductModule.init();
 
 	// 数据处理
 	var i, j;
@@ -21,9 +24,14 @@ function init() {
 			if (product.productTypeId == type.productTypeId) {
 				list[list.length] = product;
 			}
+			if (undefined == ProductAttributeModule.getAttributeList(product.productId)) {
+				product.productAttributeTypeId = undefined;
+			}
 		}
 	}
-	AdvanceOrderModule.requestAdvanceOrderData(typeList);
+	console.log(typeList);
+	AdvanceOrderData = typeList;
+	AdvanceOrderModule.loadAdvanceOrderData(typeList);
 }
 
 /**
@@ -184,23 +192,59 @@ var ProductModule = {
 var ProductAttributeModule = {
 	productAttributeBuffer : [],
 	init : function() {
-		ProductAttributeModule.productAttributeBuffer = ProductAttributeModule.requestData();
+		var list = ProductAttributeModule.requestData();
+		for (var i=0; i<list.length; i++) {
+			var array = list[i].productAttributeList;
+			for (var j=0; j<array.length; j++) {
+				array[j].productAttributeColor = ColorModule.getTargetColor(j);
+			}
+		}
+		ProductAttributeModule.productAttributeBuffer = list;
 	},
 	requestData : function() {
 		var targetList = [];
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/attribute/all",
+			type: 'GET',
+			cache: false,
+			async: false, //设置同步
+			dataType: 'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {},
+			success: function(data) {
+				if (data.code != '0') {
+					layer.open({
+						content: '获取商品属性数据失败！'+data.desc,
+						skin: 'msg',
+						time: 2 //3秒后自动关闭
+					});
+				} else {
+					targetList = data.data;
 
+				}
+			},
+			error: function() {
+				layer.open({
+					content: '连接服务器失败，请检查网络是否通畅！',
+					skin: 'msg',
+					time: 3 //3秒后自动关闭
+				});
+			}
+		});
 		return targetList;
 	},
 	getAttributeList: function(tProductId) {
 		var product = ProductModule.getProduct(tProductId);
-		if (undefined == product || undefined == product.attributeTypeId) {
+		//console.log('kkk');
+		//console.log(product);
+		if (undefined == product || undefined == product.productAttributeTypeId) {
 			return undefined;
 		}
-		var attributeTypeId = product.attributeTypeId;
+		var attributeTypeId = product.productAttributeTypeId;
 		var list = ProductAttributeModule.productAttributeBuffer;
 		for (var i=0; i<list.length; i++) {
 			var item = list[i];
-			if (item.attributeTypeId == attributeTypeId) {
+			if (item.productAttributeTypeId == attributeTypeId) {
 				return item;
 			}
 		}
@@ -213,10 +257,10 @@ var ProductAttributeModule = {
 		var list = ProductAttributeModule.productAttributeBuffer;
 		for (var i=0; i<list.length; i++) {
 			var item = list[i];
-			var array = item.attributeList;
+			var array = item.productAttributeList;
 			for (var j=0; j<array.length; j++) {
 				var cell = array[j];
-				if (cell.attributeId == tAttributeId) {
+				if (cell.productAttributeId == tAttributeId) {
 					return cell;
 				}
 			}
@@ -225,15 +269,19 @@ var ProductAttributeModule = {
 	},
 	selectAttribute : function(productId) {
 		var attributeList = ProductAttributeModule.getAttributeList(productId);
+		if (undefined == attributeList) {
+			return;
+		}
+		attributeList = attributeList.productAttributeList;
 		var html = '<div style="width:100%; background:#e5be6b; height:100px; border-top-left-radius: 15px; border-top-right-radius: 15px;">';
 		html += '<div style="width:100%; background: #ff8a0c; border-top-left-radius: 15px; border-top-right-radius: 15px; padding: 5px 0 5px 0; text-align: center;">';
 		html += '<i style="height:30px;">请选择该商品属性</i>';
-		html += '<a onclick="layer.closeAll()" style="top:0px; width:30px;height:30px;background:url(/vita/customer/0_common/img/arrow-bottom.png) no-repeat center center;background-size:50%; float:right; margin-right:8px; "></a>';
+		html += '<a onclick="layer.closeAll()" style="top:0px; width:30px;height:30px;background:url('+'/vita/customer/0_common/img/arrow-bottom.png'+') no-repeat center center;background-size:50%; float:right; margin-right:8px; "></a>';
 		html += '</div>';
 		html += '<div style="width:100%; padding: 3px 20px 10px 20px;">';
 		for (var i = 0; i < attributeList.length; i++) {
 			var item = attributeList[i];
-			html += '<input onclick="ProductAttributeModule.updateItemLabel(' + itemId + ', ' + item.attributeId + ')" type="button" style="height:30px; padding:2px 10px 2px 10px; margin: 6px 5px 5px 3px; border-radius:5px; background:#' + temp.labelValueColor + '; float:left; " value="' + temp.labelValueName + '" />';
+			html += '<input onclick="ProductAttributeModule.updateItemLabel(' + productId + ', ' + item.productAttributeId + ')" type="button" style="height:30px; padding:2px 10px 2px 10px; margin: 6px 5px 5px 3px; border-radius:5px; background:#' + item.productAttributeColor + '; float:left; " value="' + item.productAttributeName + '" />';
 		}
 		html += '</div>';
 		html += '</div>';
@@ -244,16 +292,14 @@ var ProductAttributeModule = {
 			style: 'position:fixed; bottom:0; left:0; width: 100%; height: 200px; border:none; border-top-left-radius: 15px; border-top-right-radius: 15px; background:#e5be6b; '
 		});
 	},
-	updateItemLabel : function(tItemId, tNewLabelValueId) {
-		var item = AdvanceOrderModule.getItem(tItemId);
-		item.labelTypeValueId = tNewLabelValueId;
-		var label = AdvanceOrderModule.getLabelValue(tNewLabelValueId);
-		var target = $('#itemLabel'+tItemId);
-		target.css("background", "#"+label.labelValueColor);
-		target.text(label.labelValueName);
+	updateItemLabel : function(tProductId, tAttributeId) {
+		var item = ProductModule.getProduct(tProductId);
+		item.attributeId = tAttributeId;
+		var attribute = ProductAttributeModule.getAttribute(tAttributeId);
+		var target = $('#itemLabel'+tProductId);
+		target.css("background", "#"+attribute.productAttributeColor);
+		target.text(attribute.productAttributeName);
 		layer.closeAll();
-		console.log("修改商品项标签:");
-		console.log(AdvanceOrderModule.orderData);
 	}
 }
 
@@ -269,16 +315,21 @@ var AdvanceOrderModule = {
 		var html = '';
 		for (var i = 0; i < data.length; i++) {
 			temp = data[i];
-			productList = temp.productList;
-			if (productList.length <= 0) {
-				html += '<div style="width:100%; color:#EF4F4F; font-size:10px; text-align: left;"> '+temp.productTypeName+'</div>';
+			var productList = temp.productList;
+			if (productList.length > 0) {
+				html += '<div class="indent-details-box2" style="border-top:solid 5px #F5F5F4;">\n' +
+					'<span class="indent-details-text4 tcolor-grey">'+temp.productTypeName+'</span>\n' +
+					'<span id="diningTypeName" class="indent-details-text5 tcolor-black">'+productList.length+'</span>\n' +
+					'</div>';
 			}
 			for (var j=0; j<productList.length; j++) {
 				html += AdvanceOrderModule.createValidItemHTML(productList[j]);
 			}
 		}
+		//console.log(html);
 		target.html('');
 		target.append(html);
+		return;
 		data = AdvanceOrderModule.orderData;
 		$('#diningTypeName').text(data.diningTypeName);
 		$('#diningTime').text(data.diningTime);
@@ -288,69 +339,98 @@ var AdvanceOrderModule = {
 		$('#discountAmount').text(parseFloat(data.orderAmount) - parseFloat(data.receivableAmount));
 		$('#receivableAmount').text(data.receivableAmount);
 	},
-	requestProductLabelData: function() {
-
+	submitAction : function() {
+		layer.open({
+			content: '确定提交吗？',
+			btn: ['确定', '取消'],
+			yes: function() {
+				layer.closeAll();
+				AdvanceOrderModule.submitAdvanceOrderData();
+			},
+			no: function() {
+			}
+		});
 	},
 	submitAdvanceOrderData: function() {
+		var data = AdvanceOrderModule.packageData();
+		console.log(data);
+		//var href="../4_orderResult/orderResult.html";
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/order/do",
+			type: 'POST',
+			cache: false,
+			dataType: 'json',
+			async: false, //设置同步
+			contentType: "application/json; charset=utf-8",
+			data: JSON.stringify(data),
+			success: function(data) {
+				if (data.code == 0) {
+
+				} else {
+					layer.open({
+						content: '提交订单失败：'+data.desc,
+						skin: 'msg',
+						time: 3 //3秒后自动关闭
+					});
+				}
+			},
+			error: function() {
+				layer.open({
+					content: '连接服务器失败，请检查网络是否通畅！',
+					skin: 'msg',
+					time: 3 //3秒后自动关闭
+				});
+			}
+		});
 
 	},
-	getItem: function(tItemId) {
-		var data = AdvanceOrderModule.orderData.itemList,
-			i,
-			temp;
-		for (i = 0; i < data.length; i++) {
-			temp = data[i];
-			if (temp.itemId == tItemId) {
-				return temp;
+	packageData : function() {
+		var list = AdvanceOrderData;
+		console.log("###未处理数据：")
+		console.log(list);
+		var data = [];
+		var targetData = [];
+		for (var i=0; i<list.length; i++) {
+			var item = list[i];
+			var array = item.productList;
+			if (array.length == 0) {
+				continue;
 			}
-		}
-		return undefined;
-	},
-	getLabelValueList: function(tLabelTypeId) {
-		if (undefined == tLabelTypeId) {
-			return undefined;
-		}
-		var i,
-			productLabelData = AdvanceOrderModule.productLabelData,
-			temp;
-		for (i = 0; i < productLabelData.length; i++) {
-			temp = productLabelData[i];
-			if (tLabelTypeId == temp.labelTypeId) {
-				return temp.labelValueList;
-			}
-		}
-		return undefined;
-	},
-	getLabelValue: function(tLabelValueCellId) {
-		if (undefined == tLabelValueCellId) {
-			return undefined;
-		}
-		var i, j,
-			productLabelData = AdvanceOrderModule.productLabelData,
-			temp, cell;
-		for (i = 0; i < productLabelData.length; i++) {
-			temp = productLabelData[i].labelValueList;
-			for (j = 0; j < temp.length; j++) {
-				cell = temp[j];
-				if (cell.labelValueId == tLabelValueCellId) {
-					return cell;
+			var pList = [];
+			var productItem = {
+				productTypeId : item.productTypeId,
+				productList : pList
+			};
+			for (var j=0; j<array.length; j++) {
+				var cell = {
+					productId : array[j].productId,
+					productQuantity : array[j].currentQuantity
 				}
+				if (undefined != array[j].attributeId) {
+					cell.productAttributeId = array[j].attributeId;
+				}
+				pList[pList.length] = cell;
+				targetData[targetData.length] = cell;
 			}
+			data[data.length] = productItem;
 		}
-		return undefined;
+		console.log("###处理后数据：")
+		console.log(data);
+		console.log(targetData);
+		return targetData;
 	},
 	createValidItemHTML: function(itemData) {
 		var html = '<div class="zjzz-buylist-det" style="margin-bottom: 1px;">';
-		html += '<img src="' + GlobalConfig.productImgRelativePath + itemData.productPicture + '" />';
+		html += '<img src="' + GlobalConfig.productImgRelativePath + itemData.productImgName + '" />';
 		html += '<div class="zjzz-buylist-gdetail">';
 		html += '<span class="zjzz-buylist-gtit1">' + itemData.productName + '</span>';
 		html += '<span class="zjzz-buylist-gmoney">';
 		html += '<i class="zjzz-buylist-gm1">' + itemData.productPrice + '</i>';
-		html += '<i class="zjzz-buylist-gm2">x' + itemData.quantity + '</i>';
+		html += '<i class="zjzz-buylist-gm2">x' + itemData.currentQuantity + '</i>';
 		html += '</span>';
-		if (undefined != itemData.labelTypeValueId) {
-			var temp = AdvanceOrderModule.getLabelValue(itemData.labelTypeValueId);
-			html += '<span class="zjzz-buylist-gtit1" style="font-size:13px; " onclick="AdvanceOrderModule.selectLabel(' + itemData.itemId + ')">口味：<i id="itemLabel' + itemData.itemId + '" style=" height:20px; background: #' + temp.labelValueColor + '; border-radius: 5px; padding:0 5px 0 5px;">' + temp.labelValueName + '</i></span>';
+		if (undefined != itemData.productAttributeTypeId) {
+			var temp = ProductAttributeModule.getAttributeList(itemData.productAttributeTypeId);
+			html += '<span class="zjzz-buylist-gtit1" style="font-size:13px; " onclick="ProductAttributeModule.selectAttribute(' + itemData.productId + ')">口味：<i id="itemLabel' + itemData.productId + '" style=" height:20px; background: #' + '66cccc' + '; border-radius: 5px; padding:0 5px 0 5px;">' + '默认' + '</i></span>';
 		}
 		html += '</div>';
 		html += '</div>';
@@ -368,122 +448,24 @@ var AdvanceOrderModule = {
 		html += '</div>';
 		html += '</div>';
 		return html;
-	},
-	selectLabel : function(itemId) {
-		var item = AdvanceOrderModule.getItem(itemId);
-		var labelList = AdvanceOrderModule.getLabelValueList(item.labelTypeId); 
-		var html = '<div style="width:100%; background:#e5be6b; height:100px; border-top-left-radius: 15px; border-top-right-radius: 15px;">';
-		html += '<div style="width:100%; background: #ff8a0c; border-top-left-radius: 15px; border-top-right-radius: 15px; padding: 5px 0 5px 0; text-align: center;">';
-		html += '<i style="height:30px;">请选择该菜品口味</i>';
-		html += '<a onclick="layer.closeAll()" style="top:0px; width:30px;height:30px;background:url(/vita/customer/0_common/img/arrow-bottom.png) no-repeat center center;background-size:50%; float:right; margin-right:8px; "></a>';
-		html += '</div>';
-		html += '<div style="width:100%; padding: 3px 20px 10px 20px;">';
-		for (var i = 0; i < labelList.length; i++) {
-			var temp = labelList[i];
-			html += '<input onclick="AdvanceOrderModule.updateItemLabel(' + itemId + ', ' + temp.labelValueId + ')" type="button" style="height:30px; padding:2px 10px 2px 10px; margin: 6px 5px 5px 3px; border-radius:5px; background:#' + temp.labelValueColor + '; float:left; " value="' + temp.labelValueName + '" />';
-		}
-		html += '</div>';
-		html += '</div>';
-		layer.open({
-			type: 1,
-			content: html,
-			anim: 'up',
-			style: 'position:fixed; bottom:0; left:0; width: 100%; height: 200px; border:none; border-top-left-radius: 15px; border-top-right-radius: 15px; background:#e5be6b; '
-		});
-	},
-	updateItemLabel : function(tItemId, tNewLabelValueId) {
-		var item = AdvanceOrderModule.getItem(tItemId);
-		item.labelTypeValueId = tNewLabelValueId;
-		var label = AdvanceOrderModule.getLabelValue(tNewLabelValueId);
-		var target = $('#itemLabel'+tItemId);
-		target.css("background", "#"+label.labelValueColor);
-		target.text(label.labelValueName);
-		layer.closeAll();
-		console.log("修改商品项标签:");
-		console.log(AdvanceOrderModule.orderData);
 	}
 };
 
-function test() {
-	selectLabel(1);
-}
-
-var test_data = {
-	productLabelData: [{
-		labelTypeId: "1",
-		labelValueList: [{
-			labelValueId: "101",
-			labelValueName: "正常",
-			labelValueColor: "009F95"
-		}, {
-			labelValueId: "102",
-			labelValueName: "非常辣",
-			labelValueColor: "FC746C"
-		}, {
-			labelValueId: "103",
-			labelValueName: "不辣",
-			labelValueColor: "8CB2C5"
-		}]
-	},{
-		labelTypeId: "2",
-		labelValueList: [{
-			labelValueId: "201",
-			labelValueName: "201",
-			labelValueColor: "009F95"
-		}, {
-			labelValueId: "202",
-			labelValueName: "202",
-			labelValueColor: "FC746C"
-		}, {
-			labelValueId: "203",
-			labelValueName: "203",
-			labelValueColor: "8CB2C5"
-		}]
-	}],
-	advanceOrderData: {
-		orderId: "k00101",
-		diningTypeName: "堂食",
-		diningTime: "现在",
-		itemNumber: "10",
-		orderAmount: "300",
-		discount: "0.8",
-		receivableAmount: "240",
-		receivedAmount: "240",
-		itemList: [{
-			itemId: "1001",
-			productName: "赣南脐橙",
-			productPrice: "30.00",
-			productPicture: "3.png",
-			quantity: "1",
-			labelTypeId: "1",
-			labelTypeValueId: "101",
-			isValid: true
-		}, {
-			itemId: "1002",
-			productName: "赣北苹果",
-			productPrice: "25.00",
-			productPicture: "1.png",
-			quantity: "2",
-			labelTypeId: "2",
-			labelTypeValueId: "201",
-			isValid: true
-		}, {
-			itemId: "1003",
-			productName: "失效商品测试",
-			productPrice: "888.00",
-			productPicture: "6.png",
-			quantity: "1",
-			labelTypeId: "1",
-			labelTypeValueId: "101",
-			isValid: false
-		}, {
-			itemId: "1004",
-			productName: "赣北苹果",
-			productPrice: "25.00",
-			productPicture: "1.png",
-			quantity: "1",
-			isValid: true
-		}]
+var ColorModule = {
+	DefaultColor : ['009F95', 'FC746C', '8CB2C5'],
+	getColor : function () {
+		var i = Math.floor(Math.random() * ColorModule.DefaultColor.length);
+		return ColorModule.DefaultColor[i];
+	},
+	getTargetColor : function (k) {
+		var list = ColorModule.DefaultColor;
+		if (k >= list.length || k < 0) {
+			return list[list.length - 1];
+		}
+		return list[k];
 	}
-
 }
+
+
+
+
