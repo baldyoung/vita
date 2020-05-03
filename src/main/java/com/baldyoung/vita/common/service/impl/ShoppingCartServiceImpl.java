@@ -1,5 +1,6 @@
 package com.baldyoung.vita.common.service.impl;
 
+import com.baldyoung.vita.common.pojo.ShoppingCartDataUnit;
 import com.baldyoung.vita.common.pojo.ShoppingCartOptionUnit;
 import com.baldyoung.vita.common.pojo.entity.ShoppingCartItem;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
@@ -15,7 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 
-import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.*;
+import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.SHOPPING_CART_NOT_FOUND;
+import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.SHOPPING_CART_NO_POWER;
 import static com.baldyoung.vita.common.utility.CommonMethod.toInteger;
 
 @Service
@@ -29,6 +31,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
      * 购物车并发锁
      */
     private Map<Integer, ShoppingCartOptionUnit> cartMap;
+
+    private Map<Integer, ShoppingCartDataUnit> cartDataMap;
 
     private static String DEFAULT_TABLE_NAME = "shoppingCart";
 
@@ -47,11 +51,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @PostConstruct
     private void init() {
         this.uniqueCodeModule = UniqueCodeModule.getInstance("bald", "young");
+        cartDataMap = new HashMap();
         cartMap = new HashMap();
         // 获取所有就餐位的编号，并为每个就餐位生成一个购物车操作单元
         Integer[] diningRoomIds = {1, 2, 3, 4, 5, 6, 333};
         for (Integer diningRoomId : diningRoomIds) {
             cartMap.put(diningRoomId, new ShoppingCartOptionUnit());
+            cartDataMap.put(diningRoomId, new ShoppingCartDataUnit());
         }
     }
 
@@ -63,6 +69,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
      */
     private ShoppingCartOptionUnit getOptionUnit(Integer shoppingCartId) throws ServiceException {
         ShoppingCartOptionUnit unit = cartMap.get(shoppingCartId);
+        if (null == unit) {
+            throw new ServiceException(SHOPPING_CART_NOT_FOUND);
+        }
+        return unit;
+    }
+
+    /**
+     * 获取指定购物车的数据单元
+     * @param shoppingCartId
+     * @return
+     * @throws ServiceException
+     */
+    private ShoppingCartDataUnit getDataUnit(Integer shoppingCartId) throws ServiceException {
+        ShoppingCartDataUnit unit = cartDataMap.get(shoppingCartId);
         if (null == unit) {
             throw new ServiceException(SHOPPING_CART_NOT_FOUND);
         }
@@ -188,6 +208,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         lock.unlock();
     }
 
+    /**
+     * 锁定购物车，准备提交订单
+     * @param shoppingCartId
+     * @return
+     * @throws ServiceException
+     */
     public String prepareSubmit(Integer shoppingCartId) throws ServiceException {
         ShoppingCartOptionUnit unit = getOptionUnit(shoppingCartId);
         String newHeartBeatKey = uniqueCodeModule.getUniqueCode();
@@ -196,6 +222,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return newHeartBeatKey;
     }
 
+    /**
+     * 购物车心跳交互调用
+     * @param shoppingCartId
+     * @param key
+     * @throws ServiceException
+     */
     public void doHeartBeat(Integer shoppingCartId, String key) throws ServiceException {
         if (null == key) {
             throw new ServiceException(SHOPPING_CART_NO_POWER);
@@ -204,6 +236,22 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Lock lock = unit.readyDoHeartBeat(key);
         lock.unlock();
     }
+
+    public void setDiningTime(Integer shoppingCartId, String diningTime) throws ServiceException {
+        Lock lock = readyWriteAction(shoppingCartId);
+        ShoppingCartDataUnit unit = getDataUnit(shoppingCartId);
+        unit.setDiningTime(diningTime);
+        lock.unlock();
+    }
+
+    public void setDiningType(Integer shoppingCartId, Integer diningType) throws ServiceException {
+        Lock lock = readyWriteAction(shoppingCartId);
+        ShoppingCartDataUnit unit = getDataUnit(shoppingCartId);
+        unit.setDiningType(diningType);
+        lock.unlock();
+    }
+
+
 
 
 

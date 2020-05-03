@@ -5,7 +5,6 @@ import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceExceptio
 import com.baldyoung.vita.common.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -16,7 +15,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.SHOPPING_CART_PRE_ORDER;
 import static com.baldyoung.vita.common.utility.CommonMethod.toInteger;
 
-@Service
+
 public class ShoppingCartServiceImplDelete implements ShoppingCartService {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
