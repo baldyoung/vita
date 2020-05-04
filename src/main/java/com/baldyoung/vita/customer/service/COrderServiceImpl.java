@@ -35,6 +35,9 @@ public class COrderServiceImpl {
             throw new ServiceException(SHOPPING_CART_EMPTY);
         }
         List<ShoppingCartItem> itemList = advanceOrderService.getAdvanceOrder(roomId);
+        if (null == itemList || isEmptyCollection(itemList)) {
+            throw new ServiceException(SHOPPING_CART_EMPTY);
+        }
         List<Integer> productIds = new ArrayList(itemList.size());
         for (ShoppingCartItem item : itemList) {
             productIds.add(item.getProductId());
