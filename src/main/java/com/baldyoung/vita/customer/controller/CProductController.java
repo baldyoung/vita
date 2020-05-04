@@ -2,6 +2,7 @@ package com.baldyoung.vita.customer.controller;
 
 
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
+import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
 import com.baldyoung.vita.customer.service.CProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class CProductController {
      * @return
      */
     @GetMapping("validProductForType")
-    public ResponseResult getValidProductList(@RequestParam("t")Integer typeId, HttpServletRequest request) throws UtilityException {
+    public ResponseResult getValidProductList(@RequestParam("t")Integer typeId, HttpServletRequest request) throws UtilityException, ServiceException {
         Integer roomId = getRoomIdFromSession(request.getSession());
         return success(cProductService.getValidProductForProductType(typeId, roomId));
     }

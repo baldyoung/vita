@@ -1,6 +1,7 @@
 package com.baldyoung.vita.customer.service;
 
 import com.baldyoung.vita.common.pojo.dto.product.CProductDto;
+import com.baldyoung.vita.common.pojo.dto.shoppingCart.DiningData;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.service.impl.ShoppingCartServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,13 +73,21 @@ public class CShoppingCartServiceImpl {
         shoppingCartService.deleteProductInShoppingCart(roomId, productIds);
     }
 
-    public String readySubmitShoppingCart(Integer roomId) throws ServiceException {
+    public String readySubmitShoppingCart(Integer roomId, String diningTime, Integer diningType) throws ServiceException {
         // 锁定购物车，操作期间不允许修改购物车数据
-        return shoppingCartService.prepareSubmit(roomId);
+        DiningData diningData = new DiningData();
+        diningData.setDiningType(diningType);
+        diningData.setDiningTime(diningTime);
+        String key = shoppingCartService.prepareSubmit(roomId, diningData);
+        return key;
     }
 
     public void doHeartBeat(Integer roomId, String key) throws ServiceException {
         shoppingCartService.doHeartBeat(roomId, key);
+    }
+
+    public DiningData getDiningData(Integer roomId) throws ServiceException {
+        return shoppingCartService.getDiningData(roomId);
     }
 
     public void cancelSubmitShoppingCart(Integer roomId) {

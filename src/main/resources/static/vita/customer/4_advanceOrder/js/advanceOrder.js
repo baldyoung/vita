@@ -9,7 +9,8 @@ function init() {
 	ProductModule.init();
 
 	// 数据处理
-	var i, j;
+	var i, j, k=0;
+	var receivableAmount = 0.0;
 	var typeList = ProductTypeModule.productTypeBuffer;
 	var productList = ProductModule.productBuffer;
 	for (i=0; i<typeList.length; i++) {
@@ -23,6 +24,8 @@ function init() {
 			}
 			if (product.productTypeId == type.productTypeId) {
 				list[list.length] = product;
+				k ++;
+				receivableAmount += product.productPrice * product.currentQuantity;
 			}
 			if (undefined == ProductAttributeModule.getAttributeList(product.productId)) {
 				product.productAttributeTypeId = undefined;
@@ -32,6 +35,10 @@ function init() {
 	console.log(typeList);
 	AdvanceOrderData = typeList;
 	AdvanceOrderModule.loadAdvanceOrderData(typeList);
+	var data = AdvanceOrderModule.requestDiningData();
+	data.itemNumber = k;
+	data.receivableAmount = receivableAmount;
+	AdvanceOrderModule.loadDiningData(data);
 }
 
 /**
@@ -307,7 +314,46 @@ var AdvanceOrderModule = {
 	displayAreaId: "#itemDisplayArea",
 	orderData: undefined,
 	productLabelData: undefined,
-	requestAdvanceOrderData: function() {
+	requestDiningData: function() {
+		var targetData = {};
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/order/diningData",
+			type: 'GET',
+			cache: false,
+			dataType: 'json',
+			async: false, //设置同步
+			contentType: "application/json; charset=utf-8",
+			data: null,
+			success: function(data) {
+				if (data.code == 0) {
+					targetData = data.data;
+				} else {
+					layer.open({
+						content: '获取就餐数据失败：'+data.desc,
+						skin: 'msg',
+						time: 2 //3秒后自动关闭
+					});
+				}
+			},
+			error: function() {
+				layer.open({
+					content: '连接服务器失败，请检查网络是否通畅！',
+					skin: 'msg',
+					time: 3 //3秒后自动关闭
+				});
+			}
+		});
+		return targetData;
+	},
+	loadDiningData : function(data) {
+		data.diningTypeName = data.diningType == 0 ? '堂食' : '打包';
+		$('#diningTypeName').text(data.diningTypeName);
+		$('#diningTime').text(data.diningTime);
+		$('#itemNumber').text(data.itemNumber);
+		//$('#orderAmount').text(data.orderAmount);
+		//$('#discount').text(data.discount);
+		//$('#discountAmount').text(parseFloat(data.orderAmount) - parseFloat(data.receivableAmount));
+		$('#receivableAmount').text(data.receivableAmount);
 	},
 	loadAdvanceOrderData: function(data) {
 		var target = $(AdvanceOrderModule.displayAreaId);
@@ -319,7 +365,7 @@ var AdvanceOrderModule = {
 			if (productList.length > 0) {
 				html += '<div class="indent-details-box2" style="border-top:solid 5px #F5F5F4;">\n' +
 					'<span class="indent-details-text4 tcolor-grey">'+temp.productTypeName+'</span>\n' +
-					'<span id="diningTypeName" class="indent-details-text5 tcolor-black">'+productList.length+'</span>\n' +
+					'<span class="indent-details-text5 tcolor-black">'+productList.length+'</span>\n' +
 					'</div>';
 			}
 			for (var j=0; j<productList.length; j++) {
@@ -330,14 +376,6 @@ var AdvanceOrderModule = {
 		target.html('');
 		target.append(html);
 		return;
-		data = AdvanceOrderModule.orderData;
-		$('#diningTypeName').text(data.diningTypeName);
-		$('#diningTime').text(data.diningTime);
-		$('#itemNumber').text(data.itemNumber);
-		$('#orderAmount').text(data.orderAmount);
-		$('#discount').text(data.discount);
-		$('#discountAmount').text(parseFloat(data.orderAmount) - parseFloat(data.receivableAmount));
-		$('#receivableAmount').text(data.receivableAmount);
 	},
 	submitAction : function() {
 		layer.open({

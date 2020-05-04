@@ -2,6 +2,7 @@ package com.baldyoung.vita.common.service.impl;
 
 import com.baldyoung.vita.common.pojo.ShoppingCartDataUnit;
 import com.baldyoung.vita.common.pojo.ShoppingCartOptionUnit;
+import com.baldyoung.vita.common.pojo.dto.shoppingCart.DiningData;
 import com.baldyoung.vita.common.pojo.entity.ShoppingCartItem;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.service.ShoppingCartService;
@@ -214,10 +215,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
      * @return
      * @throws ServiceException
      */
-    public String prepareSubmit(Integer shoppingCartId) throws ServiceException {
+    public String prepareSubmit(Integer shoppingCartId, DiningData diningData) throws ServiceException {
         ShoppingCartOptionUnit unit = getOptionUnit(shoppingCartId);
         String newHeartBeatKey = uniqueCodeModule.getUniqueCode();
         Lock lock = unit.readySubmit(newHeartBeatKey);
+        ShoppingCartDataUnit dataUnit = getDataUnit(shoppingCartId);
+        dataUnit.setDiningType(diningData.getDiningType());
+        dataUnit.setDiningTime(diningData.getDiningTime());
         lock.unlock();
         return newHeartBeatKey;
     }
@@ -237,20 +241,24 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         lock.unlock();
     }
 
-    public void setDiningTime(Integer shoppingCartId, String diningTime) throws ServiceException {
-        Lock lock = readyWriteAction(shoppingCartId);
+
+    public DiningData getDiningData(Integer shoppingCartId) throws ServiceException {
+        DiningData diningData = new DiningData();
+        Lock lock = readyReadAction(shoppingCartId);
         ShoppingCartDataUnit unit = getDataUnit(shoppingCartId);
-        unit.setDiningTime(diningTime);
+        diningData.setDiningTime(unit.getDiningTime());
+        diningData.setDiningType(unit.getDiningType());
         lock.unlock();
+        return diningData;
     }
 
-    public void setDiningType(Integer shoppingCartId, Integer diningType) throws ServiceException {
+    public void setDiningData(Integer shoppingCartId, DiningData diningData) throws ServiceException {
         Lock lock = readyWriteAction(shoppingCartId);
         ShoppingCartDataUnit unit = getDataUnit(shoppingCartId);
-        unit.setDiningType(diningType);
+        unit.setDiningType(diningData.getDiningType());
+        unit.setDiningTime(diningData.getDiningTime());
         lock.unlock();
     }
-
 
 
 

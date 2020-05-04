@@ -1,11 +1,20 @@
 var SelectDiningTimeModule = {
-	baseTime : 60,
+	baseTime : 0,
 	html: undefined,
-	selectAction: function(diningTimeId, diningTimeValue) {
+	selectValue : 0,
+	packageData : function() {
 		var nowDate = new Date();
-		nowDate.setMinutes(nowDate.getMinutes() + SelectDiningTimeModule.baseTime + parseInt(diningTimeValue));
-		//console.log(nowDate);
-		var selectTime = nowDate.getHours() + ":" + nowDate.getMinutes() + "左右";
+		nowDate.setMinutes(nowDate.getMinutes() + SelectDiningTimeModule.baseTime + parseInt(SelectDiningTimeModule.selectValue));
+		var h = nowDate.getHours();
+		h = h > 9 ? h : ('0'+h);
+		var m = nowDate.getMinutes();
+		m = m > 9 ? m : ('0'+m);
+		var selectTime = h + ":" + m;
+		return selectTime;
+	},
+	selectAction: function(diningTimeId, diningTimeValue) {
+		SelectDiningTimeModule.selectValue = diningTimeValue;
+		var selectTime = SelectDiningTimeModule.packageData() + '左右';
 		$('#presetTimeResult').text(selectTime);
 		layer.closeAll();
 	},
@@ -133,6 +142,7 @@ var ShopingCartModule = {
 	displayAreaId: '#itemDisplayArea',
 	productListBuffer: [],
 	invalidProductListBuffer: [],
+	diningType : undefined,
 	requestAndLoadData: function() {
 		$.ajax({
 			url: GlobalConfig.serverAddress + "/shoppingCart/itemList",
@@ -206,10 +216,6 @@ var ShopingCartModule = {
 				i--;
 			}
 		}
-		var nowDate = new Date();
-		nowDate.setMinutes(nowDate.getMinutes() + SelectDiningTimeModule.baseTime);
-		var selectTime = nowDate.getHours() + ":" + nowDate.getMinutes() + "左右";
-		$('#presetTimeResult').text(selectTime);
 		ShopingCartModule.showItemList(typeList);
 		$("#ckAll").click();
 	},
@@ -288,15 +294,13 @@ var ShopingCartModule = {
 			content: '请选择就餐方式！',
 			btn: ['堂食', '打包'],
 			yes: function() {
+				ShopingCartModule.diningType = 0; // 堂食
 				ShopingCartModule.trySubmit();
 				// window.location.href = '../4_advanceOrder/advanceOrder.html';
 			},
 			no: function() {
-				layer.open({
-					content: '你选择了打包',
-					skin: 'msg',
-					time: 2 //2秒后自动关闭
-				});
+				ShopingCartModule.diningType = 1; // 外卖
+				ShopingCartModule.trySubmit();
 			}
 		});
 	},
@@ -521,7 +525,10 @@ var ShopingCartModule = {
 			// async: false, //设置同步
 			dataType: 'json',
 			contentType: "application/x-www-form-urlencoded;charset=utf-8",
-			data: {},
+			data: {
+				diningTime : SelectDiningTimeModule.packageData(),
+				diningType : ShopingCartModule.diningType
+			},
 			success: function(data) {
 				if (data.code != '0') {
 					layer.open({
@@ -645,10 +652,10 @@ function init() {
 };
 
 $(function() {
-	init();
+	//init();
 	ProductTypeModule.init();
 	ShopingCartModule.requestAndLoadData();
-
+	SelectDiningTimeModule.selectAction(0, 0);
 	//$("#ckAll").prop("checked", true);
 	//$("input[name='sub2']").prop("checked", this.checked);
 

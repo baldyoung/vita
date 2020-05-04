@@ -80,9 +80,11 @@ public class CShoppingCartController {
      * @throws ServiceException
      */
     @GetMapping("readySubmit")
-    public ResponseResult readyToSubmitShoppingCart(HttpSession session) throws UtilityException, ServiceException {
+    public ResponseResult readyToSubmitShoppingCart(@RequestParam("diningType")Integer diningType,
+                                                    @RequestParam("diningTime")String diningTime,
+                                                    HttpSession session) throws UtilityException, ServiceException {
         Integer roomId = getRoomIdFromSession(session);
-        String key = cShoppingCartService.readySubmitShoppingCart(roomId);
+        String key = cShoppingCartService.readySubmitShoppingCart(roomId, diningTime, diningType);
         session.setAttribute(SHOPPING_CART_HEART_BEAT_KEY, key);
         return success();
     }

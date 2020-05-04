@@ -3,7 +3,8 @@ package com.baldyoung.vita.customer.service;
 import com.baldyoung.vita.common.dao.ProductDao;
 import com.baldyoung.vita.common.pojo.dto.product.CProductDto;
 import com.baldyoung.vita.common.pojo.entity.ProductEntity;
-import com.baldyoung.vita.common.service.impl.ShoppingCartServiceImplDelete;
+import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
+import com.baldyoung.vita.common.service.impl.ShoppingCartServiceImpl;
 import com.baldyoung.vita.merchant.service.ProductSortServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,9 +29,9 @@ public class CProductServiceImpl {
 
     @Autowired
     //@Qualifier("shoppingCartServiceImpl")
-    private ShoppingCartServiceImplDelete shoppingCartService;
+    private ShoppingCartServiceImpl shoppingCartService;
 
-    public List<CProductDto> getValidProductForProductType(Integer productTypeId, Integer roomId) {
+    public List<CProductDto> getValidProductForProductType(Integer productTypeId, Integer roomId) throws ServiceException {
         ProductEntity entity = new ProductEntity();
         entity.setProductTypeId(productTypeId);
         entity.setProductIsShow(1);
