@@ -361,7 +361,6 @@ var ShopingCartModule = {
 		});
 	},
 	alterProductStatus: function(tProductId) { // 修改商品状态
-		console.log('alterProductStatus is running...');
 		var productInfo = ShopingCartModule.getProductInfoByProductId(tProductId);
 		var lastStatus = productInfo.selectedStatus;
 		productInfo.selectedStatus = !lastStatus;
@@ -506,9 +505,14 @@ var ShopingCartModule = {
 	},
 	packageData : function () {
 		var productList = ShopingCartModule.productListBuffer;
+		console.log("购物车商品数据：");
+		console.log(productList);
 		var result = [];
 		for (var i=0; i<productList.length; i++) {
 			var cell = productList[i];
+			if (cell.selectedStatus == false) {
+				continue;
+			}
 			var item = {
 				productId : cell.productId,
 				productQuantity : cell.currentQuantity
@@ -518,17 +522,20 @@ var ShopingCartModule = {
 		return result;
 	},
 	trySubmit : function() {
+		var data = {
+			diningTime : SelectDiningTimeModule.packageData(),
+			diningType : ShopingCartModule.diningType,
+			itemList : ShopingCartModule.packageData()
+		};
 		$.ajax({
 			url: GlobalConfig.serverAddress + "/shoppingCart/readySubmit",
-			type: 'GET',
+			type: 'POST',
 			cache: false,
 			// async: false, //设置同步
 			dataType: 'json',
-			contentType: "application/x-www-form-urlencoded;charset=utf-8",
-			data: {
-				diningTime : SelectDiningTimeModule.packageData(),
-				diningType : ShopingCartModule.diningType
-			},
+			// contentType : "application/x-www-form-urlencoded;charset=utf-8",
+			contentType : "application/json; charset=utf-8",
+			data: JSON.stringify(data),
 			success: function(data) {
 				if (data.code != '0') {
 					layer.open({

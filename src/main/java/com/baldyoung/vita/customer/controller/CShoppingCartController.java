@@ -1,6 +1,7 @@
 package com.baldyoung.vita.customer.controller;
 
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
+import com.baldyoung.vita.common.pojo.dto.shoppingCart.SubmitData;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
 import com.baldyoung.vita.customer.service.CShoppingCartServiceImpl;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-
 import java.util.List;
 
 import static com.baldyoung.vita.common.pojo.dto.ResponseResult.success;
@@ -79,12 +79,11 @@ public class CShoppingCartController {
      * @throws UtilityException
      * @throws ServiceException
      */
-    @GetMapping("readySubmit")
-    public ResponseResult readyToSubmitShoppingCart(@RequestParam("diningType")Integer diningType,
-                                                    @RequestParam("diningTime")String diningTime,
+    @PostMapping("readySubmit")
+    public ResponseResult readyToSubmitShoppingCart(@RequestBody SubmitData submitData,
                                                     HttpSession session) throws UtilityException, ServiceException {
         Integer roomId = getRoomIdFromSession(session);
-        String key = cShoppingCartService.readySubmitShoppingCart(roomId, diningTime, diningType);
+        String key = cShoppingCartService.readySubmitShoppingCart(roomId, submitData.getDiningTime(), submitData.getDiningType(), submitData.getItemList());
         session.setAttribute(SHOPPING_CART_HEART_BEAT_KEY, key);
         return success();
     }

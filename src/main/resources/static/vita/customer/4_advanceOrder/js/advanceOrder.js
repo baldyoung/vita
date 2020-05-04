@@ -154,7 +154,7 @@ var ProductModule = {
 	requestData : function () {
 		var targetList = [];
 		$.ajax({
-			url: GlobalConfig.serverAddress + "/shoppingCart/itemList",
+			url: GlobalConfig.serverAddress + "/order/advanceOrder",
 			type: 'GET',
 			cache: false,
 			async: false, //设置同步

@@ -4,6 +4,7 @@ import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.dto.orderItem.OrderItemReceiveDto;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
+import com.baldyoung.vita.customer.service.COrderServiceImpl;
 import com.baldyoung.vita.customer.service.CShoppingCartServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,9 @@ public class COrderController {
     @Autowired
     private CShoppingCartServiceImpl cShoppingCartService;
 
+    @Autowired
+    private COrderServiceImpl cOrderService;
+
     @PostMapping("do")
     public ResponseResult receiveOrder(@RequestBody List<OrderItemReceiveDto> itemList) {
         out.println("新订单数据");
@@ -33,5 +37,11 @@ public class COrderController {
     public ResponseResult getDiningData(HttpSession session) throws UtilityException, ServiceException {
         Integer roomId = getRoomIdFromSession(session);
         return success(cShoppingCartService.getDiningData(roomId));
+    }
+
+    @GetMapping("advanceOrder")
+    public ResponseResult getAdvanceOrder(HttpSession session) throws UtilityException, ServiceException {
+        Integer roomId = getRoomIdFromSession(session);
+        return success(cOrderService.getAdvanceOrder(roomId));
     }
 }
