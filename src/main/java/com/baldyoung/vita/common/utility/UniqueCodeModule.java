@@ -93,5 +93,13 @@ public class UniqueCodeModule {
         return builder.toString();
     }
 
+    public String getUniqueCode(int maxLength) {
+        String k = getUniqueCode();
+        if (maxLength <= 0 || maxLength > k.length()) {
+            maxLength = k.length();
+        }
+        return k.substring(0, maxLength);
+    }
+
 
 }

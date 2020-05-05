@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baldyoung.vita.common.dao.OrderItemDao">
+
+    <resultMap id="baseMap" type="com.baldyoung.vita.common.pojo.entity.OrderItemEntity">
+        <id property="orderId" column="orderId"></id>
+        <!--非主键字段的对应-->
+        <result property="billNumber" column="billNumber"></result>
+        <result property="orderProductItemQuantity" column="orderProductItemQuantity"></result>
+        <result property="orderTypeFlag" column="orderTypeFlag"></result>
+        <result property="orderPresetTime" column="orderPresetTime"></result>
+        <result property="orderInitiatorFlag" column="orderInitiatorFlag"></result>
+        <result property="orderCreateDateTime" column="orderCreateDateTime"></result>
+    </resultMap>
+
+    <sql id="allFiled">
+        orderId, billNumber, orderProductItemQuantity, orderTypeFlag, orderPresetTime, orderInitiatorFlag, orderCreateDateTime
+    </sql>
+
+    <insert id="insertOrderEntity" parameterType="com.baldyoung.vita.common.pojo.entity.OrderItemEntity" useGeneratedKeys="true" keyProperty="orderId" keyColumn="orderId">
+        INSERT INTO V_Order(billNumber, orderTypeFlag, orderPresetTime, orderInitiatorFlag)
+        VALUES (#{order.billNumber}, #{order.orderTypeFlag}, #{order.orderPresetTime}, #{order.orderInitiatorFlag})
+    </insert>
+
+
+
+
+
+</mapper>

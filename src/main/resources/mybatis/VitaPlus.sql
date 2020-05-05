@@ -128,12 +128,12 @@ CREATE TABLE V_Bill (
 	billOwnerId INT UNSIGNED NOT NULL COMMENT'账单归属者编号：非空',
 	billOwnerName VARCHAR(100) COMMENT'账单归属者名称/顾客姓名',
 	billCustomerNumber SMALLINT UNSIGNED COMMENT'顾客人数',
-	billProductItemQuantity SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT'商品项总数：非空',
-	billTotalAmount DECIMAL NOT NULL COMMENT'账单总金额：非空',
+	billOrderQuantity SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT'订单总数：非空',
+	billTotalAmount DECIMAL DEFAULT 0 NOT NULL COMMENT'账单总金额：非空',
 	billReceivedAmount DECIMAL COMMENT'账单实收金额（null/未结账, 0/零收入账单, 其它/已结账的非零收入账单）',
 	billReceivedDateTime DATETIME COMMENT'账单结账时间',
-	billRecentHandlerName VARCHAR(20) NOT NULL COMMENT'账单最新的处理人名称：非空',
-	billRecentHandlerId INT UNSIGNED NOT NULL COMMENT'账单最新的处理人编号：非空',
+	billRecentHandlerName VARCHAR(20) COMMENT'账单最新的处理人名称：非空',
+	billRecentHandlerId INT UNSIGNED COMMENT'账单最新的处理人编号：非空',
 	billStartDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT'账单开始时间：非空',
 	billEndDateTime DATETIME COMMENT'账单结束时间',
 	billRemarks VARCHAR(100) COMMENT'账单备注',
@@ -144,10 +144,10 @@ CREATE TABLE V_Bill (
 DROP TABLE IF EXISTS V_Order;
 CREATE TABLE V_Order (
 	orderId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]订单编号：唯一、非空',
-	orderBillId INT UNSIGNED NOT NULL COMMENT'所属的账单编号：非空',
+	billNumber VARCHAR(30) NOT NULL COMMENT'所属账单编号：唯一、非空',
 	orderProductItemQuantity SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT'商品项总数：非空',
 	orderTypeFlag TINYINT NOT NULL COMMENT'订单类别标识（0/堂食, 1/打包, 2/外卖）：非空',
-	orderPresetTime DATETIME NOT NULL COMMENT'订单预定时间：非空',
+	orderPresetTime VARCHAR(30) NOT NULL COMMENT'订单预定时间：非空',
 	orderInitiatorFlag TINYINT NOT NULL COMMENT'订单发起人标识（0/商家, 1/顾客）：非空',
 	orderCreateDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT'[默认]订单创建时间：非空',
 	PRIMARY KEY (orderId)
@@ -162,7 +162,7 @@ CREATE TABLE V_OrderProductItem (
 	orderProductQuantity SMALLINT UNSIGNED NOT NULL COMMENT'商品数量：非空',
 	orderProductRemarks VARCHAR(40) COMMENT'商品项备注',
 	orderProductItemStatusFlag TINYINT NOT NULL DEFAULT 0 COMMENT'商品无效标识（0/有效, 1/无效, 2/删除）：非空',
-	orderProductItemInvalidMsg VARCHAR(100) COMMENT'商品无效说明',
+	orderProductItemStatusDesc VARCHAR(100) COMMENT'商品无效说明',
 	PRIMARY KEY (orderProductItemId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'订单详情表';	
 -- 客户就餐时间类型

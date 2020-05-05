@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 预订单服务
+ */
 @Service
 public class AdvanceOrderServiceImpl {
 

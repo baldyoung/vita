@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baldyoung.vita.common.dao.BillDao">
+
+    <resultMap id="baseMap" type="com.baldyoung.vita.common.pojo.entity.BillEntity">
+        <id property="billId" column="billId"></id>
+        <!--非主键字段的对应-->
+        <result property="billNumber" column="billNumber"></result>
+        <result property="billOwnerTypeFlag" column="billOwnerTypeFlag"></result>
+        <result property="billOwnerId" column="billOwnerId"></result>
+        <result property="billOwnerName" column="billOwnerName"></result>
+        <result property="billCustomerNumber" column="billCustomerNumber"></result>
+        <result property="billOrderQuantity" column="billOrderQuantity"></result>
+        <result property="billTotalAmount" column="billTotalAmount"></result>
+        <result property="billReceivedAmount" column="billReceivedAmount"></result>
+        <result property="billReceivedDateTime" column="billReceivedDateTime"></result>
+        <result property="billRecentHandlerName" column="billRecentHandlerName"></result>
+        <result property="billRecentHandlerId" column="billRecentHandlerId"></result>
+        <result property="billStartDateTime" column="billStartDateTime"></result>
+        <result property="billEndDateTime" column="billEndDateTime"></result>
+        <result property="billRemarks" column="billRemarks"></result>
+        <result property="updateDateTime" column="updateDateTime"></result>
+    </resultMap>
+
+    <sql id="allFiled">
+        billId, billNumber, billOwnerTypeFlag, billOwnerId, billOwnerName, billCustomerNumber, billOrderQuantity,
+        billTotalAmount, billTotalAmount, billReceivedAmount, billReceivedDateTime, billRecentHandlerName,
+        billRecentHandlerId, billStartDateTime, billEndDateTime, updateDateTime, billRemarks
+    </sql>
+
+    <insert id="insertBillEntity" parameterType="com.baldyoung.vita.common.pojo.entity.BillEntity" >
+        INSERT INTO V_Bill(billNumber, billOwnerTypeFlag, billOwnerId)
+        VALUES (#{bill.billNumber}, #{bill.billOwnerTypeFlag}, #{bill.billOwnerId});
+    </insert>
+
+
+
+
+
+</mapper>
