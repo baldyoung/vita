@@ -34,6 +34,13 @@
         VALUES (#{bill.billNumber}, #{bill.billOwnerTypeFlag}, #{bill.billOwnerId});
     </insert>
 
+    <select id="selectBill" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from V_Bill
+        where billNumber = #{billNumber}
+    </select>
+
 
 
 

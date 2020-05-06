@@ -4,24 +4,41 @@
 <mapper namespace="com.baldyoung.vita.common.dao.OrderItemDao">
 
     <resultMap id="baseMap" type="com.baldyoung.vita.common.pojo.entity.OrderItemEntity">
-        <id property="orderId" column="orderId"></id>
+        <id property="orderProductItemId" column="orderProductItemId"></id>
         <!--非主键字段的对应-->
-        <result property="billNumber" column="billNumber"></result>
-        <result property="orderProductItemQuantity" column="orderProductItemQuantity"></result>
-        <result property="orderTypeFlag" column="orderTypeFlag"></result>
-        <result property="orderPresetTime" column="orderPresetTime"></result>
-        <result property="orderInitiatorFlag" column="orderInitiatorFlag"></result>
-        <result property="orderCreateDateTime" column="orderCreateDateTime"></result>
+        <result property="orderProductId" column="orderProductId"></result>
+        <result property="orderProductName" column="orderProductName"></result>
+        <result property="orderProductImg" column="orderProductImg"></result>
+        <result property="orderProductQuantity" column="orderProductQuantity"></result>
+        <result property="orderProductPrice" column="orderProductPrice"></result>
+        <result property="orderProductRemarks" column="orderProductRemarks"></result>
+        <result property="orderProductItemStatusFlag" column="orderProductItemStatusFlag"></result>
+        <result property="orderProductItemStatusDesc" column="orderProductItemStatusDesc"></result>
     </resultMap>
 
     <sql id="allFiled">
-        orderId, billNumber, orderProductItemQuantity, orderTypeFlag, orderPresetTime, orderInitiatorFlag, orderCreateDateTime
+        orderProductItemId, orderProductId, orderProductName, orderProductImg, orderProductQuantity, orderProductPrice, orderProductRemarks, orderProductItemStatusFlag, orderProductItemStatusDesc
     </sql>
 
-    <insert id="insertOrderEntity" parameterType="com.baldyoung.vita.common.pojo.entity.OrderItemEntity" useGeneratedKeys="true" keyProperty="orderId" keyColumn="orderId">
-        INSERT INTO V_Order(billNumber, orderTypeFlag, orderPresetTime, orderInitiatorFlag)
-        VALUES (#{order.billNumber}, #{order.orderTypeFlag}, #{order.orderPresetTime}, #{order.orderInitiatorFlag})
+    <insert id="insertOrderItemList" parameterType="com.baldyoung.vita.common.pojo.entity.OrderItemEntity" >
+        INSERT INTO V_OrderProductItem
+        (orderId, orderProductId, orderProductName, orderProductImg, orderProductQuantity, orderProductPrice, orderProductItemStatusFlag,
+        orderProductItemStatusDesc, orderProductRemarks)
+        VALUES
+        <foreach collection="itemList" item="item" index="index" open="" separator=", " close="">
+            (#{item.orderId}, #{item.orderProductId}, #{item.orderProductName}, #{item.orderProductImg}, #{item.orderProductQuantity},
+            #{item.orderProductPrice}, #{item.orderProductItemStatusFlag}, #{item.orderProductItemStatusDesc}, #{item.orderProductRemarks})
+        </foreach>
     </insert>
+
+    <select id="selectOrderItemList" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from V_OrderProductItem
+        where orderId = #{orderId}
+    </select>
+
+
 
 
 

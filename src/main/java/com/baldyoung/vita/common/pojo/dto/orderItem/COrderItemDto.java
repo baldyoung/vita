@@ -1,9 +1,8 @@
-package com.baldyoung.vita.common.pojo.entity;
+package com.baldyoung.vita.common.pojo.dto.orderItem;
 
 import java.math.BigDecimal;
 
-public class OrderItemEntity {
-
+public class COrderItemDto {
     private Integer orderProductItemId;
     private Integer orderId;
     private Integer orderProductId;
@@ -100,5 +99,4 @@ public class OrderItemEntity {
     public void setOrderProductItemStatusDesc(String orderProductItemStatusDesc) {
         this.orderProductItemStatusDesc = orderProductItemStatusDesc;
     }
-
 }

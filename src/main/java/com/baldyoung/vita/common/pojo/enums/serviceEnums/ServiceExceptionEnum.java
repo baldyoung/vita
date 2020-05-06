@@ -13,6 +13,8 @@ public enum ServiceExceptionEnum implements EnumBase {
     PRODUCT_TYPE_NAME_EXISTS("名称已存在", 100200001),
 
     // 订单相关100300***
+    ORDER_IS_EMPTY("订单为空", 100300100),
+    NO_ORDER("无订单数据", 100300101),
 
 
     // 购物车相关100400***
@@ -21,6 +23,9 @@ public enum ServiceExceptionEnum implements EnumBase {
     SHOPPING_CART_NO_POWER("无权限操作", 100400102),
     SHOPPING_CART_TIME_OUT("权限超时", 100400103),
     SHOPPING_CART_EMPTY("购物车为空", 100400104),
+
+
+
     ;
     private String desc;
     private Integer code;

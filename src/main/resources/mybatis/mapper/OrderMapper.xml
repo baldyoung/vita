@@ -18,10 +18,17 @@
         orderId, billNumber, orderProductItemQuantity, orderTypeFlag, orderPresetTime, orderInitiatorFlag, orderCreateDateTime
     </sql>
 
-    <insert id="insertOrderEntity" parameterType="com.baldyoung.vita.common.pojo.entity.OrderEntity" useGeneratedKeys="true" keyProperty="orderId" keyColumn="orderId">
+    <insert id="insertOrderEntity" parameterType="com.baldyoung.vita.common.pojo.entity.OrderEntity" useGeneratedKeys="true" keyProperty="orderId">
         INSERT INTO V_Order(billNumber, orderTypeFlag, orderPresetTime, orderInitiatorFlag)
-        VALUES (#{order.billNumber}, #{order.orderTypeFlag}, #{order.orderPresetTime}, #{order.orderInitiatorFlag})
+        VALUES (#{billNumber}, #{orderTypeFlag}, #{orderPresetTime}, #{orderInitiatorFlag})
     </insert>
+
+    <select id="selectLastOrder" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from v_order
+        where billNumber = #{billNumber}
+    </select>
 
 
 

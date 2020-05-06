@@ -125,6 +125,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     /**
+     * 【线程安全】
      * 删除指定购物车中的商品
      * @param shoppingCartId
      * @param productIds
@@ -139,6 +140,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Lock lock = readyWriteAction(shoppingCartId);
         stringRedisTemplate.opsForHash().delete(toTableName(shoppingCartId), productIdArray);
         lock.unlock();
+    }
+
+    /**
+     * 【线程不安全】
+     * 删除指定购物车中的商品
+     * @param shoppingCartId
+     * @param productIds
+     */
+    public void deleteProductInShoppingCartWithoutSynchronized(Integer shoppingCartId, Integer... productIds) {
+        String[] productIdArray = new String[productIds.length];
+        for (int i=0; i<productIds.length; i++) {
+            productIdArray[i] = String.valueOf(productIds[i]);
+        }
+        stringRedisTemplate.opsForHash().delete(toTableName(shoppingCartId), productIdArray);
     }
 
     /**

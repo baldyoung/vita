@@ -10,4 +10,7 @@ import java.util.List;
 public interface OrderItemDao {
 
     void insertOrderItemList(@Param("itemList")List<OrderItemEntity> itemList);
+
+    List<OrderItemEntity> selectOrderItemList(@Param("orderId")Integer orderId);
+
 }

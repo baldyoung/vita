@@ -5,9 +5,12 @@
 <meta name="viewport" id="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="format-detection" content="telephone=no"/>
 <link href="../0_common/css/reset.css" rel="stylesheet" type="text/css">
-
-
 <link href="./css/order-tracking.css" rel="stylesheet" type="text/css">
+
+    <script src='../0_common/js/layer/mobile/layer.js'></script>
+    <script type="text/javascript" src="../0_common/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="../../resource/configFile/globalConfig.js"></script>
+    <script src="js/orderResult.js"></script>
 
 
 </head>
@@ -19,14 +22,14 @@
     <!--此处是订单内容部分-->
     <div class="jd-ddgz-bigbox">
         <div class="ddgz-a1">
-            <span style='font-size:11px;'>订单编号：<i>19967960230</i></span></br>
-            <span style='font-size:10px;'>归属：<i>3号桌</i></span></br>
-            <span style='font-size:10px;'>类型：<i>堂食</i></span>&nbsp;&nbsp;&nbsp;
-            <span style='font-size:10px;'>就餐时间：<i>现在</i></span>
+            <span  style='font-size:11px;'>订单编号：<i id="orderNumberText"></i></span></br>
+            <span  style='font-size:10px;'>归属：<i id="diningRoomNameText"></i></span></br>
+            <span style='font-size:10px;'>类型：<i id="diningTypeText"></i></span>&nbsp;&nbsp;&nbsp;
+            <span style='font-size:10px;'>就餐时间：<i id="diningTimeText"></i></span>
         </div>
         
         
-        <div class="ddgz-a2" style='margin-top:0px; padding-top:3px; '>
+        <div id="orderItemDisplayArea" class="ddgz-a2" style='margin-top:0px; padding-top:3px; '>
             <div class="ddgz-a2-b1 first">
                 <span class="ddgz-a2-yuan" style='background:#3CC51E; border-radius: 5px;'></span>
                 <span class="ddgz-a2-t1">红烧牛肉 * 1</span>
@@ -89,7 +92,7 @@
             </div>
             
         </div>
-        <div class="">
+        <div id="invalidItemTip" class="">
             <span class="ddgz-a2-t1" style='margin-left:5%; color:red;'>订单下单完成，但有1个商品下单失败！该情况已通知商家，如有疑问可呼叫商家！</span>
         </div>
     </div>    

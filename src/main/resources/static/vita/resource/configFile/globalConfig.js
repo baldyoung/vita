@@ -128,3 +128,12 @@ function sortProductTypeList(list) {
 	return data;
 }
 
+function  toDiningTypeName(diningTypeId) {
+	if (0 == diningTypeId) {
+		return "堂食";
+	}
+	if (1 == diningTypeId) {
+		return "打包";
+	}
+	return "未知";
+}

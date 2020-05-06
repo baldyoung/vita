@@ -9,5 +9,7 @@ public interface BillDao {
 
     void insertBillEntity(@Param("bill")BillEntity billEntity);
 
+    BillEntity selectBill(@Param("billNumber")String billNumber);
+
 
 }

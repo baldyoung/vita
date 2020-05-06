@@ -1,5 +1,7 @@
 package com.baldyoung.vita.common.utility;
 
+import com.baldyoung.vita.common.pojo.dto.orderItem.COrderItemDto;
+import com.baldyoung.vita.common.pojo.entity.OrderItemEntity;
 import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
 import com.baldyoung.vita.customer.controller.CShoppingCartController;
 
@@ -68,5 +70,20 @@ public class CommonMethod {
     public static String getHeartBeatKeyFromSession(HttpSession session) {
         Object object = session.getAttribute(CShoppingCartController.SHOPPING_CART_HEART_BEAT_KEY);
         return String.valueOf(object);
+    }
+
+    public static COrderItemDto toCOrderItemDto(OrderItemEntity entity) {
+        COrderItemDto dto = new COrderItemDto();
+        dto.setOrderId(entity.getOrderId());
+        dto.setOrderProductItemId(entity.getOrderProductItemId());
+        dto.setOrderProductId(entity.getOrderProductId());
+        dto.setOrderProductImg(entity.getOrderProductImg());
+        dto.setOrderProductItemStatusFlag(entity.getOrderProductItemStatusFlag());
+        dto.setOrderProductItemStatusDesc(entity.getOrderProductItemStatusDesc());
+        dto.setOrderProductName(entity.getOrderProductName());
+        dto.setOrderProductPrice(entity.getOrderProductPrice());
+        dto.setOrderProductQuantity(entity.getOrderProductQuantity());
+        dto.setOrderProductRemarks(entity.getOrderProductRemarks());
+        return dto;
     }
 }

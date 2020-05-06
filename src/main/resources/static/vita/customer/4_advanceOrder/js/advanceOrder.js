@@ -164,7 +164,7 @@ var ProductModule = {
 			success: function(data) {
 				if (data.code != '0') {
 					layer.open({
-						content: '获取购物车数据失败！'+data.desc,
+						content: '获取预订单数据失败！'+data.desc,
 						skin: 'msg',
 						time: 2 //3秒后自动关闭
 					});
@@ -391,8 +391,6 @@ var AdvanceOrderModule = {
 	},
 	submitAdvanceOrderData: function() {
 		var data = AdvanceOrderModule.packageData();
-		console.log(data);
-		//var href="../4_orderResult/orderResult.html";
 		$.ajax({
 			url: GlobalConfig.serverAddress + "/order/do",
 			type: 'POST',
@@ -403,7 +401,7 @@ var AdvanceOrderModule = {
 			data: JSON.stringify(data),
 			success: function(data) {
 				if (data.code == 0) {
-
+					GlobalMethod.redirectURL('../4_orderResult/orderResult.html');
 				} else {
 					layer.open({
 						content: '提交订单失败：'+data.desc,

@@ -57,6 +57,11 @@ public class BillServiceImpl {
         return billNumber;
     }
 
+    public BillEntity getBill(String billNumber) {
+        BillEntity entity = billDao.selectBill(billNumber);
+        return entity;
+    }
+
 
 
 
