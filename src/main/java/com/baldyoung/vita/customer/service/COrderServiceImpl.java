@@ -140,7 +140,7 @@ public class COrderServiceImpl {
      */
     public COrderDto getLastOrder(Integer roomId) throws ServiceException {
         String billNumber = billService.getRoomBillNumber(roomId);
-        List<OrderEntity> orderList = orderDao.selectLastOrder(billNumber);
+        List<OrderEntity> orderList = orderDao.selectOrderByBillNumber(billNumber);
         if (isEmptyCollection(orderList)) {
             throw new ServiceException(NO_ORDER);
         }

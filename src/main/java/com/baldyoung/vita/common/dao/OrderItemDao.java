@@ -13,4 +13,6 @@ public interface OrderItemDao {
 
     List<OrderItemEntity> selectOrderItemList(@Param("orderId")Integer orderId);
 
+    List<OrderItemEntity> selectOrderItemListWithOrderIdList(@Param("orderIdList")List<Integer> orderIdList);
+
 }

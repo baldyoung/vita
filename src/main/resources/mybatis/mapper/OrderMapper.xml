@@ -23,7 +23,7 @@
         VALUES (#{billNumber}, #{orderTypeFlag}, #{orderPresetTime}, #{orderInitiatorFlag})
     </insert>
 
-    <select id="selectLastOrder" resultMap="baseMap">
+    <select id="selectOrderByBillNumber" resultMap="baseMap">
         select
         <include refid="allFiled"></include>
         from v_order

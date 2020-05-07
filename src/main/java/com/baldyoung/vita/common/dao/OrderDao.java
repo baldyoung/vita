@@ -15,6 +15,7 @@ public interface OrderDao {
      */
     void insertOrderEntity(OrderEntity order);
 
-    List<OrderEntity> selectLastOrder(@Param("billNumber")String billNumber);
+    List<OrderEntity> selectOrderByBillNumber(@Param("billNumber")String billNumber);
+
 
 }

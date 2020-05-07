@@ -38,6 +38,16 @@
         where orderId = #{orderId}
     </select>
 
+    <select id="selectOrderItemListWithOrderIdList" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from V_OrderProductItem
+        where orderId in
+        <foreach collection="orderIdList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 
 
 
