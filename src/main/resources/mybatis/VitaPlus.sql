@@ -98,6 +98,7 @@ CREATE TABLE V_DiningRoom (
 	diningRoomName VARCHAR(10) UNIQUE NOT NULL COMMENT'餐桌名称：唯一、非空',
 	diningRoomGrade SMALLINT UNSIGNED NOT NULL COMMENT'排序的首要标准',
 	diningRoomStatus TINYINT NOT NULL COMMENT'餐桌状态（0/未使用, 1/使用中, 2/清理中）：非空',
+	currentBillNumber VARCHAR(30) COMMENT'当前正在进行的账单编号',
 	PRIMARY KEY (diningRoomId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'餐桌表';
 -- 购物车表（每个餐桌只能有一个购物车）

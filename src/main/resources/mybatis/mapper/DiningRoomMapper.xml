@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baldyoung.vita.common.dao.DiningRoomDao">
+
+    <resultMap id="baseMap" type="com.baldyoung.vita.common.pojo.entity.DiningRoomEntity">
+        <id property="diningRoomId" column="diningRoomId"></id>
+        <!--非主键字段的对应-->
+        <result property="diningRoomName" column="diningRoomName"></result>
+        <result property="diningRoomGrade" column="diningRoomGrade"></result>
+        <result property="diningRoomStatus" column="diningRoomStatus"></result>
+        <result property="currentBillNumber" column="currentBillNumber"></result>
+    </resultMap>
+
+    <sql id="allFiled">
+        diningRoomId, diningRoomName, diningRoomGrade, diningRoomStatus, currentBillNumber
+    </sql>
+
+    <select id="selectAll" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from v_diningRoom
+    </select>
+
+    <select id="selectByDiningRoomId" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from v_diningRoom
+        where diningRoomId = #{diningRoomId}
+    </select>
+
+    <update id="updateDiningRoom" >
+        UPDATE v_diningRoom
+        SET diningRoomId = diningRoomId
+        <if test="diningRoom.diningRoomName != null">
+            , diningRoomName = #{diningRoom.diningRoomName}
+        </if>
+        <if test="diningRoom.diningRoomGrade != null">
+            , diningRoomGrade = #{diningRoom.diningRoomGrade}
+        </if>
+        <if test="diningRoom.diningRoomStatus != null">
+            , diningRoomStatus = #{diningRoom.diningRoomStatus}
+        </if>
+        <if test="diningRoom.currentBillNumber != null">
+            , currentBillNumber = #{diningRoom.currentBillNumber}
+        </if>
+        WHERE diningRoomId = #{diningRoom.diningRoomId};
+    </update>
+
+    <delete id="deleteDiningRoom" >
+        delete from
+        v_diningRoom
+        where diningRoomId = #{diningRoomId}
+    </delete>
+
+    <insert id="insertDiningRoom" parameterType="com.baldyoung.vita.common.pojo.entity.DiningRoomEntity" useGeneratedKeys="true" keyProperty="diningRoomId">
+        insert into
+        v_diningRoom(diningRoomName, diningRoomGrade, diningRoomStatus)
+        values (#{diningRoom.diningRoomName}, #{diningRoom.diningRoomGrade}, #{diningRoom.diningRoomStatus})
+    </insert>
+
+
+
+
+
+</mapper>

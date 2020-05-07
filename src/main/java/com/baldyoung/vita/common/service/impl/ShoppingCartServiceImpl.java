@@ -24,7 +24,10 @@ import static com.baldyoung.vita.common.utility.CommonMethod.toInteger;
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Autowired
-    StringRedisTemplate stringRedisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private DiningRoomServiceImpl diningRoomService;
 
     UniqueCodeModule uniqueCodeModule;
 
@@ -55,7 +58,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cartDataMap = new HashMap();
         cartMap = new HashMap();
         // 获取所有就餐位的编号，并为每个就餐位生成一个购物车操作单元
-        Integer[] diningRoomIds = {1, 2, 3, 4, 5, 6, 333};
+        List<Integer> diningRoomIds = diningRoomService.getValidDiningRoomIdList();
         for (Integer diningRoomId : diningRoomIds) {
             cartMap.put(diningRoomId, new ShoppingCartOptionUnit());
             cartDataMap.put(diningRoomId, new ShoppingCartDataUnit());
@@ -110,6 +113,28 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private Lock readyReadAction(Integer shoppingCartId) throws ServiceException {
         ShoppingCartOptionUnit unit = getOptionUnit(shoppingCartId);
         return unit.readyReadAction();
+    }
+
+    /**
+     * 删除指定购物车的操作单元与数据单元
+     * @param shoppingCartId
+     * @throws ServiceException
+     */
+    public void deleteShoppingCart(Integer shoppingCartId) throws ServiceException {
+        Lock lock = readyWriteAction(shoppingCartId);
+        cartMap.put(shoppingCartId, null);
+        cartDataMap.put(shoppingCartId, null);
+        stringRedisTemplate.opsForHash().delete(toTableName(shoppingCartId));
+        lock.unlock();
+    }
+
+    /**
+     * 新增一个购物车，包括其操作单元与数据单元
+     * @param shoppingCartId
+     */
+    public void addShoppingCart(Integer shoppingCartId) {
+        cartDataMap.put(shoppingCartId, new ShoppingCartDataUnit());
+        cartMap.put(shoppingCartId, new ShoppingCartOptionUnit());
     }
 
     /**

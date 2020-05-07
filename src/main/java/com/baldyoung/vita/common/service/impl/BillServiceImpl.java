@@ -2,18 +2,23 @@ package com.baldyoung.vita.common.service.impl;
 
 import com.baldyoung.vita.common.dao.BillDao;
 import com.baldyoung.vita.common.pojo.entity.BillEntity;
+import com.baldyoung.vita.common.pojo.entity.DiningRoomEntity;
 import com.baldyoung.vita.common.utility.UniqueCodeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class BillServiceImpl {
     @Autowired
     private BillDao billDao;
+
+    @Autowired
+    private DiningRoomServiceImpl diningRoomService;
 
     private static final int BILL_NUMBER_LENGTH = 30;
 
@@ -25,6 +30,10 @@ public class BillServiceImpl {
     public void init() {
         uniqueCodeModule = UniqueCodeModule.getInstance("bill", "tt");
         billNumberMap = new HashMap();
+        List<DiningRoomEntity> entities = diningRoomService.getAllDiningRoom();
+        for (DiningRoomEntity entity :entities) {
+            billNumberMap.put(entity.getDiningRoomId(), entity.getCurrentBillNumber());
+        }
     }
 
     /**
@@ -43,6 +52,10 @@ public class BillServiceImpl {
         return billNumber;
     }
 
+    public void deleteBillNumberBuffer(Integer roomId) {
+        billNumberMap.put(roomId, null);
+    }
+
     /**
      * 获取指定就餐位的当前账单编号
      * @param roomId
@@ -53,6 +66,10 @@ public class BillServiceImpl {
         if (null == billNumber) {
             billNumber = createNewBill(0, roomId);
         }
+        DiningRoomEntity entity = new DiningRoomEntity();
+        entity.setDiningRoomId(roomId);
+        entity.setCurrentBillNumber(billNumber);
+        diningRoomService.updateDiningRoom(entity);
         billNumberMap.put(roomId, billNumber);
         return billNumber;
     }
@@ -61,6 +78,8 @@ public class BillServiceImpl {
         BillEntity entity = billDao.selectBill(billNumber);
         return entity;
     }
+
+
 
 
 

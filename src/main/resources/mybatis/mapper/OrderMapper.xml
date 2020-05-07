@@ -28,6 +28,7 @@
         <include refid="allFiled"></include>
         from v_order
         where billNumber = #{billNumber}
+        order by orderId desc
     </select>
 
 
