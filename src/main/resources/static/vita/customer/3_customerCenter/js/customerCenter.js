@@ -3,6 +3,10 @@ var ServiceModule = {
 	serviceData: [],
 	informMerchantStatus: false,
 	timerId: undefined,
+	init : function() {
+		var data = ServiceModule.requestData();
+		ServiceModule.loadData(data);
+	},
 	getServiceItem: function(serviceId) {
 		var i, temp;
 		for (i = 0; i < ServiceModule.serviceData.length; i++) {
@@ -13,15 +17,44 @@ var ServiceModule = {
 		}
 		return undefined;
 	},
-	requestServiceData: function() { // 获取商家下的服务信息
-		ServiceModule.serviceData = test_serviceData;
-		ServiceModule.loadServiceData();
+	requestData: function() { // 获取商家下的服务信息
+		var targetData = [];
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/system/messageType",
+			type: 'GET',
+			cache: false,
+			dataType: 'json',
+			async: false, //设置同步
+			contentType: "application/json; charset=utf-8",
+			data: null,
+			success: function(data) {
+				if (data.code == 0) {
+					targetData = data.data
+				} else {
+					layer.open({
+						content: '获取系统消息数据失败：'+data.desc,
+						skin: 'msg',
+						time: 2 //3秒后自动关闭
+					});
+				}
+			},
+			error: function() {
+				layer.open({
+					content: '连接服务器失败，请检查网络是否通畅！',
+					skin: 'msg',
+					time: 3 //3秒后自动关闭
+				});
+			}
+		});
+		return targetData;
 	},
-	postServiceMsg: function(serviceId) { // 发送当前桌的服务请求
+	postServiceMsg: function(serviceId) {
+		// 发送当前桌的服务请求
 		// 同步的请求
 		console.log("发送给商家" + serviceId + "服务信息");
 	},
-	cancelServiceRequest: function() { // 取消当前桌的服务请求
+	cancelServiceRequest: function() {
+		// 取消当前桌的服务请求
 		// 同步请求
 
 		console.log("已取消当前的服务请求");
@@ -42,22 +75,23 @@ var ServiceModule = {
 			}
 		});
 	},
-	loadServiceData: function() {
-		var serviceData = ServiceModule.serviceData;
+	loadData: function(data) {
+		var serviceData = data;
 		var target = $('#' + ServiceModule.displayAreaId);
 		target.html('');
 		var i,
-			serivceItem,
+			serviceItem,
 			html;
 		for (i = 0; i < serviceData.length; i++) {
 			serviceItem = serviceData[i];
+			serviceItem.serviceTypeId = 1;
 			html = '<span class="personal-box5-text2" onclick="ServiceModule.';
 			if (2 == serviceItem.serviceTypeId) {
-				html += 'informMerchant(' + serviceItem.serviceId;
+				html += 'informMerchant(' + serviceItem.customerMessageTypeId;
 			} else if (1 == serviceItem.serviceTypeId) {
-				html += 'sendMsgToMerchant(' + serviceItem.serviceId;
+				html += 'sendMsgToMerchant(' + serviceItem.customerMessageTypeId;
 			}
-			html += ')">' + serviceItem.serviceName + '</span>'
+			html += ')">' + serviceItem.customerMessageTypeName + '</span>'
 			target.append(html);
 		}
 	},
@@ -185,5 +219,5 @@ var testTimes = 1;
 
 $(function() {
 	DiningRoomModule.init();
-	ServiceModule.requestServiceData();
+	ServiceModule.init();
 })

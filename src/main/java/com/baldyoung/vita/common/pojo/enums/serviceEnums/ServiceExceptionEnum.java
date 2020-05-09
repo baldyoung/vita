@@ -24,6 +24,9 @@ public enum ServiceExceptionEnum implements EnumBase {
     SHOPPING_CART_TIME_OUT("权限超时", 100400103),
     SHOPPING_CART_EMPTY("购物车为空", 100400104),
 
+    // 系统消息100500***
+    MESSAGE_NO_FOUND("该消息不存在", 100500100),
+
 
 
     ;
