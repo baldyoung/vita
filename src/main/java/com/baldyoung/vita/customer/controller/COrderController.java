@@ -54,5 +54,17 @@ public class COrderController {
         return success(cOrderService.getLastOrder(roomId));
     }
 
+    @GetMapping("orderList")
+    public ResponseResult getOrderList(HttpSession session) throws UtilityException, ServiceException {
+        Integer roomId = getRoomIdFromSession(session);
+        return success(cOrderService.getOrderList(roomId));
+    }
+
+    @GetMapping("diningRoomInfo")
+    public ResponseResult getDiningRoomInfo(HttpSession session) throws UtilityException {
+        Integer roomId = getRoomIdFromSession(session);
+        return success(cOrderService.getDiningRoomInfo(roomId));
+    }
+
 
 }

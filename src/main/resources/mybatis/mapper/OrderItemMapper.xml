@@ -6,6 +6,7 @@
     <resultMap id="baseMap" type="com.baldyoung.vita.common.pojo.entity.OrderItemEntity">
         <id property="orderProductItemId" column="orderProductItemId"></id>
         <!--非主键字段的对应-->
+        <result property="orderId" column="orderId"></result>
         <result property="orderProductId" column="orderProductId"></result>
         <result property="orderProductName" column="orderProductName"></result>
         <result property="orderProductImg" column="orderProductImg"></result>
@@ -17,7 +18,7 @@
     </resultMap>
 
     <sql id="allFiled">
-        orderProductItemId, orderProductId, orderProductName, orderProductImg, orderProductQuantity, orderProductPrice, orderProductRemarks, orderProductItemStatusFlag, orderProductItemStatusDesc
+        orderId, orderProductItemId, orderProductId, orderProductName, orderProductImg, orderProductQuantity, orderProductPrice, orderProductRemarks, orderProductItemStatusFlag, orderProductItemStatusDesc
     </sql>
 
     <insert id="insertOrderItemList" parameterType="com.baldyoung.vita.common.pojo.entity.OrderItemEntity" >

@@ -45,9 +45,11 @@ public class BillServiceImpl {
     private String createNewBill(Integer ownerTypeFlag, Integer ownerId) {
         BillEntity entity = new BillEntity();
         String billNumber = uniqueCodeModule.getUniqueCode(BILL_NUMBER_LENGTH);
+        DiningRoomEntity diningRoomEntity = diningRoomService.getDiningRoom(ownerId);
         entity.setBillNumber(billNumber);
         entity.setBillOwnerTypeFlag(ownerTypeFlag);
         entity.setBillOwnerId(ownerId);
+        entity.setBillOwnerName(diningRoomEntity.getDiningRoomName());
         billDao.insertBillEntity(entity);
         return billNumber;
     }

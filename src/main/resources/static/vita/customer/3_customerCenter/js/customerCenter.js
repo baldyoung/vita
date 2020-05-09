@@ -108,6 +108,62 @@ var ServiceModule = {
 	}
 };
 
+
+var DiningRoomModule = {
+
+	init : function () {
+		var data = DiningRoomModule.requestData();
+		DiningRoomModule.loadData(data);
+	},
+	requestData : function () {
+		var targetData = [];
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/order/diningRoomInfo",
+			type: 'GET',
+			cache: false,
+			dataType: 'json',
+			async: false, //设置同步
+			contentType: "application/json; charset=utf-8",
+			data: null,
+			success: function(data) {
+				if (data.code == 0) {
+					targetData = data.data
+				} else {
+					layer.open({
+						content: '获取就餐位数据失败：'+data.desc,
+						skin: 'msg',
+						time: 2 //3秒后自动关闭
+					});
+				}
+			},
+			error: function() {
+				layer.open({
+					content: '连接服务器失败，请检查网络是否通畅！',
+					skin: 'msg',
+					time: 3 //3秒后自动关闭
+				});
+			}
+		});
+		return targetData;
+	},
+	loadData : function (data) {
+		if (undefined == data.allItem) {
+			data.allItem = '';
+		}
+		if (undefined == data.finishItem) {
+			data.finishItem = '';
+		}
+		if (undefined == data.unfinishItem) {
+			data.unfinishItem = '';
+		}
+		$('#diningRoomText').text(data.diningRoomName);
+		$('#allItemText').text(data.allItem);
+		$('#unfinishItemText').text(data.unfinishItem);
+		$('#finishItemText').text(data.finishItem);
+
+
+	}
+}
 var test_serviceData = [{
 	serviceId: "101",
 	serviceTypeId: "1",
@@ -128,6 +184,6 @@ var test_serviceData = [{
 var testTimes = 1;
 
 $(function() {
-
+	DiningRoomModule.init();
 	ServiceModule.requestServiceData();
 })

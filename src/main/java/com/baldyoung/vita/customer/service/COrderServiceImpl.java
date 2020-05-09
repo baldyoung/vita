@@ -1,17 +1,16 @@
 package com.baldyoung.vita.customer.service;
 
+import com.baldyoung.vita.common.dao.DiningRoomDao;
 import com.baldyoung.vita.common.dao.OrderDao;
 import com.baldyoung.vita.common.dao.OrderItemDao;
 import com.baldyoung.vita.common.pojo.dto.ProductAttribute.ProductAttributeDto;
 import com.baldyoung.vita.common.pojo.dto.ProductAttribute.ProductAttributeTypeDto;
+import com.baldyoung.vita.common.pojo.dto.diningRoom.CDiningRoomDto;
 import com.baldyoung.vita.common.pojo.dto.order.COrderDto;
 import com.baldyoung.vita.common.pojo.dto.orderItem.COrderItemDto;
 import com.baldyoung.vita.common.pojo.dto.orderItem.OrderItemReceiveDto;
 import com.baldyoung.vita.common.pojo.dto.product.CProductDto;
-import com.baldyoung.vita.common.pojo.entity.BillEntity;
-import com.baldyoung.vita.common.pojo.entity.OrderEntity;
-import com.baldyoung.vita.common.pojo.entity.OrderItemEntity;
-import com.baldyoung.vita.common.pojo.entity.ShoppingCartItem;
+import com.baldyoung.vita.common.pojo.entity.*;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.service.impl.AdvanceOrderServiceImpl;
 import com.baldyoung.vita.common.service.impl.BillServiceImpl;
@@ -24,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.*;
 import static com.baldyoung.vita.common.utility.CommonMethod.*;
@@ -54,6 +54,9 @@ public class COrderServiceImpl {
 
     @Autowired
     private OrderItemDao orderItemDao;
+
+    @Autowired
+    private DiningRoomDao diningRoomDao;
 
     /**
      * 获取指定就餐位的预订单数据
@@ -146,14 +149,14 @@ public class COrderServiceImpl {
         }
         OrderEntity order = orderList.get(0);
         List<OrderItemEntity>  orderItemList = orderItemDao.selectOrderItemList(order.getOrderId());
-        BillEntity billEntity = billService.getBill(billNumber);
+        DiningRoomEntity diningRoomEntity = diningRoomDao.selectByDiningRoomId(roomId);
         COrderDto result = new COrderDto();
         result.setOrderId(order.getOrderId());
         result.setBillNumber(order.getBillNumber());
         result.setOrderCreateDateTime(order.getOrderCreateDateTime());
         result.setOrderPresetTime(order.getOrderPresetTime());
         result.setOrderTypeFlag(order.getOrderTypeFlag());
-        result.setOwnerName(billEntity.getBillOwnerName());
+        result.setOwnerName(diningRoomEntity.getDiningRoomName());
         List<COrderItemDto> cOrderItemDtoList = new ArrayList(orderItemList.size());
         for (OrderItemEntity entity : orderItemList) {
             cOrderItemDtoList.add(toCOrderItemDto(entity));
@@ -161,6 +164,84 @@ public class COrderServiceImpl {
         result.setItemList(cOrderItemDtoList);
         return result;
     }
+
+    /**
+     * 获取当前账单下的所有订单
+     * @param roomId
+     * @return
+     * @throws ServiceException
+     */
+    public List<COrderDto> getOrderList(Integer roomId) throws ServiceException {
+        List<COrderDto> result = new ArrayList();
+        String billNumber = billService.getRoomBillNumber(roomId);
+        List<OrderEntity> orderList = orderDao.selectOrderByBillNumber(billNumber);
+        if (isEmptyCollection(orderList)) {
+            throw new ServiceException(NO_ORDER);
+        }
+        List<Integer> orderIds = orderList.stream().map(cell->cell.getOrderId()).collect(Collectors.toList());
+        List<OrderItemEntity>  orderItemList = orderItemDao.selectOrderItemListWithOrderIdList(orderIds);
+        DiningRoomEntity diningRoomEntity = diningRoomDao.selectByDiningRoomId(roomId);
+        for (OrderEntity order : orderList) {
+            COrderDto cOrderDto = new COrderDto();
+            cOrderDto.setOrderId(order.getOrderId());
+            cOrderDto.setBillNumber(order.getBillNumber());
+            cOrderDto.setOrderCreateDateTime(order.getOrderCreateDateTime());
+            cOrderDto.setOrderPresetTime(order.getOrderPresetTime());
+            cOrderDto.setOrderTypeFlag(order.getOrderTypeFlag());
+            cOrderDto.setOwnerName(diningRoomEntity.getDiningRoomName());
+            List<COrderItemDto> cOrderItemDtoList = new ArrayList(orderItemList.size());
+            for (OrderItemEntity item : orderItemList) {
+                if (item.getOrderId().equals(order.getOrderId())) {
+                    cOrderItemDtoList.add(toCOrderItemDto(item));
+                }
+            }
+            cOrderDto.setItemList(cOrderItemDtoList);
+            result.add(cOrderDto);
+        }
+        return result;
+    }
+
+    /**
+     * 获取就餐位的信息
+     * @param roomId
+     * @return
+     */
+    public CDiningRoomDto getDiningRoomInfo(Integer roomId) {
+        CDiningRoomDto result = new CDiningRoomDto();
+        DiningRoomEntity diningRoomEntity = diningRoomDao.selectByDiningRoomId(roomId);
+        result.setDiningRoomName(diningRoomEntity.getDiningRoomName());
+        String billNumber = billService.getRoomBillNumber(roomId);
+        List<OrderEntity> orderList = orderDao.selectOrderByBillNumber(billNumber);
+        if (isEmptyCollection(orderList)) {
+            return result;
+        }
+        List<Integer> orderIds = orderList.stream().map(cell->cell.getOrderId()).collect(Collectors.toList());
+        List<OrderItemEntity>  orderItemList = orderItemDao.selectOrderItemListWithOrderIdList(orderIds);
+        int unfinishItem = 0;
+        int finishItem = 0;
+        int allItem = 0;
+        for (OrderItemEntity item : orderItemList) {
+            Integer statusFlag = item.getOrderProductItemStatusFlag();
+            if (null == statusFlag) {
+                continue;
+            }
+            int t = statusFlag.intValue();
+            if (t == 2) {
+                unfinishItem ++;
+            }
+            if (t == 3) {
+                finishItem ++;
+            }
+            if (t != -1) {
+                allItem ++;
+            }
+        }
+        result.setFinishItem(finishItem);
+        result.setUnfinishItem(unfinishItem);
+        result.setAllItem(allItem);
+        return result;
+    }
+
 
 
 
