@@ -16,14 +16,14 @@ import java.util.Map;
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.*;
 
 @Service
-public class ProductServiceImpl {
+public class MProductServiceImpl {
 
-    private static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(MProductServiceImpl.class);
     @Autowired
     private ProductDao productDao;
 
     @Autowired
-    private ProductSortServiceImpl productSortService;
+    private MProductSortServiceImpl productSortService;
 
     public void addProduct(NewProductDto newProductDto) throws ServiceException {
         ProductEntity productEntity = toNewProductEntity(newProductDto);

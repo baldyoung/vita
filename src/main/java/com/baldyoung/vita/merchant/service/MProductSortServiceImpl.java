@@ -17,7 +17,7 @@ import java.util.Map;
  * 商品排序服务
  */
 @Service
-public class ProductSortServiceImpl {
+public class MProductSortServiceImpl {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

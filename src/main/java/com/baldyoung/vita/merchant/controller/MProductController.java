@@ -6,7 +6,7 @@ import com.baldyoung.vita.common.pojo.entity.ProductEntity;
 import com.baldyoung.vita.common.pojo.exception.ExceptionBase;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.utility.FileDataSaveModule;
-import com.baldyoung.vita.merchant.service.ProductServiceImpl;
+import com.baldyoung.vita.merchant.service.MProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ClassUtils;
 import org.springframework.validation.BindingResult;
@@ -29,13 +29,13 @@ import static java.lang.System.out;
  */
 @RestController
 @RequestMapping("mProduct")
-public class ProductController {
+public class MProductController {
 
     // 商品图片存储路径
     private static String ProductImgPath = createProductImgPath();
 
     @Autowired
-    private ProductServiceImpl productService;
+    private MProductServiceImpl productService;
 
     /**
      * 获取商品的统计数据

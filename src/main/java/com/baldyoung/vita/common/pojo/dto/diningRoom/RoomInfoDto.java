@@ -11,7 +11,6 @@ public class RoomInfoDto {
     private String diningRoomInfo;
 
     private Integer customerNumber;
-    private Integer orderNumber;
     private BigDecimal billAmount;
 
     public Integer getDiningRoomId() {
@@ -68,14 +67,6 @@ public class RoomInfoDto {
 
     public void setCustomerNumber(Integer customerNumber) {
         this.customerNumber = customerNumber;
-    }
-
-    public Integer getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(Integer orderNumber) {
-        this.orderNumber = orderNumber;
     }
 
     public BigDecimal getBillAmount() {

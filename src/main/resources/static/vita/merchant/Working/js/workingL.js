@@ -3,7 +3,7 @@
 $(function(){
 	console.log("workingL.js content...");
 	registerMonitor();
-	
+	RoomModule.init();
 	
 });
 function registerMonitor() {
@@ -23,13 +23,34 @@ function registerMonitor() {
 
 var RoomModule = {
 	init : function () {
-
+		RoomModule.requestAndLoadData();
 	},
-	requestData : function () {
-
+	requestAndLoadData : function () {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mDiningRoom/list",
+			type: 'GET',
+			cache: false,
+			dataType:'json',
+			contentType: "application/json; charset=utf-8",
+			data: {},
+			success: function (data) {
+				if (data.code == 0) {
+					data = data.data;
+					RoomModule.loadData(data);
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
 	},
-	loadData : function () {
-
+	loadData : function (data) {
+		var target = $('#RoomList');
+		target.html('');
+		for (var i=0; i<data.length; i++) {
+			var item = data[i];
+			var html = RoomModule.createDisplayUnitHtml(item);
+			target.append(html);
+		}
 	},
 	createDisplayUnitHtml : function (item) {
 		var  html = '<div id="Room3" class="col-sm-4 roomPanel" style="width:480px; height:300px;">' +
@@ -40,7 +61,7 @@ var RoomModule = {
 			'</span>' +
 			'<span class="label label-warning pull-right roomStatusLabel">已用</span>' +
 			'<h5>' +
-			'<span class="pull-left">&nbsp;&nbsp;三号桌&nbsp;&nbsp;-&nbsp;&nbsp;</span>' +
+			'<span class="pull-left">&nbsp;&nbsp;'+item.diningRoomName+'&nbsp;&nbsp;-&nbsp;&nbsp;</span>' +
 			'</h5>' +
 			'</div>' +
 			'<div class="ibox-content roomPanelBottom">' +
@@ -69,7 +90,7 @@ var RoomModule = {
 			'<div class="roomPanelPreTip">2020-02-09&nbsp;【晚餐】</div>' +
 			'<div class="roomPanelPreTip">刘先生15179798118</div>' +
 			'</span>' +
-			'<textarea style="resize:none; height:100px; width:100%; border:0px solid; margin-bottom: 5px; cursor:pointer; " readonly="true">空调、麻将桌、独立卫生间</textarea>' +
+			'<textarea style="resize:none; height:100px; width:100%; border:0px solid; margin-bottom: 5px; cursor:pointer; " readonly="true">'+item.diningRoomInfo+'</textarea>' +
 			'</div>' +
 			'</div>' +
 			'<div class="row  m-t-sm">' +

@@ -4,7 +4,7 @@ package com.baldyoung.vita.merchant.controller;
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.dto.productType.ProductTypeDto;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
-import com.baldyoung.vita.merchant.service.ProductTypeServiceImpl;
+import com.baldyoung.vita.merchant.service.MProductTypeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +13,10 @@ import static com.baldyoung.vita.common.utility.CommonMethod.isAnyEmpty;
 
 @RestController
 @RequestMapping("mProductType")
-public class ProductTypeController {
+public class MProductTypeController {
 
     @Autowired
-    private ProductTypeServiceImpl productTypeService;
+    private MProductTypeServiceImpl productTypeService;
 
     /**
      * 获取所有商品类型

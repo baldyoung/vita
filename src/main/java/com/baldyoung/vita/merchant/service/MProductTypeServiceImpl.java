@@ -8,22 +8,19 @@ import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceExceptio
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.PRODUCT_TYPE_NAME_EXISTS;
 
 @Service
-public class ProductTypeServiceImpl {
+public class MProductTypeServiceImpl {
 
     @Autowired
     private ProductTypeDao productTypeDao;
 
     @Autowired
-    private ProductTypeSortServiceImpl productTypeSortService;
+    private MProductTypeSortServiceImpl productTypeSortService;
 
     public List<ProductTypeDto> getAllProductType() {
         List<ProductTypeEntity> productTypeEntityList = productTypeDao.selectAll();

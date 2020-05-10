@@ -2,7 +2,7 @@ package com.baldyoung.vita.customer.service;
 
 import com.baldyoung.vita.common.dao.ProductTypeDao;
 import com.baldyoung.vita.common.pojo.entity.ProductTypeEntity;
-import com.baldyoung.vita.merchant.service.ProductTypeSortServiceImpl;
+import com.baldyoung.vita.merchant.service.MProductTypeSortServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class CProductTypeServiceImpl {
     private ProductTypeDao productTypeDao;
 
     @Autowired
-    private ProductTypeSortServiceImpl productTypeSortService;
+    private MProductTypeSortServiceImpl productTypeSortService;
 
     /**
      * 获取有效品类集

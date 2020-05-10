@@ -3,10 +3,10 @@ package com.baldyoung.vita.merchant.controller;
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.entity.ProductSortEntity;
 import com.baldyoung.vita.common.pojo.entity.ProductTypeSortEntity;
-import com.baldyoung.vita.merchant.service.ProductServiceImpl;
-import com.baldyoung.vita.merchant.service.ProductSortServiceImpl;
-import com.baldyoung.vita.merchant.service.ProductTypeServiceImpl;
-import com.baldyoung.vita.merchant.service.ProductTypeSortServiceImpl;
+import com.baldyoung.vita.merchant.service.MProductServiceImpl;
+import com.baldyoung.vita.merchant.service.MProductSortServiceImpl;
+import com.baldyoung.vita.merchant.service.MProductTypeServiceImpl;
+import com.baldyoung.vita.merchant.service.MProductTypeSortServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,19 +26,19 @@ import static java.lang.System.out;
 
 @RestController
 @RequestMapping("mMenu")
-public class MenuController {
+public class MMenuController {
 
     @Autowired
-    private ProductServiceImpl productService;
+    private MProductServiceImpl productService;
 
     @Autowired
-    private ProductTypeServiceImpl productTypeService;
+    private MProductTypeServiceImpl productTypeService;
 
     @Autowired
-    private ProductSortServiceImpl productSortService;
+    private MProductSortServiceImpl productSortService;
 
     @Autowired
-    private ProductTypeSortServiceImpl productTypeSortService;
+    private MProductTypeSortServiceImpl productTypeSortService;
 
     @PostMapping("menuProductUpdate")
     public ResponseResult updateMenu(@RequestBody Map param) {

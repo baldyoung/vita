@@ -5,7 +5,7 @@ import com.baldyoung.vita.common.pojo.dto.product.CProductDto;
 import com.baldyoung.vita.common.pojo.entity.ProductEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.service.impl.ShoppingCartServiceImpl;
-import com.baldyoung.vita.merchant.service.ProductSortServiceImpl;
+import com.baldyoung.vita.merchant.service.MProductSortServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class CProductServiceImpl {
     private ProductDao productDao;
 
     @Autowired
-    private ProductSortServiceImpl productSortService;
+    private MProductSortServiceImpl productSortService;
 
     @Autowired
     private CShoppingCartServiceImpl cShoppingCartService;

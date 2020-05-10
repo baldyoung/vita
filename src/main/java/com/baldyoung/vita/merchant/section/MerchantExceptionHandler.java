@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 
-import static com.baldyoung.vita.common.pojo.dto.ResponseResult.*;
-import static java.lang.System.out;
+import static com.baldyoung.vita.common.pojo.dto.ResponseResult.error;
 
 @ControllerAdvice
 public class MerchantExceptionHandler {
@@ -18,7 +17,7 @@ public class MerchantExceptionHandler {
     @ExceptionHandler(ExceptionBase.class)
     @ResponseBody
     public ResponseResult doThat(ServiceException e, HttpServletResponse response) {
-        out.println(this.getClass()+"get message");
+        //out.println(this.getClass()+"get message");
         return error(e.getCode(), e.getDesc());
     }
 
