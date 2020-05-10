@@ -10,10 +10,11 @@
         <result property="diningRoomGrade" column="diningRoomGrade"></result>
         <result property="diningRoomStatus" column="diningRoomStatus"></result>
         <result property="currentBillNumber" column="currentBillNumber"></result>
+        <result property="diningRoomInfo" column="diningRoomInfo"></result>
     </resultMap>
 
     <sql id="allFiled">
-        diningRoomId, diningRoomName, diningRoomGrade, diningRoomStatus, currentBillNumber
+        diningRoomId, diningRoomName, diningRoomGrade, diningRoomStatus, currentBillNumber, diningRoomInfo
     </sql>
 
     <select id="selectAll" resultMap="baseMap">
@@ -55,8 +56,8 @@
 
     <insert id="insertDiningRoom" parameterType="com.baldyoung.vita.common.pojo.entity.DiningRoomEntity" useGeneratedKeys="true" keyProperty="diningRoomId">
         insert into
-        v_diningRoom(diningRoomName, diningRoomGrade, diningRoomStatus)
-        values (#{diningRoom.diningRoomName}, #{diningRoom.diningRoomGrade}, #{diningRoom.diningRoomStatus})
+        v_diningRoom(diningRoomName, diningRoomGrade, diningRoomStatus, diningRoomInfo)
+        values (#{diningRoom.diningRoomName}, #{diningRoom.diningRoomGrade}, #{diningRoom.diningRoomStatus}, #{diningRoom.diningRoomInfo})
     </insert>
 
 

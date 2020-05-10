@@ -1,39 +1,18 @@
-package com.baldyoung.vita.common.pojo.entity;
+package com.baldyoung.vita.common.pojo.dto.diningRoom;
 
-public class DiningRoomEntity {
+import java.math.BigDecimal;
 
+public class RoomInfoDto {
     private Integer diningRoomId;
     private String diningRoomName;
     private Integer diningRoomGrade;
-    /**
-     * -1 未开放
-     * 0  未使用
-     * 1  使用中
-     * 2  清理中
-     */
     private Integer diningRoomStatus;
     private String currentBillNumber;
-
     private String diningRoomInfo;
 
-    public String getDiningRoomInfo() {
-        return diningRoomInfo;
-    }
-
-    public void setDiningRoomInfo(String diningRoomInfo) {
-        this.diningRoomInfo = diningRoomInfo;
-    }
-
-    @Override
-    public String toString() {
-        return "DiningRoomEntity{" +
-                "diningRoomId=" + diningRoomId +
-                ", diningRoomName='" + diningRoomName + '\'' +
-                ", diningRoomGrade=" + diningRoomGrade +
-                ", diningRoomStatus=" + diningRoomStatus +
-                ", currentBillNumber='" + currentBillNumber + '\'' +
-                '}';
-    }
+    private Integer customerNumber;
+    private Integer orderNumber;
+    private BigDecimal billAmount;
 
     public Integer getDiningRoomId() {
         return diningRoomId;
@@ -73,5 +52,37 @@ public class DiningRoomEntity {
 
     public void setCurrentBillNumber(String currentBillNumber) {
         this.currentBillNumber = currentBillNumber;
+    }
+
+    public String getDiningRoomInfo() {
+        return diningRoomInfo;
+    }
+
+    public void setDiningRoomInfo(String diningRoomInfo) {
+        this.diningRoomInfo = diningRoomInfo;
+    }
+
+    public Integer getCustomerNumber() {
+        return customerNumber;
+    }
+
+    public void setCustomerNumber(Integer customerNumber) {
+        this.customerNumber = customerNumber;
+    }
+
+    public Integer getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(Integer orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    public BigDecimal getBillAmount() {
+        return billAmount;
+    }
+
+    public void setBillAmount(BigDecimal billAmount) {
+        this.billAmount = billAmount;
     }
 }
