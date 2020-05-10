@@ -5,13 +5,14 @@ var ServiceModule = {
 	timerId: undefined,
 	init : function() {
 		var data = ServiceModule.requestData();
+		ServiceModule.serviceData = data;
 		ServiceModule.loadData(data);
 	},
 	getServiceItem: function(serviceId) {
 		var i, temp;
 		for (i = 0; i < ServiceModule.serviceData.length; i++) {
 			temp = ServiceModule.serviceData[i];
-			if (temp.serviceId == serviceId) {
+			if (temp.customerMessageTypeId == serviceId) {
 				return temp;
 			}
 		}
@@ -128,7 +129,7 @@ var ServiceModule = {
 	sendMsgToMerchant: function(serviceId) { // 只是通知商家，并不需要得到回复的消息类型
 		var service = ServiceModule.getServiceItem(serviceId);
 		layer.open({
-			content: '您确定要' + service.serviceName + '吗？',
+			content: '您确定要' + service.customerMessageTypeName + '吗？',
 			btn: ['确定', '取消'],
 			yes: function(index) {
 				ServiceModule.postServiceMsg(serviceId);
