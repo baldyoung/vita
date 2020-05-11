@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.baldyoung.vita.common.utility.CommonMethod.isEmpty;
+
 @Service
 public class BillServiceImpl {
     @Autowired
@@ -32,7 +34,9 @@ public class BillServiceImpl {
         billNumberMap = new HashMap();
         List<DiningRoomEntity> entities = diningRoomService.getAllDiningRoom();
         for (DiningRoomEntity entity :entities) {
-            billNumberMap.put(entity.getDiningRoomId(), entity.getCurrentBillNumber());
+            if (!isEmpty(entity.getCurrentBillNumber())) {
+                billNumberMap.put(entity.getDiningRoomId(), entity.getCurrentBillNumber());
+            }
         }
     }
 
@@ -59,7 +63,7 @@ public class BillServiceImpl {
     }
 
     /**
-     * 获取指定就餐位的当前账单编号
+     * 获取指定就餐位的当前账单编号, 如果不存在则创建
      * @param roomId
      * @return
      */
@@ -73,6 +77,16 @@ public class BillServiceImpl {
         entity.setCurrentBillNumber(billNumber);
         diningRoomService.updateDiningRoom(entity);
         billNumberMap.put(roomId, billNumber);
+        return billNumber;
+    }
+
+    /**
+     * 获取指定就餐位的当前账单编号
+     * @param roomId
+     * @return
+     */
+    public String getRoomBillNumberWithoutCreate(Integer roomId) {
+        String billNumber = billNumberMap.get(roomId);
         return billNumber;
     }
 

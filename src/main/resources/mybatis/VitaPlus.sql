@@ -125,10 +125,12 @@ CREATE TABLE V_ShoppingCartItem (
 -- 账单表
 DROP TABLE IF EXISTS V_Bill;
 CREATE TABLE V_Bill (
-	billId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]账单编号：唯一、非空',
+	billId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]账单ID：唯一、非空',
+	billNumber VARCHAR(30) UNIQUE NOT NULL COMMENT'账单编号：唯一、非空',
 	billOwnerTypeFlag TINYINT NOT NULL DEFAULT 0 COMMENT'[默认]归属者类型（0/餐桌、1/其它）：非空',
 	billOwnerId INT UNSIGNED NOT NULL COMMENT'账单归属者编号：非空',
-	billOwnerName VARCHAR(100) COMMENT'账单归属者名称/顾客姓名',
+	billOwnerName VARCHAR(100) COMMENT'账单所属就餐位的名称',
+	billCustomerName VARCHAR(50) COMMENT'账单归属的客户名称',
 	billCustomerNumber SMALLINT UNSIGNED COMMENT'顾客人数',
 	billOrderQuantity SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT'订单总数：非空',
 	billTotalAmount DECIMAL DEFAULT 0 NOT NULL COMMENT'账单总金额：非空',

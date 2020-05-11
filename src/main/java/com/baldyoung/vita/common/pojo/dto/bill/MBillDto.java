@@ -1,32 +1,30 @@
-package com.baldyoung.vita.common.pojo.entity;
+package com.baldyoung.vita.common.pojo.dto.bill;
+
+import com.baldyoung.vita.common.pojo.dto.order.MOrderDto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
-public class BillEntity {
-
+public class MBillDto {
     private Integer billId;
     private String billNumber;
     private Integer billOwnerTypeFlag;
     private Integer billOwnerId;
     private String billOwnerName;
-
     private Integer billCustomerNumber;
     private String billCustomerName;
     private Integer billOrderQuantity;
     private BigDecimal billTotalAmount;
-
     private BigDecimal billReceivedAmount;
     private Date billReceivedDateTime;
-
     private String billRecentHandlerName;
     private Integer billRecentHandlerId;
-
     private Date billStartDateTime;
     private Date billEndDateTime;
-    private Date updateDateTime;
-
     private String billRemarks;
+
+    private List<MOrderDto> orderList;
 
     public String getBillCustomerName() {
         return billCustomerName;
@@ -36,8 +34,20 @@ public class BillEntity {
         this.billCustomerName = billCustomerName;
     }
 
+    public List<MOrderDto> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<MOrderDto> orderList) {
+        this.orderList = orderList;
+    }
+
     public Integer getBillId() {
         return billId;
+    }
+
+    public void setBillId(Integer billId) {
+        this.billId = billId;
     }
 
     public String getBillNumber() {
@@ -46,10 +56,6 @@ public class BillEntity {
 
     public void setBillNumber(String billNumber) {
         this.billNumber = billNumber;
-    }
-
-    public void setBillId(Integer billId) {
-        this.billId = billId;
     }
 
     public Integer getBillOwnerTypeFlag() {
@@ -146,14 +152,6 @@ public class BillEntity {
 
     public void setBillEndDateTime(Date billEndDateTime) {
         this.billEndDateTime = billEndDateTime;
-    }
-
-    public Date getUpdateDateTime() {
-        return updateDateTime;
-    }
-
-    public void setUpdateDateTime(Date updateDateTime) {
-        this.updateDateTime = updateDateTime;
     }
 
     public String getBillRemarks() {

@@ -27,6 +27,9 @@ public enum ServiceExceptionEnum implements EnumBase {
     // 系统消息100500***
     MESSAGE_NO_FOUND("该消息不存在", 100500100),
 
+    // 账单相关100600***
+    BILL_NO_FOUND("无账单", 100600100),
+
 
 
     ;

@@ -11,6 +11,7 @@
         <result property="billOwnerId" column="billOwnerId"></result>
         <result property="billOwnerName" column="billOwnerName"></result>
         <result property="billCustomerNumber" column="billCustomerNumber"></result>
+        <result property="billCustomerName" column="billCustomerName"></result>
         <result property="billOrderQuantity" column="billOrderQuantity"></result>
         <result property="billTotalAmount" column="billTotalAmount"></result>
         <result property="billReceivedAmount" column="billReceivedAmount"></result>
@@ -25,7 +26,7 @@
 
     <sql id="allFiled">
         billId, billNumber, billOwnerTypeFlag, billOwnerId, billOwnerName, billCustomerNumber, billOrderQuantity,
-        billTotalAmount, billTotalAmount, billReceivedAmount, billReceivedDateTime, billRecentHandlerName,
+        billTotalAmount, billTotalAmount, billReceivedAmount, billReceivedDateTime, billRecentHandlerName, billCustomerName,
         billRecentHandlerId, billStartDateTime, billEndDateTime, updateDateTime, billRemarks
     </sql>
 

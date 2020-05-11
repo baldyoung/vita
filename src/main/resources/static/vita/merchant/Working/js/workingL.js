@@ -68,7 +68,7 @@ var RoomModule = {
 			'<div class="col-sm-12 roomOptionalArea2">' +
 			'<div class="col-sm-5" style="padding: 0 0 0 0;">' +
 			'<div class="team-members roomOptionalArea">' +
-			'<button class="btn btn-info " type="button" data-toggle="modal" data-target="#OrderFormWindow" style="margin-bottom:5px; " onclick="">' +
+			'<button onclick="BillModule.requestAndLoadData('+item.diningRoomId+')" class="btn btn-info " type="button" data-toggle="modal" data-target="#OrderFormWindow" style="margin-bottom:5px; " onclick="">' +
 			'<i class="fa fa-paste"></i> 订单详情' +
 			'<span class="badge badge-danger" style="background:#ED5565; color:black;  display:;    ">10</span>' +
 			'</button>' +
@@ -110,6 +110,119 @@ var RoomModule = {
 			'</div>' +
 			'</div>' +
 			'</div>';
+		return html;
+	}
+}
+
+
+var BillModule = {
+	requestAndLoadData : function (roomId) {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mBill/billInfo",
+			type: 'GET',
+			cache: false,
+			dataType:'json',
+			contentType: "application/json; charset=utf-8",
+			data: {
+				roomId : roomId
+			},
+			success: function (data) {
+				if (data.code == 0) {
+					data = data.data;
+					BillModule.loadData(data);
+				} else {
+					swal("获取数据失败", data.desc, "error");
+					$("#closeOrderFormWindowBtn").trigger("click"); //模拟点击关闭按钮
+				}
+			}
+		});
+	},
+	loadData : function (data) {
+		// 加载就餐位信息
+		$('#diningRoomNameText').text(data.billOwnerName);
+		$('#billNumberText').text(data.billNumber);
+		$('#customerNameText').text(data.billCustomerName);
+		$('#createDateTimeText').text(GlobalMethod.toDateString(data.billStartDateTime));
+		$('#customerNumberText').text(data.billCustomerNumber);
+		$('#orderNumberText').text(data.billOrderQuantity);
+		$('#billAmount').text();
+		// 加载账单统览
+		var target = $('#tab-1');
+		target.html('');
+		var orderList = data.orderList;
+		for (var i=0; i<orderList.length; i++) {
+			var order = orderList[i];
+			var html = BillModule.createOrderUnitHTML(order, i+1);
+			target.append(html);
+		}
+		// 加载订单统览
+		target = $('#tab-2');
+		target.html('');
+		orderList = data.orderList;
+		for (var i=0; i<orderList.length; i++) {
+			var order = orderList[i];
+			var html = BillModule.createOrderUnitHTML(order, i+1);
+			target.append(html);
+		}
+	},
+	createBillOrderTitleHTML : function() {
+		var html = '<div class="feed-element" style="margin-top:0px; padding-bottom: 0px; background:#D0E9C6;">' +
+			'<i class="orderItemUnit" style="width:20%;">#&nbsp;订单1&nbsp;(堂食 &nbsp; 12:32)</i>' +
+			'<i class="orderItemUnit" style="float:right; margin-right:5px;">总额:233.00</i>' +
+			'<i class="orderItemUnit" style="float:right; margin-right:10px;">2020-02-03 12:32:33</i>' +
+			'</div>';
+		return html;
+	},
+	createBillItemUnitHTML : function (item) {
+
+
+	},
+	createOrderUnitHTML : function (order, index) {
+		order.diningTypeName = (order.orderTypeFlag == 0 ? '堂食' : '打包');
+		order.fromTypeName = (order.orderInitiatorFlag == 0 ? '商家' : '顾客');
+		var itemHtml = '';
+		var list = order.itemList;
+		var amount = 0.0;
+		for (var i=0; i<list.length; i++) {
+			itemHtml += BillModule.createOrderItemUnitHTML(list[i]);
+			amount += list[i].amount;
+		}
+		var html = '<div style="border:1px solid; border-radius:10px; margin-bottom: 5px;">' +
+			'<div>' +
+			'<i class="orderItemUnit2" style="">订单'+index+'</i>' +
+			'<i class="orderItemUnit2" style="">'+order.diningTypeName+' &nbsp; '+order.orderPresetTime+'</i>' +
+			'<i class="orderItemUnit2" style="float:right; margin-right:15px;">总额:'+amount+'</i>' +
+			'<i class="orderItemUnit2" style="float:right; margin-right:10px;">（'+order.fromTypeName+'）'+GlobalMethod.toDateString(order.orderCreateDateTime)+'</i>' +
+			'</div>' +
+			'<table class="table invoice-table" style="border-top:1px solid; margin-bottom: 0px;">' +
+			'<thead>' +
+			'<tr>' +
+			'<th width="35%">名称</th>' +
+			'<th width="20%">口味</th>' +
+			'<th width="15%">数量</th>' +
+			'<th width="15%">单价</th>' +
+			'<th width="15%">小计</th>' +
+			'</tr>' +
+			'</thead>' +
+			'<tbody>' + itemHtml +
+			'</tbody>' +
+			'</table>' +
+			'</div>';
+		return html;
+	},
+	createOrderItemUnitHTML : function (item) {
+		var amount = item.orderProductPrice * item.orderProductQuantity;
+		item.orderProductItemStatusDesc = '';
+		item.amount = amount;
+		var html = '<tr>' +
+			'<td>' +
+			'<strong>'+item.orderProductName+'</strong>' + '<span style="font-size:9px; color:#DE0B07;">'+item.orderProductItemStatusDesc+'</span>' +
+			'</td>' +
+			'<td>'+item.orderProductRemarks+'</td>' +
+			'<td>'+item.orderProductQuantity+'</td>' +
+			'<td>'+item.orderProductPrice+'</td>' +
+			'<td>'+amount+'</td>' +
+			'</tr>';
 		return html;
 	}
 }
