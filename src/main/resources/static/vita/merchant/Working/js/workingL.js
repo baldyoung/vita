@@ -148,13 +148,13 @@ var BillModule = {
 		$('#billAmount').text();
 		// 加载账单统览
 		var target = $('#tab-1');
-		target.html('');
+		//target.html('');
 		var orderList = data.orderList;
-		for (var i=0; i<orderList.length; i++) {
+		/*for (var i=0; i<orderList.length; i++) {
 			var order = orderList[i];
 			var html = BillModule.createOrderUnitHTML(order, i+1);
 			target.append(html);
-		}
+		}*/
 		// 加载订单统览
 		target = $('#tab-2');
 		target.html('');

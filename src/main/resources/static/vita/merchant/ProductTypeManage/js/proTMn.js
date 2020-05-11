@@ -28,8 +28,6 @@ var PTModule = {
             },{
                 data:'productTypeName'
             },{
-                data:'productTypeGrade'
-            },{
                 data:'isShow'
             }
             ],
@@ -42,7 +40,7 @@ var PTModule = {
                     a+="</button>"
                     return a;
                 },
-                "targets" :4
+                "targets" :3
             }]
         });
     },
