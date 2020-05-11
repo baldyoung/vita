@@ -146,36 +146,56 @@ var BillModule = {
 		$('#customerNumberText').text(data.billCustomerNumber);
 		$('#orderNumberText').text(data.billOrderQuantity);
 		$('#billAmount').text();
-		// 加载账单统览
-		var target = $('#tab-1');
-		//target.html('');
-		var orderList = data.orderList;
-		/*for (var i=0; i<orderList.length; i++) {
-			var order = orderList[i];
-			var html = BillModule.createOrderUnitHTML(order, i+1);
-			target.append(html);
-		}*/
 		// 加载订单统览
-		target = $('#tab-2');
+		var target = $('#tab-2');
 		target.html('');
-		orderList = data.orderList;
+		var orderList = data.orderList;
 		for (var i=0; i<orderList.length; i++) {
 			var order = orderList[i];
 			var html = BillModule.createOrderUnitHTML(order, i+1);
 			target.append(html);
 		}
+		// 加载账单统览
+		var target = $('#tab-1');
+		target.html('');
+		var orderList = data.orderList;
+		var t=1;
+		for (var i=0; i<orderList.length; i++) {
+			var order = orderList[i];
+			var html = BillModule.createBillOrderTitleHTML(order, i+1);
+			var itemList = order.itemList;
+			for (var j=0; j<itemList.length; j++) {
+				html += BillModule.createBillItemUnitHTML(itemList[j], t++);
+			}
+			target.append(html);
+		}
 	},
-	createBillOrderTitleHTML : function() {
+	createBillOrderTitleHTML : function(order, index) {
 		var html = '<div class="feed-element" style="margin-top:0px; padding-bottom: 0px; background:#D0E9C6;">' +
-			'<i class="orderItemUnit" style="width:20%;">#&nbsp;订单1&nbsp;(堂食 &nbsp; 12:32)</i>' +
-			'<i class="orderItemUnit" style="float:right; margin-right:5px;">总额:233.00</i>' +
-			'<i class="orderItemUnit" style="float:right; margin-right:10px;">2020-02-03 12:32:33</i>' +
+			'<i class="orderItemUnit" style="">#&nbsp;订单'+index+'&nbsp;('+order.diningTypeName+'&nbsp;'+order.orderPresetTime+')</i>' +
+			'<i class="orderItemUnit" style="float:right; margin-right:5px;">总额:'+order.amount+'</i>' +
+			'<i class="orderItemUnit" style="float:right; margin-right:10px;">'+GlobalMethod.toDateString(order.orderCreateDateTime)+'</i>' +
 			'</div>';
 		return html;
 	},
-	createBillItemUnitHTML : function (item) {
-
-
+	createBillItemUnitHTML : function (item, index) {
+		var temp = (GlobalMethod.isEmpty(item.orderProductRemarks)? '' : ('(' + item.orderProductRemarks +')'));
+		item.itemStatusName = toOrderItemStatusName(item.orderProductItemStatusFlag);
+		var html = '<div class="feed-element">' +
+			'<i class="orderItemUnit" style="width:5%;">'+index+'</i>' +
+			'<i class="orderItemUnit" style="width:7%;font-style: normal;">'+item.itemStatusName+'</i>' +
+			'<i class="orderItemUnit" style="width:20%; font-weight:bolder; color:black; font-style: normal;">'+item.orderProductName+'&nbsp;'+temp+'</i>' +
+			'<i class="orderItemUnit" style="width:7%;">'+item.orderProductPrice+'</i>' +
+			'<i class="orderItemUnit" style="width:6%;">x'+item.orderProductQuantity+'</i>' +
+			'<i class="orderItemUnit" style="width:10%;">'+item.amount+'</i>' +
+			'<i class="orderItemUnit" style="width:45%;">' +
+			'<i class="btn btn-white btn-sm"><i class="fa fa-tags"></i> 已阅</i>' +
+			'<i class="btn btn-white btn-sm"><i class="fa fa-remove"></i> 删除</i>' +
+			'<i class="btn btn-white btn-sm"  data-toggle="modal" data-target="#alertProductPanel"><i class="fa fa-retweet"></i> 替换</i>' +
+			'<i class="btn btn-white btn-sm" data-toggle="modal" data-target="#orderItemUpdatePanel"><i class="fa fa-pencil-square"></i> 修改</i>' +
+			'</i>' +
+			'</div>'
+		return html;
 	},
 	createOrderUnitHTML : function (order, index) {
 		order.diningTypeName = (order.orderTypeFlag == 0 ? '堂食' : '打包');
@@ -187,6 +207,7 @@ var BillModule = {
 			itemHtml += BillModule.createOrderItemUnitHTML(list[i]);
 			amount += list[i].amount;
 		}
+		order.amount = amount;
 		var html = '<div style="border:1px solid; border-radius:10px; margin-bottom: 5px;">' +
 			'<div>' +
 			'<i class="orderItemUnit2" style="">订单'+index+'</i>' +

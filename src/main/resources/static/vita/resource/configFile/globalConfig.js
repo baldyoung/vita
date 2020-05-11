@@ -140,5 +140,16 @@ function  toDiningTypeName(diningTypeId) {
 	if (1 == diningTypeId) {
 		return "打包";
 	}
-	return "未知";
+	return "";
+}
+
+function toOrderItemStatusName(statusId) {
+	switch(statusId) {
+		case 0 : return '待确定';
+		case 1 : return '下单失败';
+		case 2 : return '备货中';
+		case 3 : return '已完成';
+		case 4 : return '已删除';
+	}
+	return '';
 }

@@ -31,8 +31,8 @@
     </sql>
 
     <insert id="insertBillEntity" parameterType="com.baldyoung.vita.common.pojo.entity.BillEntity" >
-        INSERT INTO V_Bill(billNumber, billOwnerTypeFlag, billOwnerId)
-        VALUES (#{bill.billNumber}, #{bill.billOwnerTypeFlag}, #{bill.billOwnerId});
+        INSERT INTO V_Bill(billNumber, billOwnerTypeFlag, billOwnerId, billOwnerName)
+        VALUES (#{bill.billNumber}, #{bill.billOwnerTypeFlag}, #{bill.billOwnerId}, #{bill.billOwnerName});
     </insert>
 
     <select id="selectBill" resultMap="baseMap">
