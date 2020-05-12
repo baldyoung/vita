@@ -181,6 +181,16 @@ public class MProductController {
         return success();
     }
 
+    /**
+     * 获取所有有效的商品
+     * @return
+     */
+    @GetMapping("allValidProduct")
+    public ResponseResult getAllValidProduct() {
+
+        return success(productService.getAllValidProduct());
+    }
+
 
 
 

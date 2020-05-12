@@ -4,7 +4,7 @@ $(function(){
 	console.log("workingL.js content...");
 	registerMonitor();
 	RoomModule.init();
-	
+	ItemModule.init();
 });
 function registerMonitor() {
 	$('.roomStatusLabel').bind("click", function(){
@@ -147,7 +147,7 @@ var BillModule = {
 		$('#orderNumberText').text(data.billOrderQuantity);
 		$('#billAmount').text();
 		// 加载订单统览
-		var target = $('#tab-2');
+		var target = $('#tab-orderList');
 		target.html('');
 		var orderList = data.orderList;
 		for (var i=0; i<orderList.length; i++) {
@@ -156,7 +156,7 @@ var BillModule = {
 			target.append(html);
 		}
 		// 加载账单统览
-		var target = $('#tab-1');
+		var target = $('#tab-billItemList');
 		target.html('');
 		var orderList = data.orderList;
 		var t=1;
@@ -191,7 +191,7 @@ var BillModule = {
 			'<i class="orderItemUnit" style="width:45%;">' +
 			'<i class="btn btn-white btn-sm"><i class="fa fa-tags"></i> 已阅</i>' +
 			'<i class="btn btn-white btn-sm"><i class="fa fa-remove"></i> 删除</i>' +
-			'<i class="btn btn-white btn-sm"  data-toggle="modal" data-target="#alertProductPanel"><i class="fa fa-retweet"></i> 替换</i>' +
+			'<i onclick="ItemModule.readyChangeProduct('+item.orderProductItemId+')" class="btn btn-white btn-sm"  data-toggle="modal" data-target="#alertProductPanel"><i class="fa fa-retweet"></i> 替换</i>' +
 			'<i class="btn btn-white btn-sm" data-toggle="modal" data-target="#orderItemUpdatePanel"><i class="fa fa-pencil-square"></i> 修改</i>' +
 			'</i>' +
 			'</div>'
@@ -246,6 +246,243 @@ var BillModule = {
 			'</tr>';
 		return html;
 	}
+}
+
+var ItemModule = {
+	changeToProductId : undefined,
+	readyChangeItemId : undefined,
+	init : function() {
+		var typeList = ItemModule.requestProductTypeData();
+		var productList = ItemModule.requestProductData();
+		for (var i=0; i<typeList.length; i++) {
+			var type = typeList[i];
+			type.productList = [];
+			for (var j=0; j<productList.length; j++) {
+				var product = productList[j];
+				if (product.productTypeId == type.productTypeId) {
+					type.productList[type.productList.length] = product;
+				}
+			}
+		}
+		ItemModule.loadData(typeList);
+	},
+	readyChangeProduct : function(itemId) {
+		ItemModule.readyChangeItemId = itemId;
+		if (undefined != ItemModule.changeToProductId) {
+			$('#changeProductUnit'+ItemModule.changeToProductId).removeClass('selectColor');
+			ItemModule.changeToProductId = undefined;
+			$('#productSelectTip').text('');
+		}
+	},
+	changeProductAction : function() {
+		ItemModule.requestChange(ItemModule.readyChangeItemId, ItemModule.changeToProductId);
+	},
+	selectProduct : function(productId, productName) {
+		$('#productSelectTip').text('已选择  '+productName);
+		if (undefined != ItemModule.changeToProductId) {
+			$('#changeProductUnit'+ItemModule.changeToProductId).removeClass('selectColor');
+		}
+		ItemModule.changeToProductId = productId;
+		$('#changeProductUnit'+productId).addClass('selectColor');
+	},
+	requestSetRead : function () {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mOrder/read",
+			type: 'POST',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				itemId : itemId
+			},
+			success: function (data) {
+				if (data.code == 0) {
+					//swal("替换成功", '', 'success');
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
+	},
+	requestSetFinish : function () {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mOrder/finish",
+			type: 'POST',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				itemId : itemId
+			},
+			success: function (data) {
+				if (data.code == 0) {
+					//swal("替换成功", '', 'success');
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
+	},
+	requestDelete : function (itemId) {
+		swal({
+				title: "您确定要删除吗?",
+				text: "删除后将无法恢复，请谨慎操作！",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "确定",
+				cancelButtonText: "取消",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			},
+			function(isConfirm) {
+				if (isConfirm) {
+					$.ajax({
+						url: GlobalConfig.serverAddress + "/mOrder/delete",
+						type: 'POST',
+						cache: false,
+						dataType:'json',
+						contentType: "application/x-www-form-urlencoded;charset=utf-8",
+						data: {
+							itemId : itemId
+						},
+						success: function (data) {
+							if (data.code == 0) {
+								swal("删除成功", '', 'success');
+							} else {
+								swal("获取数据失败", data.desc, "error");
+							}
+						}
+					});
+				} else {
+					swal("已取消", "您取消了删除操作！", "error");
+				}
+			});
+	},
+	requestUpdate : function (itemId, price, quantity) {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mOrder/update",
+			type: 'POST',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				itemId : itemId,
+				itemProductPrice : price,
+				itemProductQuantity : quantity
+			},
+			success: function (data) {
+				if (data.code == 0) {
+					swal("修改成功", '', 'success');
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
+	},
+	requestChange : function (itemId, productId) {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mOrder/change",
+			type: 'POST',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				itemId : itemId,
+				newProductId : productId
+			},
+			success: function (data) {
+				if (data.code == 0) {
+					swal("替换成功", '', 'success');
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
+	},
+	loadData : function(data) {
+		var typeDisplay = $('#productTypeDisplay');
+		var productDisplay = $('#productDisplay');
+		typeDisplay.html('');
+		productDisplay.html('');
+		for (var i=0; i<data.length; i++) {
+			var productList = data[i].productList;
+			var type = (i == 0 ? 'active' : '');
+			typeDisplay.append(ItemModule.createProductTypeUnitHTML(data[i], type));
+			productDisplay.append(ItemModule.createProductListUnitHTML(productList, data[i].productTypeId, type));
+		}
+
+	},
+	createProductTypeUnitHTML : function (data, type) {
+		var html = '<li class="'+type+'"><a data-toggle="tab" href="#tab-'+data.productTypeId+'" aria-expanded="true">'+data.productTypeName+'</a></li>';
+		return html;
+	},
+	createProductListUnitHTML : function (productList, typeId, type) {
+		var itemHtml = '';
+		for (var i=0; i<productList.length; i++) {
+			var product = productList[i];
+			var temp = '<div id="changeProductUnit'+product.productId+'" onclick="ItemModule.selectProduct('+product.productId+', \''+product.productName+'\')" class="widget style1 lazur-bg selectProductUnit ">' +
+			'<div class="row" style="height:17px;"><div class="col-xs-8">'+product.productName+'</div>' +
+			'<div class="col-xs-4 text-right">'+product.productPrice+'</div></div></div>';
+			itemHtml += temp;
+		}
+		var html = '<div id="tab-'+typeId+'" class="tab-pane '+type+'">' +
+			'<div class="panel-body">' +
+			itemHtml +
+			'</div>' +
+			'</div>';
+		return html;
+	},
+	requestProductTypeData : function() {
+		var targetData = [];
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/productType/list",
+			type: 'GET',
+			cache: false,
+			dataType: 'json',
+			async: false, //设置同步
+			contentType: "application/json; charset=utf-8",
+			data: null,
+			success: function(data) {
+				if (data.code == 0) {
+					targetData = data.data;
+					targetData = sortProductTypeList(targetData);
+				} else {
+					swal('获取品类数据失败', data.desc, 'error');
+				}
+			},
+			error: function() {
+				swal('服务器连接失败', '请检查网络是否通畅', 'warning');
+			}
+		});
+		return targetData;
+	},
+	requestProductData : function(tProductTypeId) {
+		var targetData = [];
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mProduct/allValidProduct",
+			type: 'GET',
+			cache: false,
+			dataType : 'json',
+			async: false, //设置同步
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			// contentType : 'application/json; charset=utf-8',
+			data: {
+			},
+			success: function(data) {
+				if (data.code != 0) {
+					swal('获取商品信息失败', data.desc, 'error');
+				} else {
+					targetData = data.data;
+					targetData = sortProductList(targetData);
+				}
+			},
+			error: function() {
+				swal('服务器连接失败', '请检查网络是否通畅', 'warning');
+			}
+		});
+		return targetData;
+	},
 }
 
 

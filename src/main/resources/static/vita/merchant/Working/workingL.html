@@ -76,6 +76,10 @@
 				width: 100%;
 				overflow: hidden;
 			}
+			.selectColor {
+				background : #999999;
+				color : #ed1e14;
+			}
 		</style>
 
 	</head>
@@ -354,16 +358,16 @@
 							<div class="panel blank-panel">
 								<div class="panel-options" style="margin-top:3px;">
 									<ul class="nav nav-tabs">
-										<li class="orderPanelInfoType active"><a data-toggle="tab-1" aria-expanded="true">商品统览</a>
+										<li class="orderPanelInfoType active"><a data-toggle="tab-billItemList" aria-expanded="true">商品统览</a>
 										</li>
-										<li class="orderPanelInfoType"><a data-toggle="tab-2" aria-expanded="false">订单统览</a>
+										<li class="orderPanelInfoType"><a data-toggle="tab-orderList" aria-expanded="false">订单统览</a>
 										</li>
 									</ul>
 								</div>
 								<div class="panel-body">
 									<div class="tab-content">
 										<!-- 商品统览 -->
-										<div class="tab-pane active" id="tab-1">
+										<div class="tab-pane active" id="tab-billItemList">
 											<div class="feed-activity-list">
 												<div class="feed-element">
 													<i class="orderItemUnit" style="width:5%;">序号</i>
@@ -399,7 +403,7 @@
 											</div>
 										</div>
 										<!-- 订单统览 -->
-										<div class="tab-pane " id="tab-2">
+										<div class="tab-pane " id="tab-orderList">
 											<div style="border:1px solid; border-radius:10px; margin-bottom: 5px;">
 												<div>
 													<i class="orderItemUnit2" style="">订单1</i>
@@ -688,13 +692,9 @@
 						<div class="tabs-container">
 
 							<div class="tabs-left">
-								<ul class="nav nav-tabs">
-									<li class="active"><a data-toggle="tab" href="#tab-8" aria-expanded="true">类型一</a>
-									</li>
-									<li class=""><a data-toggle="tab" href="#tab-9" aria-expanded="false">类型二</a>
-									</li>
+								<ul id="productTypeDisplay" class="nav nav-tabs">
 								</ul>
-								<div class="tab-content ">
+								<div id="productDisplay" class="tab-content ">
 									<div id="tab-8" class="tab-pane active">
 										<div class="panel-body">
 											<div class="widget style1 lazur-bg selectProductUnit">
@@ -731,8 +731,9 @@
 						</div>
 					</div>
 					<div class="modal-footer">
+						<span id="productSelectTip" class="pull-left" style="font-size:20px; font-weight: bolder;"></span>
 						<button type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
-						<a data-toggle="modal" class="btn btn-primary" onclick="">确定</a>
+						<a data-toggle="modal" class="btn btn-primary" onclick="ItemModule.changeProductAction()">确定</a>
 					</div>
 				</div>
 			</div>

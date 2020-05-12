@@ -135,6 +135,16 @@ public class MProductServiceImpl {
     }
 
     /**
+     * 获取所有上架商品
+     * @return
+     */
+    public List<ProductEntity> getAllValidProduct() {
+        ProductEntity entity = new ProductEntity();
+        entity.setProductIsShow(1);
+        return productDao.selectProductWithCondition(entity);
+    }
+
+    /**
      * 将NewProductDto转换为ProductEntity
      * @param newProductDto
      * @return

@@ -15,4 +15,8 @@ public interface OrderItemDao {
 
     List<OrderItemEntity> selectOrderItemListWithOrderIdList(@Param("orderIdList")List<Integer> orderIdList);
 
+    void updateOrderItem(@Param("item")OrderItemEntity item);
+
+    void updateOrderItemList(@Param("itemList")List<OrderItemEntity> item);
+
 }
