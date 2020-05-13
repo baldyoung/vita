@@ -11,5 +11,7 @@ public interface BillDao {
 
     BillEntity selectBill(@Param("billNumber")String billNumber);
 
+    void updateBillEntity(@Param("bill")BillEntity bill);
+
 
 }

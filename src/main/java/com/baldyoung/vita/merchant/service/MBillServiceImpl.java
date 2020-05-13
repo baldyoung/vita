@@ -63,4 +63,12 @@ public class MBillServiceImpl {
         return dto;
     }
 
+    /**
+     * 修改帐单信息
+     * @param entity
+     */
+    public void updateBillInfo (BillEntity entity) {
+        billDao.updateBillEntity(entity);
+    }
+
 }

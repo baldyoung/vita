@@ -26,7 +26,7 @@
 
     <sql id="allFiled">
         billId, billNumber, billOwnerTypeFlag, billOwnerId, billOwnerName, billCustomerNumber, billOrderQuantity,
-        billTotalAmount, billTotalAmount, billReceivedAmount, billReceivedDateTime, billRecentHandlerName, billCustomerName,
+        billTotalAmount, billReceivedAmount, billReceivedDateTime, billRecentHandlerName, billCustomerName,
         billRecentHandlerId, billStartDateTime, billEndDateTime, updateDateTime, billRemarks
     </sql>
 
@@ -41,6 +41,31 @@
         from V_Bill
         where billNumber = #{billNumber}
     </select>
+
+    <update id="updateBillEntity" >
+        update V_Bill
+        set billId = billId
+        <if test="bill.billCustomerName != null">
+            , billCustomerName = #{bill.billCustomerName}
+        </if>
+        <if test="bill.billCustomerNumber != null">
+            , billCustomerNumber = #{bill.billCustomerNumber}
+        </if>
+        <if test="bill.billTotalAmount != null">
+            , billTotalAmount = #{bill.billTotalAmount}
+        </if>
+        <choose>
+            <when test="bill.billId != null">
+                where billId = #{bill.billId}
+            </when>
+            <when test="bill.billNumber != null">
+                where billNumber = #{bill.billNumber}
+            </when>
+            <otherwise>
+                where 1 = 2
+            </otherwise>
+        </choose>
+    </update>
 
 
 

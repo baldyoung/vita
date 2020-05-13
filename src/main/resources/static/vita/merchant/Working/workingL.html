@@ -242,7 +242,7 @@
                             </div>
                     	</div>
                     	<div class="modal-footer">
-							<button id="OrderFormWindowBtnClose" type="button" class="btn btn-white" data-dismiss="modal" onclick="()">取消</button>
+							<button id="" type="button" class="btn btn-white" data-dismiss="modal" onclick="()">取消</button>
 							<a class="btn btn-primary" onclick="">确定</a>
 					</div>
                     </small>
@@ -347,7 +347,7 @@
 									<dt>消费金额：</dt>
 									<dd id="billAmount" class="text-left">未知</dd>
 									<dd class="text-right">
-										<i class="btn btn-white btn-sm" data-toggle="modal" data-target="#orderInfUpdatePanel"><i class="fa fa-pencil"> 修改</i></i>
+										<i onclick="BillSimpleInfoModule.loadCurrentBillInfo()" class="btn btn-white btn-sm" data-toggle="modal" data-target="#orderInfUpdatePanel"><i class="fa fa-pencil"> 修改</i></i>
 									</dd>
 								</dl>
 							</div>
@@ -471,8 +471,8 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button id="OrderFormWindowBtnClose" type="button" class="btn btn-white" data-dismiss="modal" onclick="refreshWin()">关闭</button>
-						<a data-toggle="modal" data-target="#settleAccountPanel" class="btn btn-primary"  style="float:left; " onclick="()">结账</a>
+						<button id="OrderFormWindowBtnClose" type="button" class="btn btn-white" data-dismiss="modal" >关闭</button>
+						<a data-toggle="modal" data-target="#settleAccountPanel" class="btn btn-primary"  style="float:left; " onclick="">结账</a>
 					</div>
 				</div>
 			</div>
@@ -486,23 +486,23 @@
 							<span aria-hidden="true">×</span>
 							<span class="sr-only">关闭</span>
 						</button>
-						<span class="pull-left" style="font-size:17px; font-weight: bold;">一号桌 &nbsp;-&nbsp;订单信息修改</span>
+						<span class="pull-left" style="font-size:17px; font-weight: bold;">账单基础信息修改</span>
 					</div>
 					<small class="font-bold">
 						<form role="form" style="padding: 5px 15px 5px 15px;">
 							<div class="form-group">
 								<label>客户名称：</label>
-								<input type="text" placeholder="" class="form-control" >
+								<input id="updateCustomerNameText" type="text" placeholder="" class="form-control" >
 							</div>
 							<div class="form-group">
 								<label>顾客人数：</label>
-								<input type="number" placeholder="" class="form-control">
+								<input id="updateCustomerNumberText" type="number" placeholder="" class="form-control">
 							</div>
 						</form>
                     </small>
                     <div class="modal-footer">
-						<button type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
-						<a data-toggle="modal" class="btn btn-primary" onclick="">保存</a>
+						<button id="closeOrderInfUpdatePanelBtn" type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
+						<a data-toggle="modal" class="btn btn-primary" onclick="BillSimpleInfoModule.updateInfo()">保存</a>
 					</div>
 				</div>
 			</div>

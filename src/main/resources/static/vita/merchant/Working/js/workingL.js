@@ -20,7 +20,10 @@ function registerMonitor() {
 		$(this).addClass("active");
 	})
 };
-
+/**
+ * 就餐位模块
+ * @type {{init: RoomModule.init, requestAndLoadData: RoomModule.requestAndLoadData, createDisplayUnitHtml: (function(*): string), loadData: RoomModule.loadData}}
+ */
 var RoomModule = {
 	init : function () {
 		RoomModule.requestAndLoadData();
@@ -120,6 +123,9 @@ var RoomModule = {
  */
 var BillModule = {
 	currentLoadRoomId : undefined,
+	customerName : undefined,
+	customerNumber : undefined,
+	billId : undefined,
 	reloadCurrentRoomBill : function() {
 		if (undefined != BillModule.currentLoadRoomId) {
 			BillModule.requestAndLoadData(BillModule.currentLoadRoomId);
@@ -139,6 +145,9 @@ var BillModule = {
 				if (data.code == 0) {
 					data = data.data;
 					BillModule.currentLoadRoomId = roomId;
+					BillModule.customerName = data.billCustomerName;
+					BillModule.customerNumber = data.billCustomerNumber;
+					BillModule.billId = data.billId;
 					BillModule.loadData(data);
 				} else {
 					swal("获取数据失败", data.desc, "error");
@@ -148,6 +157,7 @@ var BillModule = {
 		});
 	},
 	loadData : function (data) {
+		var amount = 0.0;
 		// 加载就餐位信息
 		$('#diningRoomNameText').text(data.billOwnerName);
 		$('#billNumberText').text(data.billNumber);
@@ -172,6 +182,7 @@ var BillModule = {
 		var t=1;
 		for (var i=0; i<orderList.length; i++) {
 			var order = orderList[i];
+			amount += order.amount;
 			var html = BillModule.createBillOrderTitleHTML(order, i+1);
 			var itemList = order.itemList;
 			for (var j=0; j<itemList.length; j++) {
@@ -183,6 +194,8 @@ var BillModule = {
 			}
 			target.append(html);
 		}
+		// 账单总价
+		$('#billAmount').text(amount);
 	},
 	createBillOrderTitleHTML : function(order, index) {
 		var html = '<div class="feed-element" style="margin-top:0px; padding-bottom: 0px; background:#D0E9C6; border-bottom: 1px solid;">' +
@@ -248,12 +261,12 @@ var BillModule = {
 	},
 	createOrderItemUnitHTML : function (item) {
 		var amount = item.orderProductPrice * item.orderProductQuantity;
-		item.orderProductItemStatusDesc = toOrderItemStatusName(item.orderProductItemStatusFlag);
+		item.orderProductItemStatusDesc = toOrderItemStatusNameStyle(item.orderProductItemStatusFlag);
 		item.orderProductRemarks = (item.orderProductRemarks == undefined ? '' : item.orderProductRemarks);
 		item.amount = amount;
 		var html = '<tr>' +
 			'<td>' +
-			'<strong>'+item.orderProductName+'</strong>' + '<span style="font-size:9px; color:#DE0B07;">'+item.orderProductItemStatusDesc+'</span>' +
+			'<strong>'+item.orderProductName+' &nbsp;</strong>' + '<span style="font-size:9px; ">'+item.orderProductItemStatusDesc+'</span>' +
 			'</td>' +
 			'<td>'+item.orderProductRemarks+'</td>' +
 			'<td>'+item.orderProductQuantity+'</td>' +
@@ -278,7 +291,10 @@ var BillModule = {
 	}
 }
 
-
+/**
+ *
+ * @type {{readyChangeProduct: ItemModule.readyChangeProduct, init: ItemModule.init, requestProductTypeData: (function(): Array), requestSetRead: ItemModule.requestSetRead, requestSetFinish: ItemModule.requestSetFinish, loadData: ItemModule.loadData, changeToProductId: undefined, requestDelete: ItemModule.requestDelete, requestProductData: (function(*): Array), changeProductAction: ItemModule.changeProductAction, createProductTypeUnitHTML: (function(*, *): string), createProductListUnitHTML: (function(*, *, *): string), requestChange: ItemModule.requestChange, readyChangeItemId: undefined, selectProduct: ItemModule.selectProduct}}
+ */
 var ItemModule = {
 	changeToProductId : undefined,
 	readyChangeItemId : undefined,
@@ -498,7 +514,10 @@ var ItemModule = {
 		return targetData;
 	},
 }
-
+/**
+ * 商品选择模块
+ * @type {{init: ItemSelectModule.init, createProductTypeUnitHTML: (function(*, *): string), loadProduct: ItemSelectModule.loadProduct, createProductListUnitHTML: (function(*, *, *): string), readyToSelectProduct: ItemSelectModule.readyToSelectProduct, productImgName: undefined, loadData: ItemSelectModule.loadData, selectedProductId: undefined, productName: undefined, productPrice: undefined, selectProduct: ItemSelectModule.selectProduct}}
+ */
 var ItemSelectModule = {
 	selectedProductId : undefined,
 	productName : undefined,
@@ -563,7 +582,10 @@ var ItemSelectModule = {
 		return html;
 	}
 }
-
+/**
+ * 订单项新增模块
+ * @type {{addItem: ItemAddModule.addItem, readyToAddItem: ItemAddModule.readyToAddItem, loadProduct: ItemAddModule.loadProduct, packageData: ItemAddModule.packageData, requestAddItem: ItemAddModule.requestAddItem}}
+ */
 var ItemAddModule = {
 	readyToAddItem : function () {
 		ItemSelectModule.readyToSelectProduct();
@@ -700,7 +722,10 @@ var ItemInfoUpdateModule = {
 	}
 }
 
-
+/**
+ * 订单项状态修改模块
+ * @type {{init: ItemStatusModule.init, requestNewStatus: ItemStatusModule.requestNewStatus, readyToChangeStatus: ItemStatusModule.readyToChangeStatus, currentItemId: undefined, selectNewStatus: ItemStatusModule.selectNewStatus}}
+ */
 var ItemStatusModule = {
 	currentItemId : undefined,
 	init : function() {
@@ -742,6 +767,47 @@ var ItemStatusModule = {
 		});
 	}
 
+}
+
+
+var BillSimpleInfoModule = {
+	loadCurrentBillInfo : function () {
+		var temp = (BillModule.customerName == undefined ? '' : BillModule.customerName);
+		$('#updateCustomerNameText').val(temp);
+		temp = (BillModule.customerNumber == undefined ? '' : BillModule.customerNumber);
+		$('#updateCustomerNumberText').val(temp);
+	},
+	packageData : function() {
+		var data = {
+			customerName : $('#updateCustomerNameText').val(),
+			customerNumber : $('#updateCustomerNumberText').val(),
+			billId : BillModule.billId
+		}
+		return data;
+	},
+	updateInfo : function() {
+		var data = BillSimpleInfoModule.packageData();
+		BillSimpleInfoModule.requestUpdateInfo(data);
+	},
+	requestUpdateInfo : function (data) {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mBill/updateSimpleInfo",
+			type: 'POST',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: data,
+			success: function (data) {
+				if (data.code == 0) {
+					BillModule.reloadCurrentRoomBill();
+					$('#closeOrderInfUpdatePanelBtn').trigger('click');
+					//swal("操作成功", '', 'success');
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
+	}
 }
 
 
