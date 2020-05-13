@@ -367,7 +367,7 @@
 								<div class="panel-body">
 									<div class="tab-content">
 										<!-- 商品统览 -->
-										<div class="tab-pane active" id="tab-billItemList">
+										<div class="tab-pane active" id="tab-billItemList" style="max-height:600px; overflow-y:auto;">
 											<div class="feed-activity-list">
 												<div class="feed-element">
 													<i class="orderItemUnit" style="width:5%;">序号</i>
@@ -381,7 +381,7 @@
 														<i class="btn btn-white btn-sm"  data-toggle="modal" data-target="#orderItemAddPanel" style="float:right;"><i class="fa fa-plus"></i> 新增 </i>
 													</i>
 												</div>
-												<div class="feed-element" style="margin-top:0px; padding-bottom: 0px; background:#D0E9C6;">
+												<!--<div class="feed-element" style="margin-top:0px; padding-bottom: 0px; background:#D0E9C6;">
 													<i class="orderItemUnit" style="width:20%;">#&nbsp;订单1&nbsp;(堂食 &nbsp; 12:32)</i>
 													<i class="orderItemUnit" style="float:right; margin-right:5px;">总额:233.00</i>
 													<i class="orderItemUnit" style="float:right; margin-right:10px;">2020-02-03 12:32:33</i>													
@@ -399,12 +399,12 @@
 													<i class="btn btn-white btn-sm"  data-toggle="modal" data-target="#alertProductPanel"><i class="fa fa-retweet"></i> 替换</i>
 													<i class="btn btn-white btn-sm" data-toggle="modal" data-target="#orderItemUpdatePanel"><i class="fa fa-pencil-square"></i> 修改</i>
 													</i>
-												</div>
+												</div>-->
 											</div>
 										</div>
 										<!-- 订单统览 -->
-										<div class="tab-pane " id="tab-orderList">
-											<div style="border:1px solid; border-radius:10px; margin-bottom: 5px;">
+										<div class="tab-pane " id="tab-orderList" style="max-height:600px; overflow-y:auto;">
+											<!--<div style="border:1px solid; border-radius:10px; margin-bottom: 5px;">
 												<div>
 													<i class="orderItemUnit2" style="">订单1</i>
 													<i class="orderItemUnit2" style="">堂食 &nbsp; 12:32</i>
@@ -460,37 +460,8 @@
 														</tr>
 													</tbody>
 												</table>
-											</div>
-											<div style="border:1px solid; border-radius:10px;">
-												<div>
-													<i class="orderItemUnit2" style="">订单1</i>
-													<i class="orderItemUnit2" style="">堂食 &nbsp; 12:32</i>
-													<i class="orderItemUnit2" style="float:right; margin-right:15px;">总额:263.00</i>
-													<i class="orderItemUnit2" style="float:right; margin-right:10px;">（顾客）2020-02-03 12:33:32</i>
-												</div>
-												<table class="table invoice-table" style="border-top:1px solid; margin-bottom: 0px;">
-													<thead>
-														<tr>
-															<th width="35%">名称</th>
-															<th width="20%">口味</th>
-															<th width="15%">数量</th>
-															<th width="15%">单价</th>
-															<th width="15%">小计</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr style="background:#D3D4D3;">
-															<td>
-																<strong>肉末蒸蛋</strong><span style="font-size:9px; color:#F1A417;">(已替换为红烧肉)</span>
-															</td>
-															<td>不辣</td>
-															<td>1</td>
-															<td>¥26.00</td>
-															<td>0.00</td>
-														</tr>
-													</tbody>
-												</table>
-											</div>
+											</div>-->
+
 										</div>
 									</div>
 
@@ -549,7 +520,7 @@
 						<span class="pull-left" style="font-size:17px; font-weight: bold;">一号桌 &nbsp;-&nbsp;订单修改</span>
 					</div>
 					<div class="modal-body" style="padding:0  0 0 0;">
-						<table id="OrderFormList" style="width:100%;" class="table table-striped table-bordered table-hover  dataTable">
+						<table style="width:100%;" class="table table-striped table-bordered table-hover  dataTable">
 							<thead>
 								<tr>
 									<td width="20%">类型</td>
@@ -559,51 +530,51 @@
 							</thead>
 							<tr class="gradeA ">
 								<td class="sorting_1">商品名称</td>
-								<td class=" ">孜然牛肉</td>
+								<td id="updateItemInfo-productNameText" class=" "></td>
 								<td class=" ">
 									<input type="text" class="form-control" placeholder="不可修改" readonly="true">
 								</td>
 							</tr>
 							<tr class="gradeA ">
 								<td class="sorting_1">口味</td>
-								<td class=" ">正常</td>
+								<td id="updateItemInfo-productAttributeNameText" class=" "></td>
 								<td class=" ">
-									<input type="text" class="form-control" placeholder="正常" readonly="true">
+									<input type="text" class="form-control" placeholder="不可修改" readonly="true">
 								</td>
 							</tr>
 							<tr class="gradeA ">
 								<td class="sorting_1">状态</td>
-								<td class=" ">已完成</td>
+								<td id="updateItemInfo-itemStatusName" class=" "></td>
 								<td class=" ">
-									<input type="text" class="form-control" placeholder="已完成" readonly="true">
+									<input type="text" class="form-control" placeholder="不可修改" readonly="true">
 								</td>
 							</tr>
 							<tr class="gradeA" style="background:white;">
 								<td class="sorting_1">单价</td>
-								<td class=" ">38.00</td>
+								<td id="updateItemInfo-productPrice" class=" "></td>
 								<td class=" ">
-									<input type="text" class="form-control" placeholder="38.00">
+									<input id="updateItemInfo-newProductPrice" type="number" class="form-control" placeholder="38.00">
 								</td>
 							</tr>
 							<tr class="gradeA" style="background:white;">
 								<td class="sorting_1">数量</td>
-								<td class=" ">1</td>
+								<td id="updateItemInfo-productQuantity" class=" "></td>
 								<td class=" ">
-									<input type="text" class="form-control" placeholder="1">
+									<input id="updateItemInfo-newProductQuantity" type="number" class="form-control" placeholder="1">
 								</td>
 							</tr>
 							<tr class="gradeA">
 								<td class="sorting_1">小计</td>
-								<td class=" ">38.00</td>
+								<td id="updateItemInfo-itemAmount" class=" "></td>
 								<td class=" ">
-									<input type="text" class="form-control" placeholder="38.00" readonly="true">
+									<input type="text" class="form-control" placeholder="不可修改" readonly="true">
 								</td>
 							</tr>
 						</table>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
-						<a data-toggle="modal" class="btn btn-primary" onclick="">保存</a>
+						<button id="closeOrderItemUpdatePanelBtn" type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
+						<a data-toggle="modal" class="btn btn-primary" onclick="ItemInfoUpdateModule.updateItemInfo()">保存</a>
 					</div>
 				</div>
 			</div>
@@ -620,8 +591,8 @@
 						<span class="pull-left" style="font-size:17px; font-weight: bold;">一号桌 &nbsp;-&nbsp;新增商品</span>
 					</div>
 					<div class="modal-body" style="padding:0  0 0 0;">
-						<a class="btn btn-success btn-rounded" data-toggle="modal" data-target="#selectProductPanel" style="margin-top:3px; margin-left:3px;">选择商品</a>
-						<table id="OrderFormList" style="width:100%;" class="table table-striped table-bordered table-hover  dataTable">
+						<a onclick="ItemSelectModule.readyToSelectProduct()" class="btn btn-success btn-rounded" data-toggle="modal" data-target="#selectProductPanel" style="margin-top:3px; margin-left:3px;">选择商品</a>
+						<table style="width:100%;" class="table table-striped table-bordered table-hover  dataTable">
 							<thead>
 								<tr>
 									<td width="20%">类型</td>
@@ -631,39 +602,39 @@
 							<tr class="gradeA " style="background:white;">
 								<td class="sorting_1">商品名称<span style="color:red;">（必填）</span></td>
 								<td class=" ">
-									<input type="text" class="form-control" placeholder="孜然牛肉">
+									<input id="addItemProductNameText" type="text" class="form-control" placeholder="">
 								</td>
 							</tr>
 							<tr class="gradeA " style="background:white;">
 								<td class="sorting_1">口味</td>
 								<td class=" ">
-									<input type="text" class="form-control" placeholder="正常">
+									<input id="addItemProductAttributeNameText" type="text" class="form-control" placeholder="">
 								</td>
 							</tr>
 							<tr class="gradeA ">
 								<td class="sorting_1">状态</td>
 								<td class=" ">
-									<input type="text" class="form-control" placeholder="准备中" readonly="true">
+									<input type="text" class="form-control" placeholder="待确认" readonly="true">
 								</td>
 							</tr>
 							<tr class="gradeA" style="background:white;">
 								<td class="sorting_1">单价<span style="color:red;">（必填）</span></td>
 								<td class=" ">
-									<input type="number" class="form-control" placeholder="38.00">
+									<input id="addItemProductPriceText" type="number" class="form-control" placeholder="">
 								</td>
 							</tr>
 							<tr class="gradeA" style="background:white;">
 								<td class="sorting_1">数量<span style="color:red;">（必填）</span></td>
 								<td class=" ">
-									<input type="number" class="form-control" placeholder="1">
+									<input id="addItemProductQuantityText" type="number" class="form-control" placeholder="">
 								</td>
 							</tr>
-							<tr class="gradeA">
+							<!--<tr class="gradeA">
 								<td class="sorting_1">小计</td>
 								<td class=" ">
-									<input type="text" class="form-control" placeholder="38.00" readonly="true">
+									<input id="addItemAmountText" type="text" class="form-control" placeholder="" readonly="true">
 								</td>
-							</tr>
+							</tr>-->
 						</table>
 					</div>
 					<div class="modal-footer">
@@ -671,8 +642,8 @@
 							<input type="radio" id="diningType1" name="diningType" style="height:20px; width:20px; " /><i onclick="diningType1.click()">堂食</i>&nbsp;&nbsp;
 							<input type="radio" id="diningType2" name="diningType" style="height:20px; width:20px; " /><i onclick="diningType2.click()">打包</i>
 						</i>
-						<button type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
-						<a data-toggle="modal" class="btn btn-primary" onclick="">提交</a>
+						<button id="closeAddItemPanelBtn" type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
+						<a onclick="ItemAddModule.addItem()" data-toggle="modal" class="btn btn-primary" onclick="">提交</a>
 					</div>
 				</div>
 			</div>
@@ -686,7 +657,7 @@
 							<span aria-hidden="true">&times;</span>
 							<span class="sr-only">关闭</span>
                         </button>
-						<span class="pull-left" style="font-size:17px; font-weight: bold;">一号桌 &nbsp;-&nbsp;商品替换</span>
+						<span class="pull-left" style="font-size:17px; font-weight: bold;">修改商品项 - 选择商品</span>
 					</div>
 					<div class="modal-body" style="padding:0  0 0 0;">
 						<div class="tabs-container">
@@ -695,35 +666,7 @@
 								<ul id="productTypeDisplay" class="nav nav-tabs">
 								</ul>
 								<div id="productDisplay" class="tab-content ">
-									<div id="tab-8" class="tab-pane active">
-										<div class="panel-body">
-											<div class="widget style1 lazur-bg selectProductUnit">
-												<div class="row" style="height:17px;">
-													<div class="col-xs-8">
-														红烧牛肉
-													</div>
-													<div class="col-xs-4 text-right">
-														45.00
-													</div>
-												</div>
-											</div>
-											<div class="widget style1 lazur-bg selectProductUnit">
-												<div class="row" style="height:17px;">
-													<div class="col-xs-8">
-														红烧全鱼
-													</div>
-													<div class="col-xs-4 text-right">
-														35.00
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div id="tab-9" class="tab-pane">
-										<div class="panel-body">
 
-										</div>
-									</div>
 								</div>
 
 							</div>
@@ -732,7 +675,7 @@
 					</div>
 					<div class="modal-footer">
 						<span id="productSelectTip" class="pull-left" style="font-size:20px; font-weight: bolder;"></span>
-						<button type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
+						<button id="closeAlterProductPanelBtn" type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
 						<a data-toggle="modal" class="btn btn-primary" onclick="ItemModule.changeProductAction()">确定</a>
 					</div>
 				</div>
@@ -747,57 +690,24 @@
 							<span aria-hidden="true">&times;</span>
 							<span class="sr-only">关闭</span>
                         </button>
-						<span class="pull-left" style="font-size:17px; font-weight: bold;">一号桌 &nbsp;-&nbsp;新增商品项</span>
+						<span class="pull-left" style="font-size:17px; font-weight: bold;">新增商品项 - 选择商品</span>
 					</div>
 					<div class="modal-body" style="padding:0  0 0 0;">
 						<div class="tabs-container">
 
 							<div class="tabs-left">
-								<ul class="nav nav-tabs">
-									<li class="active"><a data-toggle="tab" href="#tab-8" aria-expanded="true">类型一</a>
-									</li>
-									<li class=""><a data-toggle="tab" href="#tab-9" aria-expanded="false">类型二</a>
-									</li>
+								<ul id="productTypeDisplay2" class="nav nav-tabs">
 								</ul>
-								<div class="tab-content ">
-									<div id="tab-8" class="tab-pane active">
-										<div class="panel-body">
-											<div class="widget style1 lazur-bg selectProductUnit">
-												<div class="row" style="height:17px;">
-													<div class="col-xs-8">
-														红烧牛肉
-													</div>
-													<div class="col-xs-4 text-right">
-														45.00
-													</div>
-												</div>
-											</div>
-											<div class="widget style1 lazur-bg selectProductUnit">
-												<div class="row" style="height:17px;">
-													<div class="col-xs-8">
-														红烧全鱼
-													</div>
-													<div class="col-xs-4 text-right">
-														35.00
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div id="tab-9" class="tab-pane">
-										<div class="panel-body">
-
-										</div>
-									</div>
+								<div  id="productDisplay2" class="tab-content ">
 								</div>
-
 							</div>
 
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
-						<a data-toggle="modal" class="btn btn-primary" onclick="">确定</a>
+						<span id="productSelectTip2" class="pull-left" style="font-size:20px; font-weight: bolder;"></span>
+						<button id="closeAlterProductPanelBtn2"  type="button" class="btn btn-white" data-dismiss="modal" onclick="">取消</button>
+						<a data-toggle="modal" class="btn btn-primary" onclick="ItemSelectModule.loadProduct()">确定</a>
 					</div>
 				</div>
 			</div>
@@ -862,6 +772,36 @@
 						<button type="button" class="btn btn-white" data-dismiss="modal" onclick="">关闭</button>
 						
 					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 订单项的状态修改栏 -->
+		<div class="modal inmodal" id="itemStatusPanel" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content animated bounceInDown">
+					<div class="modal-header" style="padding-bottom: 15px; padding-top:10px; ">
+						<button id="closeItemStatusPanelBtn" type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">×</span>
+							<span class="sr-only">关闭</span>
+						</button>
+						<span class="pull-left" style="font-size:17px; font-weight: bold;">一号桌 &nbsp;-&nbsp;订单项状态选择</span>
+					</div>
+					<small class="font-bold">
+						<div style="text-align: center; margin-top:10px; margin-bottom:20px; ">
+							<button class="btn btn-primary "  type="button" style="margin:3px 1px 5px 3px; width:80%; background:#FFCCCC; color:#000000 ! important;" onclick="ItemStatusModule.selectNewStatus(0)">
+								<i class="fa fa-building-o" style="color:#000000;"></i> 待确定
+							</button>
+							<button class="btn btn-primary "  type="button" style="margin:3px 1px 5px 3px; background:#99CCFF; color:#000000 ! important; width:80%;" onclick="ItemStatusModule.selectNewStatus(2)">
+								<i class="fa fa-building-o" style="color:#000000;"></i> 备货中
+							</button>
+							<button class="btn btn-primary "  type="button" style="margin:3px 1px 5px 3px; background:#99CC99; color:#000000 ! important; width:80%;" onclick="ItemStatusModule.selectNewStatus(3)">
+								<i class="fa fa-building-o" style="color:#000000;"></i> 已完成
+							</button>
+							<!--<button class="btn btn-primary "  type="button" style="margin:3px 1px 5px 3px; background:#FFFF66; color:#000000 ! important; width:80%;" onclick="ItemStatusModule.selectNewStatus(1)">
+								<i class="fa fa-building-o" style="color:#000000;"></i> 缺货中
+							</button>-->
+						</div>
+					</small>
 				</div>
 			</div>
 		</div>

@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 
+import static com.baldyoung.vita.common.pojo.dto.ResponseResult.defeat;
 import static com.baldyoung.vita.common.pojo.dto.ResponseResult.success;
+import static com.baldyoung.vita.common.utility.CommonMethod.isEmpty;
 
 @RestController
 @RequestMapping("mOrder")
@@ -20,6 +22,34 @@ public class MOrderController {
 
     @Autowired
     private MOrderServiceImpl mOrderService;
+
+    /**
+     * 设置订单项为下单成功，等待商家确认
+     * @param itemId
+     * @return
+     */
+    @PostMapping("unRead")
+    public ResponseResult setOrderItemUnRead(@RequestParam("itemId")Integer itemId) {
+        OrderItemEntity entity = new OrderItemEntity();
+        entity.setOrderProductItemId(itemId);
+        entity.setOrderProductItemStatusFlag(0);
+        mOrderService.updateOrderItem(entity);
+        return success();
+    }
+
+    /**
+     * 设置订单项为下单失败，库存不足
+     * @param itemId
+     * @return
+     */
+    @PostMapping("failed")
+    public ResponseResult setOrderItemFailed(@RequestParam("itemId")Integer itemId) {
+        OrderItemEntity entity = new OrderItemEntity();
+        entity.setOrderProductItemId(itemId);
+        entity.setOrderProductItemStatusFlag(1);
+        mOrderService.updateOrderItem(entity);
+        return success();
+    }
 
     /**
      * 设置订单项已读
@@ -61,6 +91,7 @@ public class MOrderController {
         OrderItemEntity entity = new OrderItemEntity();
         entity.setOrderProductItemId(itemId);
         entity.setOrderProductItemStatusFlag(4);
+        entity.setOrderProductQuantity(0);
         mOrderService.updateOrderItem(entity);
         return success();
     }
@@ -94,6 +125,48 @@ public class MOrderController {
     public ResponseResult exchangeOrderItemProduct(@RequestParam("itemId")Integer itemId,
                                                    @RequestParam("newProductId")Integer productId) throws ServiceException {
         mOrderService.changeOrderItemProduct(itemId, productId);
+        return success();
+    }
+
+    /**
+     * 新增订单项
+     * @param roomId
+     * @param productId
+     * @param productName
+     * @param productPrice
+     * @param productQuantity
+     * @param diningType
+     * @return
+     */
+    @PostMapping("addItem")
+    public ResponseResult addOrderItem(@RequestParam("roomId")Integer roomId,
+                                       @RequestParam(value = "productId", required = false)Integer productId,
+                                       @RequestParam("productName")String productName,
+                                       @RequestParam("productPrice")BigDecimal productPrice,
+                                       @RequestParam("productQuantity")Integer productQuantity,
+                                       @RequestParam("diningType")Integer diningType,
+                                       @RequestParam(value = "productImgName", required = false)String productImgName,
+                                       @RequestParam(value = "productRemarks", required = false)String productRemarks) {
+        if (isEmpty(productName)) {
+            return defeat("商品名称不能为空");
+        }
+        if (!isEmpty(productImgName) && productImgName.length() >= 100) {
+            return defeat("非法数据");
+        }
+        if (!isEmpty(productRemarks) && productRemarks.length() >= 40) {
+            return defeat("口味字数需小于40");
+        }
+        if (productName.length() >= 60) {
+            return defeat("商品名称需小于60");
+        }
+        OrderItemEntity entity = new OrderItemEntity();
+        entity.setOrderProductId(productId);
+        entity.setOrderProductName(productName);
+        entity.setOrderProductPrice(productPrice);
+        entity.setOrderProductQuantity(productQuantity);
+        entity.setOrderProductImg(productImgName);
+        entity.setOrderProductRemarks(productRemarks);
+        mOrderService.addOrderItem(roomId, diningType, entity);
         return success();
     }
 

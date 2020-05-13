@@ -142,14 +142,29 @@ function  toDiningTypeName(diningTypeId) {
 	}
 	return "";
 }
-
 function toOrderItemStatusName(statusId) {
+	var temp = '';
 	switch(statusId) {
-		case 0 : return '待确定';
-		case 1 : return '下单失败';
-		case 2 : return '备货中';
-		case 3 : return '已完成';
-		case 4 : return '已删除';
+		case 0 : temp = '待确定'; break;
+		case 1 : temp = '缺货中'; break
+		case 2 : temp = '备货中'; break
+		case 3 : temp = '已完成'; break
+		case 4 : temp = '已删除'; break
 	}
-	return '';
+	return temp;
+}
+
+function toOrderItemStatusNameStyle(statusId) {
+	var html = '';
+	var temp = '';
+	switch(statusId) {
+		case 0 : temp = '<span style="background:#FFCCCC; color:#000000;">待确定</span>'; break;
+		case 1 : temp = '<span style="background:#FFFF66; color:#000000;">缺货中</span>'; break
+		case 2 : temp = '<span style="background:#99CCFF; color:#000000;">备货中</span>'; break
+		case 3 : temp = '<span style="background:#99CC99; color:#000000;">已完成</span>'; break
+		case 4 : temp = '<span style="background:#000000; color:#FFFFFF;">已删除</span>'; break
+	}
+	html += temp;
+	html += "";
+	return html;
 }

@@ -9,6 +9,10 @@ Vita plus
 show create database MiniBlog;
 查看建表的语句
 SHOW CREATE TABLE MB_User;
+修改数据库密码
+update user set authentication_string=PASSWORD('bd3366x,') where User='root';
+alter user 'root'@'localhost' identified by 'vita2019';
+flush privileges;
 */
 -- ------------------------------------------------------------------------------------------------
 -- 创建数据库
@@ -102,6 +106,8 @@ CREATE TABLE V_DiningRoom (
 	diningRoomInfo VARCHAR(150) COMMENT'就餐位的相关信息',
 	PRIMARY KEY (diningRoomId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'餐桌表';
+INSERT INTO V_DiningRoom(diningRoomName, diningRoomGrade, diningRoomStatus, diningRoomInfo)
+VALUES ('一号桌', 0, 0, '标配20人、空调、卫生间');
 -- 购物车表（每个餐桌只能有一个购物车）
 DROP TABLE IF EXISTS V_ShoppingCart;
 CREATE TABLE V_ShoppingCart (
@@ -133,8 +139,8 @@ CREATE TABLE V_Bill (
 	billCustomerName VARCHAR(50) COMMENT'账单归属的客户名称',
 	billCustomerNumber SMALLINT UNSIGNED COMMENT'顾客人数',
 	billOrderQuantity SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT'订单总数：非空',
-	billTotalAmount DECIMAL DEFAULT 0 NOT NULL COMMENT'账单总金额：非空',
-	billReceivedAmount DECIMAL COMMENT'账单实收金额（null/未结账, 0/零收入账单, 其它/已结账的非零收入账单）',
+	billTotalAmount DECIMAL(11,1) DEFAULT 0 NOT NULL COMMENT'账单总金额：非空',
+	billReceivedAmount DECIMAL(11,1) COMMENT'账单实收金额（null/未结账, 0/零收入账单, 其它/已结账的非零收入账单）',
 	billReceivedDateTime DATETIME COMMENT'账单结账时间',
 	billRecentHandlerName VARCHAR(20) COMMENT'账单最新的处理人名称：非空',
 	billRecentHandlerId INT UNSIGNED COMMENT'账单最新的处理人编号：非空',
@@ -143,7 +149,7 @@ CREATE TABLE V_Bill (
 	billRemarks VARCHAR(100) COMMENT'账单备注',
 	updateDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT'修改时间：非空',
 	PRIMARY KEY (billId)
-)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'账单表';	
+)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'账单表';
 -- 订单表
 DROP TABLE IF EXISTS V_Order;
 CREATE TABLE V_Order (
@@ -155,7 +161,7 @@ CREATE TABLE V_Order (
 	orderInitiatorFlag TINYINT NOT NULL COMMENT'订单发起人标识（0/商家, 1/顾客）：非空',
 	orderCreateDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT'[默认]订单创建时间：非空',
 	PRIMARY KEY (orderId)
-)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'订单表';	
+)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'订单表';
 -- 订单详情表/商品条目表
 DROP TABLE IF EXISTS V_OrderProductItem;
 CREATE TABLE V_OrderProductItem (
@@ -165,7 +171,7 @@ CREATE TABLE V_OrderProductItem (
 	orderProductName VARCHAR(60) NOT NULL COMMENT'商品名称：非空',
 	orderProductImg VARCHAR(100) NOT NULL COMMENT'商品图片：非空',
 	orderProductQuantity SMALLINT UNSIGNED NOT NULL COMMENT'商品数量：非空',
-	orderProductPrice DECIMAL NOT NULL COMMENT'商品单价：非空',
+	orderProductPrice DECIMAL(10,1) NOT NULL COMMENT'商品单价：非空',
 	orderProductItemStatusFlag TINYINT NOT NULL DEFAULT 0 COMMENT'商品无效标识（0/有效, 1/无效, 2/删除）：非空',
 	orderProductItemStatusDesc VARCHAR(100) COMMENT'商品无效说明',
 	orderProductRemarks VARCHAR(40) COMMENT'商品项备注',
@@ -178,14 +184,15 @@ CREATE TABLE V_PresetTime (
 	presetTimeName VARCHAR(20) UNIQUE NOT NULL COMMENT'类型名称：非空',
 	presetTimeMinute SMALLINT UNIQUE NOT NULL COMMENT'该类型所代表的分钟值',
 	PRIMARY KEY (presetTimeId)
-)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'客户就餐时间类型';		
+)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'客户就餐时间类型';
 -- 客户消息类型表
 DROP TABLE IF EXISTS V_CustomerMessageType;
 CREATE TABLE V_CustomerMessageType (
 	customerMessageTypeId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]客户消息类型编号：唯一、非空',
 	customerMessageTypeName VARCHAR(20) UNIQUE NOT NULL COMMENT'消息类型的名称：唯一、非空',
 	PRIMARY KEY (customerMessageTypeId)
-)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'客户消息类型表';	
+)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'客户消息类型表';
+INSERT INTO V_CustomerMessageType(customerMessageTypeName) VALUES('呼叫商家'), ('预开发票'), ('催促上菜');
 -- 客户消息表
 DROP TABLE IF EXISTS V_CustomerMessage;
 CREATE TABLE V_CustomerMessage (

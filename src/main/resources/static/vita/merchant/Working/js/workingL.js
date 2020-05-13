@@ -114,8 +114,17 @@ var RoomModule = {
 	}
 }
 
-
+/**
+ * 账单模块
+ * @type {{currentLoadRoomId: undefined, createBillItemUnitHTML: (function(*, *): string), createBillTopTitleHTML: (function(): string), createOrderItemUnitHTML: (function(*): string), createOrderUnitHTML: (function(*, *): string), requestAndLoadData: BillModule.requestAndLoadData, reloadCurrentRoomBill: BillModule.reloadCurrentRoomBill, loadData: BillModule.loadData, createBillOrderTitleHTML: (function(*, *): string)}}
+ */
 var BillModule = {
+	currentLoadRoomId : undefined,
+	reloadCurrentRoomBill : function() {
+		if (undefined != BillModule.currentLoadRoomId) {
+			BillModule.requestAndLoadData(BillModule.currentLoadRoomId);
+		}
+	},
 	requestAndLoadData : function (roomId) {
 		$.ajax({
 			url: GlobalConfig.serverAddress + "/mBill/billInfo",
@@ -129,6 +138,7 @@ var BillModule = {
 			success: function (data) {
 				if (data.code == 0) {
 					data = data.data;
+					BillModule.currentLoadRoomId = roomId;
 					BillModule.loadData(data);
 				} else {
 					swal("获取数据失败", data.desc, "error");
@@ -157,7 +167,7 @@ var BillModule = {
 		}
 		// 加载账单统览
 		var target = $('#tab-billItemList');
-		target.html('');
+		target.html(BillModule.createBillTopTitleHTML());
 		var orderList = data.orderList;
 		var t=1;
 		for (var i=0; i<orderList.length; i++) {
@@ -165,13 +175,17 @@ var BillModule = {
 			var html = BillModule.createBillOrderTitleHTML(order, i+1);
 			var itemList = order.itemList;
 			for (var j=0; j<itemList.length; j++) {
+				var orderItem = itemList[j];
+				if (4 == orderItem.orderProductItemStatusFlag) {
+					continue;
+				}
 				html += BillModule.createBillItemUnitHTML(itemList[j], t++);
 			}
 			target.append(html);
 		}
 	},
 	createBillOrderTitleHTML : function(order, index) {
-		var html = '<div class="feed-element" style="margin-top:0px; padding-bottom: 0px; background:#D0E9C6;">' +
+		var html = '<div class="feed-element" style="margin-top:0px; padding-bottom: 0px; background:#D0E9C6; border-bottom: 1px solid;">' +
 			'<i class="orderItemUnit" style="">#&nbsp;订单'+index+'&nbsp;('+order.diningTypeName+'&nbsp;'+order.orderPresetTime+')</i>' +
 			'<i class="orderItemUnit" style="float:right; margin-right:5px;">总额:'+order.amount+'</i>' +
 			'<i class="orderItemUnit" style="float:right; margin-right:10px;">'+GlobalMethod.toDateString(order.orderCreateDateTime)+'</i>' +
@@ -181,18 +195,19 @@ var BillModule = {
 	createBillItemUnitHTML : function (item, index) {
 		var temp = (GlobalMethod.isEmpty(item.orderProductRemarks)? '' : ('(' + item.orderProductRemarks +')'));
 		item.itemStatusName = toOrderItemStatusName(item.orderProductItemStatusFlag);
+		item.itemStatusStyle = toOrderItemStatusNameStyle(item.orderProductItemStatusFlag);
 		var html = '<div class="feed-element">' +
 			'<i class="orderItemUnit" style="width:5%;">'+index+'</i>' +
-			'<i class="orderItemUnit" style="width:7%;font-style: normal;">'+item.itemStatusName+'</i>' +
+			'<i class="orderItemUnit" style="width:7%;font-style: normal;">'+item.itemStatusStyle+'</i>' +
 			'<i class="orderItemUnit" style="width:20%; font-weight:bolder; color:black; font-style: normal;">'+item.orderProductName+'&nbsp;'+temp+'</i>' +
 			'<i class="orderItemUnit" style="width:7%;">'+item.orderProductPrice+'</i>' +
 			'<i class="orderItemUnit" style="width:6%;">x'+item.orderProductQuantity+'</i>' +
 			'<i class="orderItemUnit" style="width:10%;">'+item.amount+'</i>' +
 			'<i class="orderItemUnit" style="width:45%;">' +
-			'<i class="btn btn-white btn-sm"><i class="fa fa-tags"></i> 已阅</i>' +
-			'<i class="btn btn-white btn-sm"><i class="fa fa-remove"></i> 删除</i>' +
+			'<i onclick="ItemStatusModule.readyToChangeStatus('+item.orderProductItemId+')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#itemStatusPanel" ><i class="fa fa-tags"></i> 状态</i>' +
+			'<i onclick="ItemModule.requestDelete('+item.orderProductItemId+', \''+item.orderProductName+'\')" class="btn btn-white btn-sm"><i class="fa fa-remove"></i> 删除</i>' +
 			'<i onclick="ItemModule.readyChangeProduct('+item.orderProductItemId+')" class="btn btn-white btn-sm"  data-toggle="modal" data-target="#alertProductPanel"><i class="fa fa-retweet"></i> 替换</i>' +
-			'<i class="btn btn-white btn-sm" data-toggle="modal" data-target="#orderItemUpdatePanel"><i class="fa fa-pencil-square"></i> 修改</i>' +
+			'<i onclick="ItemInfoUpdateModule.readyToUpdate('+item.orderProductItemId+', \''+item.orderProductName+'\', \''+item.itemStatusName+'\', \''+temp+'\', '+item.orderProductPrice+', '+item.orderProductQuantity+', '+item.amount+')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#orderItemUpdatePanel"><i class="fa fa-pencil-square"></i> 修改</i>' +
 			'</i>' +
 			'</div>'
 		return html;
@@ -233,7 +248,8 @@ var BillModule = {
 	},
 	createOrderItemUnitHTML : function (item) {
 		var amount = item.orderProductPrice * item.orderProductQuantity;
-		item.orderProductItemStatusDesc = '';
+		item.orderProductItemStatusDesc = toOrderItemStatusName(item.orderProductItemStatusFlag);
+		item.orderProductRemarks = (item.orderProductRemarks == undefined ? '' : item.orderProductRemarks);
 		item.amount = amount;
 		var html = '<tr>' +
 			'<td>' +
@@ -245,8 +261,23 @@ var BillModule = {
 			'<td>'+amount+'</td>' +
 			'</tr>';
 		return html;
+	},
+	createBillTopTitleHTML : function() {
+		return '<div class="feed-element">\n' +
+			'\t\t\t\t\t\t\t\t\t\t\t\t\t<i class="orderItemUnit" style="width:5%;">序号</i>\n' +
+			'\t\t\t\t\t\t\t\t\t\t\t\t\t<i class="orderItemUnit" style="width:7%;">状态</i>\n' +
+			'\t\t\t\t\t\t\t\t\t\t\t\t\t<i class="orderItemUnit" style="width:20%;">名称</i>\n' +
+			'\t\t\t\t\t\t\t\t\t\t\t\t\t<i class="orderItemUnit" style="width:7%;">单价</i>\n' +
+			'\t\t\t\t\t\t\t\t\t\t\t\t\t<i class="orderItemUnit" style="width:6%;">数量</i>\n' +
+			'\t\t\t\t\t\t\t\t\t\t\t\t\t<i class="orderItemUnit" style="width:10%;">小计</i>\n' +
+			'\t\t\t\t\t\t\t\t\t\t\t\t\t<i class="orderItemUnit" style="width:45%;">\n' +
+			'\t\t\t\t\t\t\t\t\t\t\t\t\t\t操作&nbsp;&nbsp;\n' +
+			'\t\t\t\t\t\t\t\t\t\t\t\t\t\t<i onclick="ItemAddModule.readyToAddItem()" class="btn btn-white btn-sm"  data-toggle="modal" data-target="#orderItemAddPanel" style="float:right;"><i class="fa fa-plus"></i> 新增 </i>\n' +
+			'\t\t\t\t\t\t\t\t\t\t\t\t\t</i>\n' +
+			'\t\t\t\t\t\t\t\t\t\t\t\t</div>';
 	}
 }
+
 
 var ItemModule = {
 	changeToProductId : undefined,
@@ -265,6 +296,7 @@ var ItemModule = {
 			}
 		}
 		ItemModule.loadData(typeList);
+		ItemSelectModule.loadData(typeList);
 	},
 	readyChangeProduct : function(itemId) {
 		ItemModule.readyChangeItemId = itemId;
@@ -323,9 +355,9 @@ var ItemModule = {
 			}
 		});
 	},
-	requestDelete : function (itemId) {
+	requestDelete : function (itemId, productName) {
 		swal({
-				title: "您确定要删除吗?",
+				title: "您确定要删除 "+productName+" 吗?",
 				text: "删除后将无法恢复，请谨慎操作！",
 				type: "warning",
 				showCancelButton: true,
@@ -348,6 +380,7 @@ var ItemModule = {
 						},
 						success: function (data) {
 							if (data.code == 0) {
+								BillModule.reloadCurrentRoomBill();
 								swal("删除成功", '', 'success');
 							} else {
 								swal("获取数据失败", data.desc, "error");
@@ -358,27 +391,6 @@ var ItemModule = {
 					swal("已取消", "您取消了删除操作！", "error");
 				}
 			});
-	},
-	requestUpdate : function (itemId, price, quantity) {
-		$.ajax({
-			url: GlobalConfig.serverAddress + "/mOrder/update",
-			type: 'POST',
-			cache: false,
-			dataType:'json',
-			contentType: "application/x-www-form-urlencoded;charset=utf-8",
-			data: {
-				itemId : itemId,
-				itemProductPrice : price,
-				itemProductQuantity : quantity
-			},
-			success: function (data) {
-				if (data.code == 0) {
-					swal("修改成功", '', 'success');
-				} else {
-					swal("获取数据失败", data.desc, "error");
-				}
-			}
-		});
 	},
 	requestChange : function (itemId, productId) {
 		$.ajax({
@@ -393,7 +405,9 @@ var ItemModule = {
 			},
 			success: function (data) {
 				if (data.code == 0) {
+					BillModule.reloadCurrentRoomBill();
 					swal("替换成功", '', 'success');
+					$('#closeAlterProductPanelBtn').trigger('click');
 				} else {
 					swal("获取数据失败", data.desc, "error");
 				}
@@ -484,6 +498,253 @@ var ItemModule = {
 		return targetData;
 	},
 }
+
+var ItemSelectModule = {
+	selectedProductId : undefined,
+	productName : undefined,
+	productPrice : undefined,
+	productImgName : undefined,
+	init : function() {
+
+	},
+	loadProduct : function() {
+		$('#closeAlterProductPanelBtn2').trigger('click');
+		ItemAddModule.loadProduct(ItemSelectModule.selectedProductId, ItemSelectModule.productName, ItemSelectModule.productPrice);
+	},
+	loadData : function(data) {
+		var typeDisplay = $('#productTypeDisplay2');
+		var productDisplay = $('#productDisplay2');
+		typeDisplay.html('');
+		productDisplay.html('');
+		for (var i=0; i<data.length; i++) {
+			var productList = data[i].productList;
+			var type = (i == 0 ? 'active' : '');
+			console.log(type);
+			typeDisplay.append(ItemSelectModule.createProductTypeUnitHTML(data[i], type));
+			productDisplay.append(ItemSelectModule.createProductListUnitHTML(productList, data[i].productTypeId, type));
+		}
+	},
+	readyToSelectProduct : function() {
+		if (undefined != ItemSelectModule.selectedProductId) {
+			$('#selectProductUnit'+ItemSelectModule.selectedProductId).removeClass('selectColor');
+			$('#productSelectTip2').text('');
+			ItemSelectModule.selectedProductId = undefined;
+		}
+	},
+	selectProduct : function(productId, productName, productPrice) {
+		$('#productSelectTip2').text('已选择  '+productName);
+		if (undefined != ItemSelectModule.selectedProductId) {
+			$('#selectProductUnit'+ItemSelectModule.selectedProductId).removeClass('selectColor');
+		}
+		ItemSelectModule.selectedProductId = productId;
+		$('#selectProductUnit'+productId).addClass('selectColor');
+		ItemSelectModule.productName = productName;
+		ItemSelectModule.productPrice = productPrice;
+		ItemSelectModule.productImgName = $('#selectProductUnit'+productId).attr('imgName');
+	},
+	createProductTypeUnitHTML : function (data, type) {
+		var html = '<li class="'+type+'"><a data-toggle="tab" href="#tab2-'+data.productTypeId+'" aria-expanded="true">'+data.productTypeName+'</a></li>';
+		return html;
+	},
+	createProductListUnitHTML : function (productList, typeId, type) {
+		var itemHtml = '';
+		for (var i=0; i<productList.length; i++) {
+			var product = productList[i];
+			var temp = '<div imgName="'+product.productImgName+'" id="selectProductUnit'+product.productId+'" onclick="ItemSelectModule.selectProduct('+product.productId+', \''+product.productName+'\', '+product.productPrice+')" class="widget style1 lazur-bg selectProductUnit ">' +
+				'<div class="row" style="height:17px;"><div class="col-xs-8">'+product.productName+'</div>' +
+				'<div class="col-xs-4 text-right">'+product.productPrice+'</div></div></div>';
+			itemHtml += temp;
+		}
+		var html = '<div id="tab2-'+typeId+'" class="tab-pane '+type+'">' +
+			'<div class="panel-body">' +
+			itemHtml +
+			'</div>' +
+			'</div>';
+		return html;
+	}
+}
+
+var ItemAddModule = {
+	readyToAddItem : function () {
+		ItemSelectModule.readyToSelectProduct();
+		$('#addItemProductNameText').val('');
+		$('#addItemProductAttributeNameText').val('');
+		$('#addItemProductPriceText').val('');
+		$('#addItemProductQuantityText').val('');
+		$('#diningType1').removeAttr('checked');
+		$('#diningType2').removeAttr('checked');
+	},
+	loadProduct : function (productId, productName, productPrice) {
+		$('#addItemProductNameText').val(productName);
+		$('#addItemProductAttributeNameText').val('');
+		$('#addItemProductPriceText').val(productPrice);
+		$('#addItemProductQuantityText').val('1');
+		// $('#addItemAmountText').val();
+	},
+	packageData : function () {
+		var data = {
+			roomId : BillModule.currentLoadRoomId,
+			productId : ItemSelectModule.selectedProductId,
+			productName : $('#addItemProductNameText').val(),
+			productPrice : $('#addItemProductPriceText').val(),
+			productQuantity : $('#addItemProductQuantityText').val(),
+			productRemarks : $('#addItemProductAttributeNameText').val(),
+			productImgName : ItemSelectModule.productImgName
+		}
+		if ($('#diningType1').is(':checked')) {
+			data.diningType = 0;
+		} else if ($('#diningType2').is(':checked')) {
+			data.diningType = 1;
+		} else {
+			swal('请选择就餐类型', '', 'error');
+			return undefined;
+		}
+		if (GlobalMethod.isEmpty(data.productName)) {
+			swal('商品名称不能为空', '', 'error');
+			return undefined;
+		}
+		if (GlobalMethod.isEmpty(data.productPrice)) {
+			swal('商品单价不能为空', '', 'error');
+			return undefined;
+		}
+		if (GlobalMethod.isEmpty(data.productQuantity)) {
+			swal('商品数量不能为空', '', 'error');
+			return undefined;
+		}
+		return data;
+	},
+	addItem : function() {
+		var data = ItemAddModule.packageData();
+		console.log(data);
+		if (undefined == data) {
+			return;
+		}
+		ItemAddModule.requestAddItem(data);
+		$('#closeAddItemPanelBtn').trigger('click');
+	},
+	requestAddItem : function (data) {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mOrder/addItem",
+			type: 'POST',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: data,
+			success: function (data) {
+				if (data.code == 0) {
+					BillModule.reloadCurrentRoomBill();
+					swal("新增成功", '', 'success');
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
+	}
+}
+/**
+ * 订单项修改模块
+ * @type {{init: ItemInfoUpdateModule.init, updateItemInfo: ItemInfoUpdateModule.updateItemInfo, currentItemId: undefined, requestUpdate: ItemInfoUpdateModule.requestUpdate, readyToUpdate: ItemInfoUpdateModule.readyToUpdate}}
+ */
+var ItemInfoUpdateModule = {
+	currentItemId : undefined,
+	init : function() {
+		
+	},
+	readyToUpdate : function (itemId, productName, itemStatus, productAttribute, productPrice, productQuantity, itemAmount) {
+		ItemInfoUpdateModule.currentItemId = itemId;
+		$('#updateItemInfo-productNameText').text(productName);
+		$('#updateItemInfo-productAttributeNameText').text(productAttribute);
+		$('#updateItemInfo-itemStatusName').text(itemStatus);
+		$('#updateItemInfo-productPrice').text(productPrice);
+		$('#updateItemInfo-newProductPrice').val('');
+		$('#updateItemInfo-newProductPrice').attr('placeholder', productPrice);
+		$('#updateItemInfo-productQuantity').text(productQuantity);
+		$('#updateItemInfo-newProductQuantity').val('');
+		$('#updateItemInfo-newProductQuantity').attr('placeholder', productQuantity);
+		$('#updateItemInfo-itemAmount').text(itemAmount);
+	},
+	updateItemInfo : function() {
+		var data = {
+			itemId : ItemInfoUpdateModule.currentItemId,
+			itemProductPrice : $('#updateItemInfo-newProductPrice').val(),
+			itemProductQuantity : $('#updateItemInfo-newProductQuantity').val()
+		}
+		if (GlobalMethod.isEmpty(data.itemProductPrice) && GlobalMethod.isEmpty(data.itemProductQuantity)) {
+			$('#closeOrderItemUpdatePanelBtn').trigger('click');
+			return;
+		}
+		ItemInfoUpdateModule.requestUpdate(data.itemId, data.itemProductPrice, data.itemProductQuantity);
+	},
+	requestUpdate : function (itemId, price, quantity) {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mOrder/update",
+			type: 'POST',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				itemId : itemId,
+				itemProductPrice : price,
+				itemProductQuantity : quantity
+			},
+			success: function (data) {
+				if (data.code == 0) {
+					BillModule.reloadCurrentRoomBill();
+					swal("修改成功", '', 'success');
+					$('#closeOrderItemUpdatePanelBtn').trigger('click');
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
+	}
+}
+
+
+var ItemStatusModule = {
+	currentItemId : undefined,
+	init : function() {
+
+	},
+	readyToChangeStatus : function(itemId) {
+		ItemStatusModule.currentItemId = itemId;
+	},
+	selectNewStatus : function(newStatus) {
+		$('#closeItemStatusPanelBtn').trigger('click');
+		switch(newStatus) {
+			case 0 : newStatus = 'unRead'; break;
+			case 1 : newStatus = 'failed'; break;
+			case 2 : newStatus = 'read'; break;
+			case 3 : newStatus = 'finish'; break;
+			case 4 : newStatus = 'delete'; break;
+			default : return;
+		}
+		ItemStatusModule.requestNewStatus(ItemStatusModule.currentItemId, newStatus);
+	},
+	requestNewStatus : function(itemId, newStatus) {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mOrder/"+newStatus,
+			type: 'POST',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				itemId : itemId
+			},
+			success: function (data) {
+				if (data.code == 0) {
+					BillModule.reloadCurrentRoomBill();
+					swal("操作成功", '', 'success');
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
+	}
+
+}
+
+
 
 
 

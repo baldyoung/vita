@@ -27,6 +27,9 @@ var ProductTypeModule = {
 					targetData = data.data;
 					targetData = sortProductTypeList(targetData);
 					ProductTypeModule.showData(targetData);
+					if (undefined == targetData || targetData.length ==0 ) {
+						return;
+					}
 					ProductTypeModule.selectUnit(targetData[0].productTypeId);
 				} else {
 					swal('获取品类数据失败', data.desc, 'error');
@@ -39,6 +42,10 @@ var ProductTypeModule = {
 		//return targetData;
 	},
 	showData : function(t) {
+		if (t.length == 0) {
+
+			return ;
+		}
 		var str = '<div class="classify-perch"></div>';
 		var i;
 		for (i=0; i<t.length; i++) {
@@ -89,6 +96,9 @@ var ProductModule = {
 					//swal('获取商品信息失败', data.desc, 'error');
 				} else {
 					var temp = data.data;
+					if (undefined == temp || temp.length ==0 ) {
+						return;
+					}
 					temp = sortProductList(temp);
 					var i, j=0, k=0;
 					ProductModule.productListBuffer[0] = [];
@@ -113,6 +123,9 @@ var ProductModule = {
 
 	},
 	sortProductList : function(tProductList) { // 商品排序规则
+		if (undefined == tProductList) {
+			return ;
+		}
 		var i, itemF, itemE, item;
 		for (i=0; i<tProductList.length; i++) {
 			item = i;
@@ -142,6 +155,9 @@ var ProductModule = {
 	showData : function() { // 商品展示调用
 		var i;
 		var t = ProductModule.sortProductList(ProductModule.productListBuffer[0]);
+		if (undefined == t) {
+			return;
+		}
 		var target = $(ProductModule.displayAreaId);
 		target.html('');
 		for (i=0; i<t.length; i++) {
@@ -182,7 +198,7 @@ var ProductModule = {
 		ProductModule.sortType = tType;
 		ProductModule.sortRule = tRule;
 		ProductModule.showData();
-		console.log('当前排序规则：'+tType+', '+tRule);
+		//console.log('当前排序规则：'+tType+', '+tRule);
 	}
 }
 

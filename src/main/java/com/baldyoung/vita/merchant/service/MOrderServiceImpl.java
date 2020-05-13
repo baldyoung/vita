@@ -10,10 +10,12 @@ import com.baldyoung.vita.common.pojo.entity.OrderItemEntity;
 import com.baldyoung.vita.common.pojo.entity.ProductEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.service.impl.BillServiceImpl;
+import com.baldyoung.vita.common.service.impl.OrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,6 +36,9 @@ public class MOrderServiceImpl {
 
     @Autowired
     private ProductDao productDao;
+
+    @Autowired
+    private OrderServiceImpl orderService;
 
     /**
      * 获取指定就餐位的所有订单
@@ -126,6 +131,16 @@ public class MOrderServiceImpl {
         entity.setOrderProductImg(productEntity.getProductImgName());
         entity.setOrderProductPrice(productEntity.getProductPrice());
         orderItemDao.updateOrderItem(entity);
+    }
+
+    /**
+     * 新增订单项
+     * @param roomId
+     * @param diningTypeFlag
+     * @param item
+     */
+    public void addOrderItem(Integer roomId, Integer diningTypeFlag, OrderItemEntity item) {
+        orderService.doOrder(roomId, diningTypeFlag, "", 0, Arrays.asList(item));
     }
 
 }

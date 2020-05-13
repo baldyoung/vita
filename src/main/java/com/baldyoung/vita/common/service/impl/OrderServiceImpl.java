@@ -55,10 +55,15 @@ public class OrderServiceImpl {
         String billNumber = billService.getRoomBillNumber(roomId);
         Integer orderId = createNewOrder(billNumber, orderTypeFlag, orderPresetTime, orderInitiatorFlag);
         for (OrderItemEntity entity : itemList) {
-            // 进行下单校验，校验成功的标记下单成功
-            // ------------------------------------------------------------------------
+            if (null != entity.getOrderId()) {
+                // 进行下单校验，校验成功的标记下单成功
+                // ------------------------------------------------------------------------
+            }
             entity.setOrderId(orderId);
             entity.setOrderProductItemStatusFlag(0);
+            if (null == entity.getOrderProductImg()) {
+                entity.setOrderProductImg("default.gif");
+            }
         }
         orderItemDao.insertOrderItemList(itemList);
         return itemList;
