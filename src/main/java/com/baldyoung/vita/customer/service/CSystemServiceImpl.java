@@ -14,7 +14,10 @@ public class CSystemServiceImpl {
     @Autowired
     private CustomerMessageServiceImpl customerMessageService;
 
-
+    /**
+     * 获取所有的服务类型数据
+     * @return
+     */
     public List<CMessageTypeDto> getAllType() {
         List<CustomerMessageTypeEntity> typeList = customerMessageService.getAllMessageType();
         List<CMessageTypeDto> list = new ArrayList(typeList.size());
@@ -26,6 +29,16 @@ public class CSystemServiceImpl {
             list.add(dto);
         }
         return list;
+    }
+
+    /**
+     * 发送服务消息
+     * @param roomId
+     * @param typeId
+     * @param messageContent
+     */
+    public void sendMessage(Integer roomId, Integer typeId, String messageContent) {
+        customerMessageService.sendMessageForRoom(roomId, typeId, messageContent);
     }
 
 

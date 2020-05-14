@@ -72,11 +72,11 @@ var RoomModule = {
 			'<div class="col-sm-12 roomOptionalArea2">' +
 			'<div class="col-sm-5" style="padding: 0 0 0 0;">' +
 			'<div class="team-members roomOptionalArea">' +
-			'<button onclick="BillModule.requestAndLoadData('+item.diningRoomId+')" class="btn btn-info " type="button" data-toggle="modal" data-target="#OrderFormWindow" style="margin-bottom:5px; " onclick="">' +
+			'<button onclick="BillModule.requestAndLoadData('+item.diningRoomId+')" class="btn btn-info " type="button" data-toggle="modal" data-target="#OrderFormWindow" style="margin-bottom:5px; " >' +
 			'<i class="fa fa-paste"></i> 订单详情' +
 			'<span class="badge badge-danger" style="background:#ED5565; color:black;  display:;    ">10</span>' +
 			'</button>' +
-			'<button class="btn btn-primary " data-toggle="modal" data-target="#customerMsgPanel" type="button" style="margin-bottom:5px; " onclick="">' +
+			'<button class="btn btn-primary " data-toggle="modal" data-target="#customerMsgPanel" type="button" style="margin-bottom:5px; " onclick="MessageModule.loadCurrentRoomMessage('+item.diningRoomId+', \''+item.diningRoomName+'\')">' +
 			'<i class="glyphicon glyphicon-envelope"></i> 客户消息' +
 			'<span class="badge badge-danger" style="background:#ED5565; color:black; display:;    ">3</span>' +
 			'</button>' +
@@ -129,6 +129,8 @@ var BillModule = {
 	billId : undefined,
 	billAmount : undefined,
 	billNumber : undefined,
+	billOwnerId : undefined,
+	billOwnerName : undefined,
 	reloadCurrentRoomBill : function() {
 		if (undefined != BillModule.currentLoadRoomId) {
 			BillModule.requestAndLoadData(BillModule.currentLoadRoomId);
@@ -152,6 +154,8 @@ var BillModule = {
 					BillModule.customerNumber = data.billCustomerNumber;
 					BillModule.billId = data.billId;
 					BillModule.billNumber = data.billNumber;
+					BillModule.billOwnerId = data.billOwnerId;
+					BillModule.billOwnerName = data.billOwnerName;
 					BillModule.loadData(data);
 				} else {
 					swal("获取数据失败", data.desc, "error");
@@ -885,6 +889,57 @@ var BillSettleAccountModule = {
 		}
 		target.html(html);
 	}
+}
+
+var MessageModule = {
+	loadCurrentRoomMessage : function (t, n) {
+		MessageModule.requestAndLoadData(t);
+		var temp = n + ' - 客戶消息';
+		$('#customerMsgPanel-title').text(temp);
+	},
+	loadData : function(data) {
+		var target = $('#customerMessageArea');
+		target.html('<thead >\n' +
+			'\t\t\t\t\t\t\t\t<tr>\n' +
+			'\t\t\t\t\t\t\t\t\t<td width="40%">类型</td>\n' +
+			'\t\t\t\t\t\t\t\t\t<td width="20%">时间</td>\n' +
+			'\t\t\t\t\t\t\t\t\t<td width="30%">操作</td>\n' +
+			'\t\t\t\t\t\t\t\t</tr>\n' +
+			'\t\t\t\t\t\t\t</thead>')
+		for (var i=0; i<data.length; i++) {
+			target.append(MessageModule.createMessageUnitHTML(data[i]));
+		}
+	},
+	createMessageUnitHTML : function (item) {
+		var html = '<tr class="gradeA even" style="background:white;">\n' +
+			'\t\t\t\t\t\t\t\t<td class="sorting_1">'+item.customerMessageTypeName+'</td>\n' +
+			'\t\t\t\t\t\t\t\t<td class=" ">'+GlobalMethod.toDateString(item.createDateTime)+'</td>\n' +
+			'\t\t\t\t\t\t\t\t<td class=" ">\n' +
+			'\t\t\t\t\t\t\t\t\t<i class="btn btn-white btn-sm"><i class="fa fa-dot-circle-o"></i> 确定 </i>\n' +
+			'\t\t\t\t\t\t\t\t</td>\n' +
+			'\t\t\t\t\t\t\t</tr>';
+		return html;
+	},
+	requestAndLoadData : function (roomId) {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mSystem/message",
+			type: 'GET',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				roomId : roomId
+			},
+			success: function (data) {
+				if (data.code == 0) {
+					MessageModule.loadData(data.data);
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
+	}
+
 }
 
 

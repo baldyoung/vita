@@ -18,6 +18,8 @@ public interface CustomerMessageDao {
 
     void update(@Param("entity")CustomerMessageEntity entity);
 
+    void deleteRecordForRoomId(@Param("roomId")Integer roomId);
+
 
 
 }

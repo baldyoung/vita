@@ -4,9 +4,7 @@ import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
 import com.baldyoung.vita.customer.service.CSystemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -25,5 +23,16 @@ public class CSystemController {
         Integer roomId = getRoomIdFromSession(session);
         return success(cSystemService.getAllType());
     }
+
+    @PostMapping("sendMessage")
+    public ResponseResult sendMessage(
+            @RequestParam("messageTypeId")Integer typeId,
+            HttpSession session) throws UtilityException {
+        Integer roomId = getRoomIdFromSession(session);
+        cSystemService.sendMessage(roomId, typeId, "");
+        return success();
+    }
+
+
 
 }

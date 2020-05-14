@@ -50,7 +50,12 @@
         </if>
         where customerMessageId = #{entity.customerMessageId}
     </update>
-    
+
+
+    <delete id="deleteRecordForRoomId" >
+        delete from v_customerMessage
+        where diningRoomId = #{roomId}
+    </delete>
     
     
     

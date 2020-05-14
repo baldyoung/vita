@@ -20,9 +20,21 @@ public class CustomerMessageServiceImpl {
     @Autowired
     private CustomerMessageTypeDao customerMessageTypeDao;
 
-
+    /**
+     * 获取所有的消息类型
+     * @return
+     */
     public List<CustomerMessageTypeEntity> getAllMessageType() {
         return customerMessageTypeDao.selectAll();
+    }
+
+    /**
+     * 获取指定就餐位的所有消息
+     * @param roomId
+     * @return
+     */
+    public List<CustomerMessageEntity> getMessageListForRoomId(Integer roomId) {
+        return customerMessageDao.selectByDiningRoomId(roomId);
     }
 
     /**
@@ -38,6 +50,7 @@ public class CustomerMessageServiceImpl {
         }
         CustomerMessageEntity entity = new CustomerMessageEntity();
         entity.setCustomerMessageStatus(0);
+        entity.setDiningRoomId(roomId);
         entity.setCustomerMessageTypeId(messageTypeId);
         entity.setCustomerMessageTypeName(typeEntity.getCustomerMessageTypeName());
         entity.setCustomerMessageValue(messageData);
@@ -59,6 +72,13 @@ public class CustomerMessageServiceImpl {
         customerMessageDao.update(entity);
     }
 
+    /**
+     * 删除指定就餐位下的所有消息
+     * @param roomId
+     */
+    public void deleteRoomMessage(Integer roomId) {
+        customerMessageDao.deleteRecordForRoomId(roomId);
+    }
 
 
 

@@ -197,10 +197,12 @@ INSERT INTO V_CustomerMessageType(customerMessageTypeName) VALUES('呼叫商家'
 DROP TABLE IF EXISTS V_CustomerMessage;
 CREATE TABLE V_CustomerMessage (
 	customerMessageId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]消息的主键：唯一、非空',
+	diningRoomId INT UNSIGNED NOT NULL COMMENT'餐桌编号：非空',
 	customerMessageTypeId INT NOT NULL COMMENT'消息类型的编号',
 	customerMessageTypeName VARCHAR(20) NOT NULL COMMENT'消息类型的名称',
 	customerMessageValue VARCHAR(100) COMMENT'该条消息的值',
 	customerMessageStatus TINYINT DEFAULT 0 COMMENT'0/未读 1/已读 2/完成',
+	createDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT'创建时间',
 	PRIMARY KEY (customerMessageId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'客户消息表';
 -- 商家账号表

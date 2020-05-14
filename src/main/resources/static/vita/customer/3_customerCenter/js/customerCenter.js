@@ -50,8 +50,39 @@ var ServiceModule = {
 		return targetData;
 	},
 	postServiceMsg: function(serviceId) {
-		// 发送当前桌的服务请求
-		// 同步的请求
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/system/sendMessage",
+			type: 'POST',
+			cache: false,
+			dataType: 'json',
+			async: false, //设置同步
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				messageTypeId : serviceId
+			},
+			success: function(data) {
+				if (data.code == 0) {
+					layer.open({
+						content: '您的请求已送达商家！',
+						skin: 'msg',
+						time: 2 //2秒后自动关闭
+					});
+				} else {
+					layer.open({
+						content: '消息发送失败：'+data.desc,
+						skin: 'msg',
+						time: 2 //3秒后自动关闭
+					});
+				}
+			},
+			error: function() {
+				layer.open({
+					content: '连接服务器失败，请检查网络是否通畅！',
+					skin: 'msg',
+					time: 3 //3秒后自动关闭
+				});
+			}
+		});
 		console.log("发送给商家" + serviceId + "服务信息");
 	},
 	cancelServiceRequest: function() {
@@ -133,11 +164,6 @@ var ServiceModule = {
 			btn: ['确定', '取消'],
 			yes: function(index) {
 				ServiceModule.postServiceMsg(serviceId);
-				layer.open({
-					content: '您的请求已送达商家！',
-					skin: 'msg',
-					time: 2 //2秒后自动关闭
-				});
 			}
 		});
 	}
@@ -199,23 +225,12 @@ var DiningRoomModule = {
 
 	}
 }
-var test_serviceData = [{
-	serviceId: "101",
-	serviceTypeId: "1",
-	serviceName: "催促上菜"
-}, {
-	serviceId: "102",
-	serviceTypeId: "2",
-	serviceName: "呼叫商家"
-}, {
-	serviceId: "103",
-	serviceTypeId: "1",
-	serviceName: "账单结账"
-}, {
-	serviceId: "104",
-	serviceTypeId: "1",
-	serviceName: "发票打印"
-}];
+
+var MessageModule = {
+
+}
+
+
 var testTimes = 1;
 
 $(function() {
