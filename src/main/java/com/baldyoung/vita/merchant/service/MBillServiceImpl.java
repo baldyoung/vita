@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.BILL_NO_FOUND;
+import static com.baldyoung.vita.common.utility.CommonMethod.isEmpty;
 
 @Service
 public class MBillServiceImpl {
@@ -36,7 +37,7 @@ public class MBillServiceImpl {
      */
     public MBillDto getBillInfo(Integer roomId) throws ServiceException {
         String billNumber = billService.getRoomBillNumberWithoutCreate(roomId);
-        if (null == billNumber) {
+        if (isEmpty(billNumber)) {
             throw new ServiceException(BILL_NO_FOUND);
         }
         return getBillInfo(billNumber);

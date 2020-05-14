@@ -142,7 +142,10 @@ public class COrderServiceImpl {
      * @throws ServiceException
      */
     public COrderDto getLastOrder(Integer roomId) throws ServiceException {
-        String billNumber = billService.getRoomBillNumber(roomId);
+        String billNumber = billService.getRoomBillNumberWithoutCreate(roomId);
+        if (isEmpty(billNumber)) {
+            throw new ServiceException(NO_ORDER);
+        }
         List<OrderEntity> orderList = orderDao.selectOrderByBillNumber(billNumber);
         if (isEmptyCollection(orderList)) {
             throw new ServiceException(NO_ORDER);
@@ -173,7 +176,10 @@ public class COrderServiceImpl {
      */
     public List<COrderDto> getOrderList(Integer roomId) throws ServiceException {
         List<COrderDto> result = new ArrayList();
-        String billNumber = billService.getRoomBillNumber(roomId);
+        String billNumber = billService.getRoomBillNumberWithoutCreate(roomId);
+        if (isEmpty(billNumber)) {
+            return new ArrayList(0);
+        }
         List<OrderEntity> orderList = orderDao.selectOrderByBillNumber(billNumber);
         if (isEmptyCollection(orderList)) {
             throw new ServiceException(NO_ORDER);
@@ -210,7 +216,10 @@ public class COrderServiceImpl {
         CDiningRoomDto result = new CDiningRoomDto();
         DiningRoomEntity diningRoomEntity = diningRoomDao.selectByDiningRoomId(roomId);
         result.setDiningRoomName(diningRoomEntity.getDiningRoomName());
-        String billNumber = billService.getRoomBillNumber(roomId);
+        String billNumber = billService.getRoomBillNumberWithoutCreate(roomId);
+        if (isEmpty(billNumber)) {
+            return result;
+        }
         List<OrderEntity> orderList = orderDao.selectOrderByBillNumber(billNumber);
         if (isEmptyCollection(orderList)) {
             return result;

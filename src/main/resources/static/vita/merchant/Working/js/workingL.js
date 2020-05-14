@@ -818,7 +818,10 @@ var BillSimpleInfoModule = {
 	}
 }
 
-
+/**
+ * 账单结账模块
+ * @type {{defaultRemarks: string[], init: BillSettleAccountModule.init, loadCurrentBill: BillSettleAccountModule.loadCurrentBill, selectDefaultRemarks: BillSettleAccountModule.selectDefaultRemarks, requestSettleAccount: BillSettleAccountModule.requestSettleAccount, remarks: string[], settleAccount: BillSettleAccountModule.settleAccount, loadDefaultRemarks: BillSettleAccountModule.loadDefaultRemarks}}
+ */
 var BillSettleAccountModule = {
 	defaultRemarks : [
 		'<a onclick="BillSettleAccountModule.selectDefaultRemarks(0)" class="btn btn-info btn-rounded" >商家请客</a>',
@@ -865,7 +868,6 @@ var BillSettleAccountModule = {
 			data: data,
 			success: function (data) {
 				if (data.code == 0) {
-					BillModule.reloadCurrentRoomBill();
 					$('#closeSettleAccountPanelBtn').trigger('click');
 					//swal("", '', 'success');
 				} else {

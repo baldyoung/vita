@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.PRODUCT_NOT_FOUND;
+import static com.baldyoung.vita.common.utility.CommonMethod.isEmpty;
 import static com.baldyoung.vita.common.utility.CommonMethod.isEmptyCollection;
 
 @Service
@@ -93,7 +94,10 @@ public class MOrderServiceImpl {
      * @return
      */
     public List<MOrderDto> getAllOrderInRoom(Integer roomId) {
-        String billNumber = billService.getRoomBillNumber(roomId);
+        String billNumber = billService.getRoomBillNumberWithoutCreate(roomId);
+        if (isEmpty(billNumber)) {
+            return new ArrayList(0);
+        }
         return getAllOrderInRoom(billNumber);
     }
 
