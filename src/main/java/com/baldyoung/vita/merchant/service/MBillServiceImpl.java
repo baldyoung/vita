@@ -1,12 +1,16 @@
 package com.baldyoung.vita.merchant.service;
 
 import com.baldyoung.vita.common.dao.BillDao;
+import com.baldyoung.vita.common.dao.DiningRoomDao;
 import com.baldyoung.vita.common.pojo.dto.bill.MBillDto;
 import com.baldyoung.vita.common.pojo.entity.BillEntity;
+import com.baldyoung.vita.common.pojo.entity.DiningRoomEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.service.impl.BillServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.BILL_NO_FOUND;
 
@@ -21,6 +25,9 @@ public class MBillServiceImpl {
 
     @Autowired
     private BillServiceImpl billService;
+
+    @Autowired
+    private DiningRoomDao diningRoomDao;
 
     /**
      * 获取指定就餐位的账单详情
@@ -69,6 +76,29 @@ public class MBillServiceImpl {
      */
     public void updateBillInfo (BillEntity entity) {
         billDao.updateBillEntity(entity);
+    }
+
+    /**
+     * 账单结账
+     * @param billNumber
+     * @param totalAmount
+     * @param receiveAmount
+     */
+    public void settleAccount (String billNumber, BigDecimal totalAmount, BigDecimal receiveAmount, String remarks) {
+        BillEntity bill = billDao.selectBill(billNumber);
+        if (null == bill || null == bill.getBillId()) {
+            return;
+        }
+        BillEntity newBill = new BillEntity();
+        newBill.setBillId(bill.getBillId());
+        newBill.setBillTotalAmount(totalAmount);
+        newBill.setBillReceivedAmount(receiveAmount);
+        billDao.updateBillEntity(newBill);
+        DiningRoomEntity room = new DiningRoomEntity();
+        room.setDiningRoomId(bill.getBillOwnerId());
+        room.setCurrentBillNumber("");
+        diningRoomDao.updateDiningRoom(room);
+        billService.deleteBillNumberBuffer(bill.getBillOwnerId());
     }
 
 }

@@ -54,6 +54,15 @@
         <if test="bill.billTotalAmount != null">
             , billTotalAmount = #{bill.billTotalAmount}
         </if>
+        <if test="bill.billReceivedAmount != null">
+            , billReceivedAmount = #{bill.billReceivedAmount}
+        </if>
+        <if test="bill.billEndDateTime != null">
+            , billEndDateTime = #{bill.billEndDateTime}
+        </if>
+        <if test="bill.billReceivedDateTime != null">
+            , billReceivedDateTime = #{bill.billReceivedDateTime}
+        </if>
         <choose>
             <when test="bill.billId != null">
                 where billId = #{bill.billId}

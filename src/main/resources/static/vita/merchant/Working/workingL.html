@@ -472,7 +472,7 @@
 					</div>
 					<div class="modal-footer">
 						<button id="OrderFormWindowBtnClose" type="button" class="btn btn-white" data-dismiss="modal" >关闭</button>
-						<a data-toggle="modal" data-target="#settleAccountPanel" class="btn btn-primary"  style="float:left; " onclick="">结账</a>
+						<a data-toggle="modal" data-target="#settleAccountPanel" class="btn btn-primary"  style="float:left; " onclick="BillSettleAccountModule.loadCurrentBill()">结账</a>
 					</div>
 				</div>
 			</div>
@@ -716,6 +716,13 @@
 		<div id="settleAccountPanel" class="modal fade" aria-hidden="true">
 			<div class="modal-dialog" style="width:600px;">
 				<div class="modal-content">
+					<div class="modal-header" style="padding-bottom: 15px; padding-top:10px; ">
+						<button id="closeSettleAccountPanelBtn" type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span>
+							<span class="sr-only">关闭</span>
+						</button>
+						<span class="pull-left" style="font-size:17px; font-weight: bold;">账单结账</span>
+					</div>
 					<div class="modal-body">
 						<div class="row">
 							<div class="col-sm-6 b-r">
@@ -730,10 +737,10 @@
 										<input id="actuallyPay" type="text" placeholder="" class="form-control">
 									</div>
 									<div>
-										<button class="btn btn-sm btn-warning pull-left m-t-n-xs" type="button" onclick="settleAccount()">
+										<button class="btn btn-sm btn-warning pull-left m-t-n-xs" type="button" onclick="BillSettleAccountModule.settleAccount(1)">
 											<strong>记账</strong>
                                    		</button>
-										<button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="button" onclick="settleAccount()">
+										<button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="button" onclick="BillSettleAccountModule.settleAccount(0)">
 											<strong>确定</strong>
                                    		</button>
 									</div>
@@ -741,10 +748,8 @@
 							</div>
 							<div class="col-sm-6">
 								<h4 class="m-t-none m-b">备注</h4>
-								<textarea style="resize:none; height:100px; width:100%; border:1px solid; margin-bottom: 5px; " placeholder="请在这里记录对该订单说明的备注信息！"></textarea>
-								<div style="width:100%;" >
-									<a class="btn btn-info btn-rounded" >商家请客</a>
-									<a class="btn btn-danger btn-rounded" >活动免单</a>
+								<textarea id="billRemarksArea" style="resize:none; height:100px; width:100%; border:1px solid; margin-bottom: 5px; " placeholder="请在这里记录对该订单说明的备注信息！"></textarea>
+								<div id="defaultRemarksArea" style="width:100%;" >
 								</div>
 							</div>
 						</div>

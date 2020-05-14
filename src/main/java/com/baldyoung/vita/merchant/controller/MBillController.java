@@ -7,6 +7,9 @@ import com.baldyoung.vita.merchant.service.MBillServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
+import static com.baldyoung.vita.common.pojo.dto.ResponseResult.defeat;
 import static com.baldyoung.vita.common.pojo.dto.ResponseResult.success;
 import static com.baldyoung.vita.common.utility.CommonMethod.isEmpty;
 
@@ -26,14 +29,32 @@ public class MBillController {
     public ResponseResult updateSimpleInfo(@RequestParam(value = "customerName", required = false)String customerName,
                                            @RequestParam(value = "customerNumber", required = false)Integer customerNumber,
                                            @RequestParam("billId")Integer billId) {
-        if (isEmpty(customerName) && null == customerNumber) {
+        if (isEmpty(customerName) && null == customerNumber ) {
             return success();
+        }
+        if (null != customerName && customerName.length() >= 50) {
+            return defeat("账单的客户名称字数要小于50");
         }
         BillEntity entity = new BillEntity();
         entity.setBillId(billId);
         entity.setBillCustomerName(customerName);
         entity.setBillCustomerNumber(customerNumber);
         mBillService.updateBillInfo(entity);
+        return success();
+    }
+
+    @PostMapping("settleAccount")
+    public ResponseResult settleAccount(@RequestParam("billNumber")String billNumber,
+                                        @RequestParam("totalAmount")BigDecimal totalAmount,
+                                        @RequestParam(value = "receiveAmount", required = false)BigDecimal receiveAmount,
+                                        @RequestParam("remarks")String remarks) {
+        if (isEmpty(billNumber) || billNumber.length() >= 30) {
+            return defeat("非法数据");
+        }
+        if (null != remarks && remarks.length() >= 100) {
+            return defeat("账单备注字数要小于100");
+        }
+        mBillService.settleAccount(billNumber, totalAmount, receiveAmount, remarks);
         return success();
     }
 }

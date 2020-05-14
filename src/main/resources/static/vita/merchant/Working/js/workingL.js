@@ -5,6 +5,7 @@ $(function(){
 	registerMonitor();
 	RoomModule.init();
 	ItemModule.init();
+	BillSettleAccountModule.init();
 });
 function registerMonitor() {
 	$('.roomStatusLabel').bind("click", function(){
@@ -126,6 +127,8 @@ var BillModule = {
 	customerName : undefined,
 	customerNumber : undefined,
 	billId : undefined,
+	billAmount : undefined,
+	billNumber : undefined,
 	reloadCurrentRoomBill : function() {
 		if (undefined != BillModule.currentLoadRoomId) {
 			BillModule.requestAndLoadData(BillModule.currentLoadRoomId);
@@ -148,6 +151,7 @@ var BillModule = {
 					BillModule.customerName = data.billCustomerName;
 					BillModule.customerNumber = data.billCustomerNumber;
 					BillModule.billId = data.billId;
+					BillModule.billNumber = data.billNumber;
 					BillModule.loadData(data);
 				} else {
 					swal("获取数据失败", data.desc, "error");
@@ -195,6 +199,7 @@ var BillModule = {
 			target.append(html);
 		}
 		// 账单总价
+		BillModule.billAmount = amount;
 		$('#billAmount').text(amount);
 	},
 	createBillOrderTitleHTML : function(order, index) {
@@ -769,7 +774,10 @@ var ItemStatusModule = {
 
 }
 
-
+/**
+ * 账单简要信息修改模块
+ * @type {{updateInfo: BillSimpleInfoModule.updateInfo, packageData: (function(): {billId: (undefined|*), customerNumber: (*|jQuery|*|*), customerName: (*|jQuery|*|*)}), requestUpdateInfo: BillSimpleInfoModule.requestUpdateInfo, loadCurrentBillInfo: BillSimpleInfoModule.loadCurrentBillInfo}}
+ */
 var BillSimpleInfoModule = {
 	loadCurrentBillInfo : function () {
 		var temp = (BillModule.customerName == undefined ? '' : BillModule.customerName);
@@ -811,7 +819,71 @@ var BillSimpleInfoModule = {
 }
 
 
-
+var BillSettleAccountModule = {
+	defaultRemarks : [
+		'<a onclick="BillSettleAccountModule.selectDefaultRemarks(0)" class="btn btn-info btn-rounded" >商家请客</a>',
+		'<a onclick="BillSettleAccountModule.selectDefaultRemarks(1)" class="btn btn-danger btn-rounded" >活动免单</a>'
+	],
+	remarks : [
+		'商家请客',
+		'活动免单'
+	],
+	init : function() {
+		BillSettleAccountModule.loadDefaultRemarks();
+	},
+	loadCurrentBill : function() {
+		$('#shouldPay').val(BillModule.billAmount);
+		$('#actuallyPay').val('');
+		$('#billRemarksArea').val('');
+	},
+	selectDefaultRemarks : function(index) {
+		var temp = BillSettleAccountModule.remarks[index];
+		$('#billRemarksArea').val(temp);
+	},
+	settleAccount : function(type) {
+		var data = {
+			billNumber : BillModule.billNumber,
+			totalAmount : $('#shouldPay').val(),
+			remarks : $('#billRemarksArea').val()
+		}
+		if (type == 0) {
+			data.receiveAmount = $('#actuallyPay').val();
+			if (GlobalMethod.isEmpty(data.receiveAmount)) {
+				swal('实收金额不能为空', '', 'error');
+				return;
+			}
+		}
+		BillSettleAccountModule.requestSettleAccount(data);
+	},
+	requestSettleAccount : function (data) {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mBill/settleAccount",
+			type: 'POST',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: data,
+			success: function (data) {
+				if (data.code == 0) {
+					BillModule.reloadCurrentRoomBill();
+					$('#closeSettleAccountPanelBtn').trigger('click');
+					//swal("", '', 'success');
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
+	},
+	loadDefaultRemarks : function () {
+		var target = $('#defaultRemarksArea');
+		var html = '';
+		var list = BillSettleAccountModule.defaultRemarks;
+		for (var i=0; i<list.length; i++) {
+			html += list[i];
+		}
+		target.html(html);
+	}
+}
 
 
 
