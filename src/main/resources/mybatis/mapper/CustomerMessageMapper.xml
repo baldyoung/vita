@@ -44,9 +44,9 @@
     
     <update id="update" >
         update v_customerMessage
-        set customerMessageId = #{entity.customerMessageId}
+        set customerMessageId = customerMessageId
         <if test="entity.customerMessageStatus != null">
-            customerMessageStatus = #{entity.customerMessageStatus}
+            , customerMessageStatus = #{entity.customerMessageStatus}
         </if>
         where customerMessageId = #{entity.customerMessageId}
     </update>

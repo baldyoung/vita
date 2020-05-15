@@ -884,11 +884,23 @@ var BillSettleAccountModule = {
 	}
 }
 
+/**
+ * 顾客消息模块
+ * @type {{loadCurrentRoomMessage: MessageModule.loadCurrentRoomMessage, createMessageUnitHTML: (function(*): string), requestAndLoadData: MessageModule.requestAndLoadData, loadData: MessageModule.loadData}}
+ */
 var MessageModule = {
+	currentRoomId : undefined,
+	reloadCurrentRoomInfo : function() {
+		MessageModule.requestAndLoadData(MessageModule.currentRoomId);
+	},
 	loadCurrentRoomMessage : function (t, n) {
+		MessageModule.currentRoomId = t;
 		MessageModule.requestAndLoadData(t);
 		var temp = n + ' - 客戶消息';
 		$('#customerMsgPanel-title').text(temp);
+	},
+	updateMessage : function(recordId) {
+		MessageModule.requestSetStatus(recordId, 1);
 	},
 	loadData : function(data) {
 		var target = $('#customerMessageArea');
@@ -907,10 +919,13 @@ var MessageModule = {
 		var html = '<tr class="gradeA even" style="background:white;">\n' +
 			'\t\t\t\t\t\t\t\t<td class="sorting_1">'+item.customerMessageTypeName+'</td>\n' +
 			'\t\t\t\t\t\t\t\t<td class=" ">'+GlobalMethod.toDateString(item.createDateTime)+'</td>\n' +
-			'\t\t\t\t\t\t\t\t<td class=" ">\n' +
-			'\t\t\t\t\t\t\t\t\t<i class="btn btn-white btn-sm"><i class="fa fa-dot-circle-o"></i> 确定 </i>\n' +
-			'\t\t\t\t\t\t\t\t</td>\n' +
-			'\t\t\t\t\t\t\t</tr>';
+			'\t\t\t\t\t\t\t\t<td class=" ">\n' ;
+			if (item.customerMessageStatus == 0) {
+				html += '\t\t\t\t\t\t\t\t\t<i onclick="MessageModule.updateMessage('+item.customerMessageId+')" class="btn btn-white btn-sm"><i class="fa fa-dot-circle-o"></i> 确定 </i>\n';
+			} else {
+				html += ' 已确定 ';
+			}
+			html += '</td></tr>';
 		return html;
 	},
 	requestAndLoadData : function (roomId) {
@@ -927,12 +942,68 @@ var MessageModule = {
 				if (data.code == 0) {
 					MessageModule.loadData(data.data);
 				} else {
-					swal("获取数据失败", data.desc, "error");
+					swal("操作失败", data.desc, "error");
 				}
 			}
 		});
-	}
+	},
+	requestSetStatus : function (recordId, status) {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mSystem/set",
+			type: 'POST',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				recordId : recordId,
+				status : status
+			},
+			success: function (data) {
+				if (data.code == 0) {
+					MessageModule.reloadCurrentRoomInfo();
+				} else {
+					swal("操作失败", data.desc, "error");
+				}
+			}
+		});
+	},
+	requestDeleteAllMessage : function () {
+		swal({
+				title: "您确定要清空所有客户消息吗?",
+				text: "清空后将无法恢复，请谨慎操作！",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "确定",
+				cancelButtonText: "取消",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			},
+			function(isConfirm) {
+				if (isConfirm) {
+					$.ajax({
+						url: GlobalConfig.serverAddress + "/mSystem/delete",
+						type: 'POST',
+						cache: false,
+						dataType:'json',
+						contentType: "application/x-www-form-urlencoded;charset=utf-8",
+						data: {
+							roomId : MessageModule.currentRoomId
+						},
+						success: function (data) {
+							if (data.code == 0) {
+								MessageModule.reloadCurrentRoomInfo();
+							} else {
+								swal("操作失败", data.desc, "error");
+							}
+						}
+					});
+				} else {
+					swal("已取消", "您取消了删除操作！", "error");
+				}
+			});
 
+	}
 }
 
 /**
@@ -996,7 +1067,10 @@ var DiningRoomStatusModule = {
 		});
 	}
 }
-
+/**
+ * 就餐位的预定记录模块
+ * @type {{loadRoomReservationInfo: DiningRoomReservationModule.loadRoomReservationInfo, readyToAdd: DiningRoomReservationModule.readyToAdd, reloadCurrentRoomInfo: DiningRoomReservationModule.reloadCurrentRoomInfo, requestDeleteReservation: DiningRoomReservationModule.requestDeleteReservation, requestRemoveRoomTip: DiningRoomReservationModule.requestRemoveRoomTip, currentRoomId: undefined, packageData: DiningRoomReservationModule.packageData, requestAddReservation: DiningRoomReservationModule.requestAddReservation, requestAndLoadData: DiningRoomReservationModule.requestAndLoadData, loadData: DiningRoomReservationModule.loadData, selectRecordOnTip: DiningRoomReservationModule.selectRecordOnTip}}
+ */
 var DiningRoomReservationModule = {
 	currentRoomId : undefined,
 	reloadCurrentRoomInfo : function() {
@@ -1183,7 +1257,6 @@ var DiningRoomReservationModule = {
 						},
 						success: function (data) {
 							if (data.code == 0) {
-								swal('预约标识移除成功', '', 'success');
 								$('#reservationTip'+roomId).text('无预约');
 							} else {
 								swal("删除失败", data.desc, "error");
