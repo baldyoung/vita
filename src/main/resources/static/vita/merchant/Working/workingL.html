@@ -249,28 +249,23 @@
 				</div>
 			</div>
 		</div>
-		<!-- 订单组状态修改栏 -->
+		<!-- 就餐位状态修改栏 -->
 		<div class="modal inmodal" id="roomStatusPanel" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content animated bounceInDown">
 					<div class="modal-header" style="padding-bottom: 15px; padding-top:10px; ">
-						<button type="button" class="close" data-dismiss="modal">
+						<button id="closeRoomStatusPanelBtn" type="button" class="close" data-dismiss="modal">
 							<span aria-hidden="true">×</span>
 							<span class="sr-only">关闭</span>
 						</button>
 						<span class="pull-left" style="font-size:17px; font-weight: bold;">订单项状态编辑</span>
 					</div>
 					<small class="font-bold">
-						<div style="text-align: center; margin-top:10px; margin-bottom:20px; ">
-							<button class="btn btn-primary "  type="button" style="margin:3px 1px 5px 3px; background:#ECBA52; width:80%;" onclick="">
-								<i class="fa fa-building-o"></i>使用中
-							</button>
-                    		<button class="btn btn-primary "  type="button" style="margin:3px 1px 5px 3px; background:#7266BA; width:80%;" onclick="">
-								<i class="fa fa-building-o"></i>清理中
-							</button>
-							<button class="btn btn-primary "  type="button" style="margin:3px 1px 5px 3px; background:#1DA02B; width:80%;" onclick="">
-								<i class="fa fa-building-o"></i>空闲
-							</button>
+						<div id="diningRoomStatusSelectArea" style="text-align: center; margin-top:10px; margin-bottom:20px; ">
+							<button class="btn btn-primary "  type="button" style="margin:3px 1px 5px 3px; background:#ECBA52; width:80%;" onclick=""><i class="fa fa-building-o"></i> 使用中</button>
+                    		<button class="btn btn-primary "  type="button" style="margin:3px 1px 5px 3px; background:#7266BA; width:80%;" onclick=""><i class="fa fa-building-o"></i> 清理中</button>
+							<button class="btn btn-primary "  type="button" style="margin:3px 1px 5px 3px; background:#1DA02B; width:80%;" onclick=""><i class="fa fa-building-o"></i> 空闲</button>
+							<button class="btn btn-primary "  type="button" style="margin:3px 1px 5px 3px; background:#ee162d; color:black !important; width:80%; font-weight:bolder; " onclick=""><i class="fa fa-building-o"></i> 禁用</button>
 						</div>
                     </small>
 				</div>

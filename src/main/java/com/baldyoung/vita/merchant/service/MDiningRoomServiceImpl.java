@@ -33,6 +33,10 @@ public class MDiningRoomServiceImpl {
         return list;
     }
 
+    public void updateDiningRoom(DiningRoomEntity entity) {
+        diningRoomDao.updateDiningRoom(entity);
+    }
+
 
 
 }

@@ -6,6 +6,7 @@ $(function(){
 	RoomModule.init();
 	ItemModule.init();
 	BillSettleAccountModule.init();
+	DiningRoomStatusModule.init();
 });
 function registerMonitor() {
 	$('.roomStatusLabel').bind("click", function(){
@@ -57,13 +58,13 @@ var RoomModule = {
 		}
 	},
 	createDisplayUnitHtml : function (item) {
-		var  html = '<div id="Room3" class="col-sm-4 roomPanel" style="width:480px; height:300px;">' +
+		var  html = '<div id="Room3" class="col-sm-4 roomPanel" style="width:480px; height:300px; ">' +
 			'<div class="ibox roomPanel" style=" ">' +
-			'<div class="ibox-title roomPanelTop">' +
+			'<div class="ibox-title roomPanelTop" style="height:50px;">' +
 			'<span class="pull-left" style="cursor:pointer; font-size:10px;">' +
 			'<span class="glyphicon glyphicon-qrcode" aria-hidden="true" data-toggle="modal" data-target="#qrCodePanel"></span>' +
 			'</span>' +
-			'<span class="label label-warning pull-right roomStatusLabel">已用</span>' +
+			'<span id="roomStatusStyleArea'+item.diningRoomId+'" class=" pull-right roomStatusLabel">'+DiningRoomStatusModule.toDiningRoomStatusNameStyle(item.diningRoomStatus)+'</span>' +
 			'<h5>' +
 			'<span class="pull-left">&nbsp;&nbsp;'+item.diningRoomName+'&nbsp;&nbsp;-&nbsp;&nbsp;</span>' +
 			'</h5>' +
@@ -84,7 +85,7 @@ var RoomModule = {
 			'<i class="glyphicon glyphicon-tag"></i> 预定记录' +
 			'<span class="badge badge-danger" style="background:#ED5565; color:black;  display:;    ">6</span>' +
 			'</button>' +
-			'<button class="btn btn-primary " data-toggle="modal" data-target="#roomStatusPanel" type="button" style="margin-bottom:5px; " onclick="">' +
+			'<button onclick="DiningRoomStatusModule.readyToSelect('+item.diningRoomId+')" class="btn btn-primary " data-toggle="modal" data-target="#roomStatusPanel" type="button" style="margin-bottom:5px; " >' +
 			'<i class="glyphicon glyphicon-edit"></i> 修改状态' +
 			'</button>' +
 			'</div>' +
@@ -940,6 +941,68 @@ var MessageModule = {
 		});
 	}
 
+}
+
+/**
+ * 就餐位状态编辑模块
+ * @type {{loadData: DiningRoomStatusModule.loadData}}
+ */
+var DiningRoomStatusModule = {
+	defaultStatus : [
+		'<button class="btn btn-primary "  type="button" style="border: 0px solid;  background:#1DA02B; color:black !important;" > 空闲</button>',
+		'<button class="btn btn-primary "  type="button" style="border: 0px solid;  background:#ECBA52; color:black !important;" > 使用中</button>',
+		'<button class="btn btn-primary "  type="button" style="border: 0px solid;  background:#7266BA; color:black !important;" > 清理中</button>',
+		'<button class="btn btn-primary "  type="button" style="border: 0px solid;  background:#ee162d; color:black !important;" > 禁用</button>'
+	],
+	selectBtnStyle : [
+		'<button onclick="DiningRoomStatusModule.selectStatus(0)" class="btn btn-primary "  type="button" style="border: 0px solid;  background:#1DA02B; color:black !important; font-weight: bolder; width:60%; margin-bottom:8px; " > 空闲</button>',
+		'<button onclick="DiningRoomStatusModule.selectStatus(1)" class="btn btn-primary "  type="button" style="border: 0px solid;  background:#ECBA52; color:black !important; font-weight: bolder; width:60%; margin-bottom:8px; " > 使用中</button>',
+		'<button onclick="DiningRoomStatusModule.selectStatus(2)" class="btn btn-primary "  type="button" style="border: 0px solid;  background:#7266BA; color:black !important; font-weight: bolder; width:60%; margin-bottom:8px; " > 清理中</button>',
+		'<button onclick="DiningRoomStatusModule.selectStatus(3)" class="btn btn-primary "  type="button" style="border: 0px solid;  background:#ee162d; color:black !important; font-weight: bolder; width:60%; margin-bottom:8px; " > 禁用</button>'
+	],
+	currentRoomId : undefined,
+	init : function() {
+		var target = $('#diningRoomStatusSelectArea');
+		target.html('');
+		var list = DiningRoomStatusModule.selectBtnStyle;
+		for (var i=0; i<list.length; i++) {
+			var html =  list[i] ;
+			target.append(html);
+		}
+	},
+	toDiningRoomStatusNameStyle : function(statusId) {
+		if (statusId < 0 || statusId >= DiningRoomStatusModule.defaultStatus.length) {
+			statusId = 3;
+		}
+		return DiningRoomStatusModule.defaultStatus[statusId];
+	},
+	readyToSelect : function (roomId) {
+		DiningRoomStatusModule.currentRoomId = roomId;
+	},
+	selectStatus : function (statusId) {
+		DiningRoomStatusModule.requestSetStatus(DiningRoomStatusModule.currentRoomId, statusId);
+	},
+	requestSetStatus : function (roomId, statusId) {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mDiningRoom/changeStatus",
+			type: 'POST',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				roomId : roomId,
+				newStatusId : statusId
+			},
+			success: function (data) {
+				if (data.code == 0) {
+					$('#roomStatusStyleArea'+DiningRoomStatusModule.currentRoomId).html(DiningRoomStatusModule.toDiningRoomStatusNameStyle(statusId));
+					$('#closeRoomStatusPanelBtn').trigger('click');
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
+	}
 }
 
 
