@@ -97,4 +97,12 @@ public class MSystemServiceImpl {
         diningRoomReservationDao.updateReservationEntity(newEntity);
     }
 
+    /**
+     * 移除指定就餐位的预约标识
+     * @param roomId
+     */
+    public void removeRoomReservationTip(Integer roomId) {
+        diningRoomReservationDao.updateReservationOffTipStatus(roomId);
+    }
+
 }

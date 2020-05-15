@@ -124,6 +124,17 @@ public class MSystemController {
         return success();
     }
 
+    /**
+     * 移除指定就餐位的预约标识
+     * @param roomId
+     * @return
+     */
+    @PostMapping("removeRoomReservationTip")
+    public ResponseResult removeRoomReservationTip(@RequestParam("roomId")Integer roomId) {
+        mSystemService.removeRoomReservationTip(roomId);
+        return success();
+    }
+
 
 
 }

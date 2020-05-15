@@ -101,7 +101,7 @@ var RoomModule = {
 			'</div>' +
 			'<div class="row  m-t-sm">' +
 			'<span class=" pull-left " style=" width:100%; ">' +
-			'<div id="reservationTip'+item.diningRoomId+'" class="roomPanelPreTip">'+item.reservationData+'</div>' +
+			'<div ondblclick="DiningRoomReservationModule.requestRemoveRoomTip('+item.diningRoomId+', \''+item.diningRoomName+'\')" id="reservationTip'+item.diningRoomId+'" class="roomPanelPreTip" style="cursor:default;">'+item.reservationData+'</div>' +
 			'</span>' +
 			'</div>' +
 			'</div>' +
@@ -541,7 +541,6 @@ var ItemSelectModule = {
 		for (var i=0; i<data.length; i++) {
 			var productList = data[i].productList;
 			var type = (i == 0 ? 'active' : '');
-			console.log(type);
 			typeDisplay.append(ItemSelectModule.createProductTypeUnitHTML(data[i], type));
 			productDisplay.append(ItemSelectModule.createProductListUnitHTML(productList, data[i].productTypeId, type));
 		}
@@ -1158,7 +1157,43 @@ var DiningRoomReservationModule = {
 					swal("已取消", "您取消了删除操作！", "error");
 				}
 			});
-
+	},
+	requestRemoveRoomTip : function(roomId, roomName) {
+		swal({
+				title: "您确定要删除 "+roomName+" 的预约标识吗?",
+				text: "删除后将无法恢复，请谨慎操作！",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "确定",
+				cancelButtonText: "取消",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			},
+			function(isConfirm) {
+				if (isConfirm) {
+					$.ajax({
+						url: GlobalConfig.serverAddress + "/mSystem/removeRoomReservationTip",
+						type: 'POST',
+						cache: false,
+						dataType:'json',
+						contentType: "application/x-www-form-urlencoded;charset=utf-8",
+						data: {
+							roomId : roomId
+						},
+						success: function (data) {
+							if (data.code == 0) {
+								swal('预约标识移除成功', '', 'success');
+								$('#reservationTip'+roomId).text('无预约');
+							} else {
+								swal("删除失败", data.desc, "error");
+							}
+						}
+					});
+				} else {
+					swal("已取消", "您取消了删除操作！", "error");
+				}
+			});
 	}
 }
 
