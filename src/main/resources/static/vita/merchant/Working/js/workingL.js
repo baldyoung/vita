@@ -1031,7 +1031,7 @@ var DiningRoomReservationModule = {
 				'<td >'+item.customerName+'</td>' +
 				'<td class=" ">' +
 				'<i onclick="DiningRoomReservationModule.selectRecordOnTip('+item.reservationId+', \''+item.diningDate+'\', \''+item.diningTime+'\', \''+item.customerName+'\')" class="btn btn-white btn-sm"><i class="fa fa-thumb-tack"></i> 标注 </i>' +
-				'<i class="btn btn-white btn-sm"><i class="fa fa-trash-o"></i> 删除 </i>' +
+				'<i onclick="DiningRoomReservationModule.requestDeleteReservation('+item.reservationId+', \''+item.customerName+'\')" class="btn btn-white btn-sm"><i class="fa fa-trash-o"></i> 删除 </i>' +
 				'</td></tr>';
 			target.append(html);
 		}
@@ -1092,8 +1092,9 @@ var DiningRoomReservationModule = {
 			success: function (data) {
 				if (data.code == 0) {
 					$('#reservationTip'+DiningRoomReservationModule.currentRoomId).text('预约: '+diningDate+'【'+diningTime+'】 '+customerName);
+					swal('标记成功', '', 'success');
 				} else {
-					swal("获取数据失败", data.desc, "error");
+					swal("操作失败", data.desc, "error");
 				}
 			}
 		});
@@ -1116,10 +1117,48 @@ var DiningRoomReservationModule = {
 					DiningRoomReservationModule.reloadCurrentRoomInfo();
 					swal('新增预约成功', '', 'success');
 				} else {
-					swal("获取数据失败", data.desc, "error");
+					swal("新增数据失败", data.desc, "error");
 				}
 			}
 		});
+	},
+	requestDeleteReservation : function(recordId, customerName) {
+		swal({
+				title: "您确定要删除 "+customerName+" 的该条预约记录吗?",
+				text: "删除后将无法恢复，请谨慎操作！",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "确定",
+				cancelButtonText: "取消",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			},
+			function(isConfirm) {
+				if (isConfirm) {
+					$.ajax({
+						url: GlobalConfig.serverAddress + "/mSystem/reservationRemove",
+						type: 'POST',
+						cache: false,
+						dataType:'json',
+						contentType: "application/x-www-form-urlencoded;charset=utf-8",
+						data: {
+							recordId : recordId
+						},
+						success: function (data) {
+							if (data.code == 0) {
+								swal('新增预约成功', '', 'success');
+								DiningRoomReservationModule.reloadCurrentRoomInfo();
+							} else {
+								swal("删除失败", data.desc, "error");
+							}
+						}
+					});
+				} else {
+					swal("已取消", "您取消了删除操作！", "error");
+				}
+			});
+
 	}
 }
 

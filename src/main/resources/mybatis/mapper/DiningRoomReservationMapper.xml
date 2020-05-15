@@ -40,7 +40,7 @@
         <include refid="allFiled"></include>
         from v_diningroomreservation
         where reservationStatus = 1
-        and reservationId in
+        and diningRoomId in
         <foreach collection="roomIds" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
