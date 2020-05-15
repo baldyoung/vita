@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baldyoung.vita.common.dao.DiningRoomReservationDao">
+
+    <resultMap id="baseMap" type="com.baldyoung.vita.common.pojo.entity.DiningRoomReservationEntity">
+        <id property="reservationId" column="reservationId"></id>
+        <!--非主键字段的对应-->
+        <result property="diningRoomId" column="diningRoomId"></result>
+        <result property="customerName" column="customerName"></result>
+        <result property="reservationInfo" column="reservationInfo"></result>
+        <result property="diningDate" column="diningDate"></result>
+        <result property="diningTime" column="diningTime"></result>
+        <result property="reservationStatus" column="reservationStatus"></result>
+        <result property="createDateTime" column="createDateTime"></result>
+        <result property="updateDateTime" column="updateDateTime"></result>
+    </resultMap>
+
+    <sql id="allFiled">
+        reservationId, diningRoomId, customerName, reservationInfo, diningDate, diningTime, reservationStatus,
+        createDateTime, updateDateTime
+    </sql>
+
+    <select id="selectByRoomId" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from v_diningroomreservation
+        where diningRoomId = #{roomId}
+    </select>
+
+    <select id="selectByRecordId" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from v_diningroomreservation
+        where reservationId = #{recordId}
+    </select>
+
+    <select id="selectTargetByRoomIds" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from v_diningroomreservation
+        where reservationStatus = 1
+        and reservationId in
+        <foreach collection="roomIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <insert id="insertReservationEntity" >
+        insert into
+        v_diningroomreservation(diningRoomId, customerName, reservationInfo, diningDate, diningTime, reservationStatus)
+        values (#{entity.diningRoomId}, #{entity.customerName}, #{entity.reservationInfo}, #{entity.diningDate}, #{entity.diningTime},
+        #{entity.reservationStatus})
+    </insert>
+
+    <update id="updateReservationEntity" >
+        update
+        v_diningroomreservation
+        set reservationId = reservationId
+        <if test="entity.reservationStatus != null">
+            , reservationStatus = #{entity.reservationStatus}
+        </if>
+        where reservationId = #{entity.reservationId}
+    </update>
+
+    <delete id="deleteReservationEntity" >
+        delete from
+        v_diningroomreservation
+        where reservationId = #{recordId}
+    </delete>
+
+    <update id="updateReservationOffTipStatus">
+        update
+        v_diningroomreservation
+        set reservationStatus = 0
+        where diningRoomId = #{roomId}
+    </update>
+
+
+
+</mapper>

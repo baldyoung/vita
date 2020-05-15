@@ -223,6 +223,7 @@ CREATE TABLE V_DiningRoomReservation (
 	reservationId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]主键',
 	diningRoomId INT UNSIGNED NOT NULL COMMENT'就餐位编号',
 	customerName VARCHAR(30) NOT NULL COMMENT'顾客名称',
+	reservationInfo VARCHAR(200) COMMENT'预定信息',
 	diningDate VARCHAR(15) NOT NULL COMMENT'就餐日期(如：2020-01-01)',
 	diningTime VARCHAR(5) NOT NULL COMMENT'餐点(如：午餐、晚餐、全天)',
 	reservationStatus TINYINT DEFAULT 0 COMMENT'0/正常, 1/标注到就餐位, 4/删除',
@@ -230,5 +231,4 @@ CREATE TABLE V_DiningRoomReservation (
 	updateDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT'修改时间',
 	PRIMARY KEY (reservationId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'就餐位预定表';
-
 

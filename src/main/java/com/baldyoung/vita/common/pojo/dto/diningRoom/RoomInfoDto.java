@@ -9,9 +9,18 @@ public class RoomInfoDto {
     private Integer diningRoomStatus;
     private String currentBillNumber;
     private String diningRoomInfo;
+    private String reservationData;
 
     private Integer customerNumber;
     private BigDecimal billAmount;
+
+    public String getReservationData() {
+        return reservationData;
+    }
+
+    public void setReservationData(String reservationData) {
+        this.reservationData = reservationData;
+    }
 
     public Integer getDiningRoomId() {
         return diningRoomId;

@@ -1,12 +1,15 @@
 package com.baldyoung.vita.merchant.controller;
 
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
+import com.baldyoung.vita.common.pojo.entity.DiningRoomReservationEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.merchant.service.MSystemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import static com.baldyoung.vita.common.pojo.dto.ResponseResult.defeat;
 import static com.baldyoung.vita.common.pojo.dto.ResponseResult.success;
+import static com.baldyoung.vita.common.utility.CommonMethod.isAnyEmpty;
 
 @RestController
 @RequestMapping("mSystem")
@@ -48,4 +51,79 @@ public class MSystemController {
         mSystemService.deleteRoomMessage(roomId);
         return success();
     }
+
+    /**
+     * 获取指定就餐位的预约记录
+     * @param roomId
+     * @return
+     */
+    @GetMapping("reservationList")
+    public ResponseResult getReservationOfRoom(@RequestParam("roomId")Integer roomId) {
+        return success(mSystemService.getReservationOfRoom(roomId));
+    }
+
+    /**
+     * 新增预约记录
+     * @param roomId
+     * @param customerName
+     * @param reservationInfo
+     * @param diningDate
+     * @param diningTime
+     * @return
+     */
+    @PostMapping("addReservation")
+    public ResponseResult addReservationOfRoom(@RequestParam("roomId")Integer roomId,
+                                               @RequestParam("customerName")String customerName,
+                                               @RequestParam("reservationInfo")String reservationInfo,
+                                               @RequestParam("diningDate")String diningDate,
+                                               @RequestParam("diningTime")String diningTime) {
+        if (isAnyEmpty(customerName, diningDate, diningTime) || null == reservationInfo) {
+            return defeat("请补全预约信息");
+        }
+        if (customerName.length() >= 30) {
+            return defeat("客户名称要少于30个字");
+        }
+        if (reservationInfo.length() >= 200) {
+            return defeat("预约备注要少于200个字");
+        }
+        if (diningDate.length() >= 15) {
+            return defeat("就餐日期要少于15个字");
+        }
+        if (diningTime.length() >= 5) {
+            return defeat("就餐时间要少于5个字");
+        }
+        DiningRoomReservationEntity entity = new DiningRoomReservationEntity();
+        entity.setDiningRoomId(roomId);
+        entity.setCustomerName(customerName);
+        entity.setReservationInfo(reservationInfo);
+        entity.setDiningDate(diningDate);
+        entity.setDiningTime(diningTime);
+        mSystemService.addReservationForRoom(entity);
+        return success();
+    }
+
+    /**
+     * 删除指定预约记录
+     * @param recordId
+     * @return
+     */
+    @PostMapping("reservationRemove")
+    public ResponseResult deleteReservation(@RequestParam("recordId")Integer recordId) {
+        mSystemService.deleteReservation(recordId);
+        return success();
+    }
+
+    /**
+     * 将指定预约记录标识到就餐位
+     * @param recordId
+     * @return
+     */
+    @PostMapping("setOnTip")
+    public ResponseResult setReservationOnTip(@RequestParam("recordId")Integer recordId) {
+        mSystemService.setReservationOnTip(recordId);
+        return success();
+    }
+
+
+
 }

@@ -58,6 +58,11 @@ var RoomModule = {
 		}
 	},
 	createDisplayUnitHtml : function (item) {
+		if (!GlobalMethod.isEmpty(item.reservationData)) {
+			item.reservationData = '预约: ' + item.reservationData;
+		} else {
+			item.reservationData = '无预约';
+		}
 		var  html = '<div id="Room3" class="col-sm-4 roomPanel" style="width:480px; height:300px; ">' +
 			'<div class="ibox roomPanel" style=" ">' +
 			'<div class="ibox-title roomPanelTop" style="height:50px;">' +
@@ -81,7 +86,7 @@ var RoomModule = {
 			'<i class="glyphicon glyphicon-envelope"></i> 客户消息' +
 			'<span class="badge badge-danger" style="background:#ED5565; color:black; display:;    ">3</span>' +
 			'</button>' +
-			'<button class="btn btn-primary " data-toggle="modal" data-target="#roomPreOrderHistoryPanel" type="button" style="margin-bottom:5px; background:#e0a9f9; " onclick="">' +
+			'<button onclick="DiningRoomReservationModule.loadRoomReservationInfo('+item.diningRoomId+')" class="btn btn-primary " data-toggle="modal" data-target="#roomPreOrderHistoryPanel" type="button" style="margin-bottom:5px; background:#e0a9f9; " >' +
 			'<i class="glyphicon glyphicon-tag"></i> 预定记录' +
 			'<span class="badge badge-danger" style="background:#ED5565; color:black;  display:;    ">6</span>' +
 			'</button>' +
@@ -91,25 +96,13 @@ var RoomModule = {
 			'</div>' +
 			'</div>' +
 			'<div class="col-sm-7" style="padding: 0 0 0 0;">' +
-			'<span class="label label-warning pull-left roomStatusLabel" style="background:#F4C20B; width:100%;">' +
-			'<div class="roomPanelPreTip">2020-02-09&nbsp;【晚餐】</div>' +
-			'<div class="roomPanelPreTip">刘先生15179798118</div>' +
-			'</span>' +
-			'<textarea style="resize:none; height:100px; width:100%; border:0px solid; margin-bottom: 5px; cursor:pointer; " readonly="true">'+item.diningRoomInfo+'</textarea>' +
+			'<textarea style="resize:none; height:150px; width:100%; border:0px solid; margin-bottom: 5px; cursor:pointer; " readonly="true">'+item.diningRoomInfo+'</textarea>' +
 			'</div>' +
 			'</div>' +
 			'<div class="row  m-t-sm">' +
-			'<div class="col-sm-4">' +
-			'<div class="font-bold">客人数量</div>' +
-			'<div id="RoomPeopleNum3">未知</div>' +
-			'</div>' +
-			'<div class="col-sm-4">' +
-			'<div class="font-bold">商品数量</div>' +
-			'<div id="RoomProNum3">未知</div>' +
-			'</div>' +
-			'<div class="col-sm-4 text-right">' +
-			'<div class="font-bold">账单预算</div>' +
-			'<div id="RoomTotalAmount3">未知</div>' +
+			'<span class=" pull-left " style=" width:100%; ">' +
+			'<div id="reservationTip'+item.diningRoomId+'" class="roomPanelPreTip">'+item.reservationData+'</div>' +
+			'</span>' +
 			'</div>' +
 			'</div>' +
 			'</div>' +
@@ -1005,7 +998,130 @@ var DiningRoomStatusModule = {
 	}
 }
 
-
+var DiningRoomReservationModule = {
+	currentRoomId : undefined,
+	reloadCurrentRoomInfo : function() {
+		if (undefined == DiningRoomReservationModule.currentRoomId) {
+			return;
+		}
+		DiningRoomReservationModule.requestAndLoadData(DiningRoomReservationModule.currentRoomId);
+	},
+	loadRoomReservationInfo : function(roomId) {
+		DiningRoomReservationModule.currentRoomId = roomId;
+		DiningRoomReservationModule.requestAndLoadData(roomId);
+	},
+	loadData : function(data) {
+		var html = '<thead><tr>' +
+			'<td width="10%">序号</td>' +
+			'<td width="15%">日期</td>' +
+			'<td width="10%">餐点</td>' +
+			'<td width="20%">预定人</td>' +
+			'<td width="25%">' +
+			'操作 ' +
+			'<i onclick="DiningRoomReservationModule.readyToAdd()" class="btn btn-white btn-sm"  data-toggle="modal" data-target="#roomPreOrderAddPanel" style="float:right;"><i class="fa fa-plus-square-o"></i> 新增 </i>' +
+			'</td></tr></thead>';
+		var target = $('#reservationDisplayArea');
+		target.html(html);
+		for (var i=0; i<data.length; i++) {
+			var item = data[i];
+			html = '<tr class="gradeA" style="background:white;">' +
+				'<td class="sorting_1">'+(i+1)+'</td>' +
+				'<td class=" ">'+item.diningDate+'</td>' +
+				'<td >'+item.diningTime+'</td>' +
+				'<td >'+item.customerName+'</td>' +
+				'<td class=" ">' +
+				'<i onclick="DiningRoomReservationModule.selectRecordOnTip('+item.reservationId+', \''+item.diningDate+'\', \''+item.diningTime+'\', \''+item.customerName+'\')" class="btn btn-white btn-sm"><i class="fa fa-thumb-tack"></i> 标注 </i>' +
+				'<i class="btn btn-white btn-sm"><i class="fa fa-trash-o"></i> 删除 </i>' +
+				'</td></tr>';
+			target.append(html);
+		}
+	},
+	requestAndLoadData : function(roomId) {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mSystem/reservationList",
+			type: 'GET',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				roomId : roomId
+			},
+			success: function (data) {
+				if (data.code == 0) {
+					DiningRoomReservationModule.loadData(data.data);
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
+	},
+	readyToAdd : function () {
+		//DiningRoomReservationModule.currentRoomId = roomId;
+		$('#hello1').val('');
+		$('#reservationDiningTimeArea').val(-1);
+		$('#reservationCustomerNameArea').val('');
+		$('#reservationCustomerInfoArea').val('');
+	},
+	packageData : function() {
+		if ( -1 == $('#reservationDiningTimeArea').val()) {
+			swal('请选择就餐时间', '', 'error');
+			return undefined;
+		}
+		var data = {
+			roomId : DiningRoomReservationModule.currentRoomId,
+			diningDate : $('#hello1').val(),
+			diningTime : $('#reservationDiningTimeArea option:selected').text(),
+			customerName : $('#reservationCustomerNameArea').val(),
+			reservationInfo : $('#reservationCustomerInfoArea').val()
+		}
+		if (GlobalMethod.isEmpty(data.reservationInfo)) {
+			data.reservationInfo = ' ';
+		}
+		return data;
+	},
+	selectRecordOnTip : function(recordId, diningDate, diningTime, customerName) {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mSystem/setOnTip",
+			type: 'POST',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				recordId : recordId
+			},
+			success: function (data) {
+				if (data.code == 0) {
+					$('#reservationTip'+DiningRoomReservationModule.currentRoomId).text('预约: '+diningDate+'【'+diningTime+'】 '+customerName);
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
+	},
+	requestAddReservation : function () {
+		var data = DiningRoomReservationModule.packageData();
+		if (undefined == data) {
+			return ;
+		}
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mSystem/addReservation",
+			type: 'POST',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: data,
+			success: function (data) {
+				if (data.code == 0) {
+					$('#closeReservationAddPanelBtn').trigger('click');
+					DiningRoomReservationModule.reloadCurrentRoomInfo();
+					swal('新增预约成功', '', 'success');
+				} else {
+					swal("获取数据失败", data.desc, "error");
+				}
+			}
+		});
+	}
+}
 
 
 
