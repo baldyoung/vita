@@ -6,6 +6,7 @@ public class OrderItemEntity {
 
     private Integer orderProductItemId;
     private Integer orderId;
+    private Integer ownerId;
     private Integer orderProductId;
     private String orderProductName;
     private String orderProductImg;
@@ -20,6 +21,14 @@ public class OrderItemEntity {
      */
     private Integer orderProductItemStatusFlag;
     private String orderProductItemStatusDesc;
+
+    public Integer getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Integer ownerId) {
+        this.ownerId = ownerId;
+    }
 
     public Integer getOrderId() {
         return orderId;

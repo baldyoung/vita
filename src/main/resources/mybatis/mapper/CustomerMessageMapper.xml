@@ -56,6 +56,13 @@
         delete from v_customerMessage
         where diningRoomId = #{roomId}
     </delete>
+
+    <select id="selectWithCondition" resultMap="baseMap">
+        select
+        diningRoomId
+        from v_customerMessage
+        where customerMessageStatus = #{item.customerMessageStatus}
+    </select>
     
     
     

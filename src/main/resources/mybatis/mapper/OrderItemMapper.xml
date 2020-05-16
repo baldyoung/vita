@@ -15,20 +15,21 @@
         <result property="orderProductRemarks" column="orderProductRemarks"></result>
         <result property="orderProductItemStatusFlag" column="orderProductItemStatusFlag"></result>
         <result property="orderProductItemStatusDesc" column="orderProductItemStatusDesc"></result>
+        <result property="ownerId" column="ownerId"></result>
     </resultMap>
 
     <sql id="allFiled">
-        orderId, orderProductItemId, orderProductId, orderProductName, orderProductImg, orderProductQuantity, orderProductPrice, orderProductRemarks, orderProductItemStatusFlag, orderProductItemStatusDesc
+        orderId, orderProductItemId, orderProductId, orderProductName, orderProductImg, orderProductQuantity, orderProductPrice, orderProductRemarks, orderProductItemStatusFlag, orderProductItemStatusDesc, ownerId
     </sql>
 
     <insert id="insertOrderItemList" parameterType="com.baldyoung.vita.common.pojo.entity.OrderItemEntity" >
         INSERT INTO V_OrderProductItem
         (orderId, orderProductId, orderProductName, orderProductImg, orderProductQuantity, orderProductPrice, orderProductItemStatusFlag,
-        orderProductItemStatusDesc, orderProductRemarks)
+        orderProductItemStatusDesc, orderProductRemarks, ownerId)
         VALUES
         <foreach collection="itemList" item="item" index="index" open="" separator=", " close="">
             (#{item.orderId}, #{item.orderProductId}, #{item.orderProductName}, #{item.orderProductImg}, #{item.orderProductQuantity},
-            #{item.orderProductPrice}, #{item.orderProductItemStatusFlag}, #{item.orderProductItemStatusDesc}, #{item.orderProductRemarks})
+            #{item.orderProductPrice}, #{item.orderProductItemStatusFlag}, #{item.orderProductItemStatusDesc}, #{item.orderProductRemarks}, #{item.ownerId})
         </foreach>
     </insert>
 
@@ -111,6 +112,14 @@
             #{item.orderProductItemId}
         </foreach>
     </update>
+
+
+    <select id="selectOrderItemListWithCondition" resultMap="baseMap">
+        select
+        ownerId
+        from v_orderProductItem
+        where orderProductItemStatusFlag = #{item.orderProductItemStatusFlag}
+    </select>
 
 
 

@@ -20,6 +20,8 @@ public interface CustomerMessageDao {
 
     void deleteRecordForRoomId(@Param("roomId")Integer roomId);
 
+    List<CustomerMessageEntity> selectWithCondition(@Param("item")CustomerMessageEntity item);
+
 
 
 }

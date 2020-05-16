@@ -1,14 +1,21 @@
 package com.baldyoung.vita.merchant.service;
 
+import com.baldyoung.vita.common.dao.CustomerMessageDao;
 import com.baldyoung.vita.common.dao.DiningRoomReservationDao;
+import com.baldyoung.vita.common.dao.OrderItemDao;
+import com.baldyoung.vita.common.pojo.dto.diningRoom.MDiningRoomNewsDto;
 import com.baldyoung.vita.common.pojo.entity.CustomerMessageEntity;
 import com.baldyoung.vita.common.pojo.entity.DiningRoomReservationEntity;
+import com.baldyoung.vita.common.pojo.entity.OrderItemEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.service.impl.CustomerMessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MSystemServiceImpl {
@@ -18,6 +25,12 @@ public class MSystemServiceImpl {
 
     @Autowired
     private DiningRoomReservationDao diningRoomReservationDao;
+
+    @Autowired
+    private OrderItemDao orderItemDao;
+
+    @Autowired
+    private CustomerMessageDao customerMessageDao;
 
     /**
      * 获取指定就餐位的客户消息
@@ -103,6 +116,56 @@ public class MSystemServiceImpl {
      */
     public void removeRoomReservationTip(Integer roomId) {
         diningRoomReservationDao.updateReservationOffTipStatus(roomId);
+    }
+
+    /**
+     * 获取最新系统消息（新订单项、新客户消息）
+     * @return
+     */
+    public List<MDiningRoomNewsDto> getCurrentDiningRoomNews() {
+        Map<Integer, Integer> orderItemMap = new HashMap();
+        Map<Integer, Integer> messageMap = new HashMap();
+        Map<Integer, MDiningRoomNewsDto> newsMap = new HashMap();
+        OrderItemEntity orderItemEntity = new OrderItemEntity();
+        orderItemEntity.setOrderProductItemStatusFlag(0);
+        List<OrderItemEntity> orderItemEntityList = orderItemDao.selectOrderItemListWithCondition(orderItemEntity);
+        for (OrderItemEntity entity : orderItemEntityList) {
+            Integer roomId = entity.getOwnerId();
+            Integer currentNumber = orderItemMap.get(roomId);
+            if (null == currentNumber) {
+                orderItemMap.put(roomId, 1);
+                continue;
+            }
+            orderItemMap.put(roomId, currentNumber + 1);
+        }
+        CustomerMessageEntity messageEntity = new CustomerMessageEntity();
+        messageEntity.setCustomerMessageStatus(0);
+        List<CustomerMessageEntity> messageEntityList = customerMessageDao.selectWithCondition(messageEntity);
+        for (CustomerMessageEntity entity : messageEntityList) {
+            Integer roomId = entity.getDiningRoomId();
+            Integer currentNumber = messageMap.get(roomId);
+            if (null == currentNumber) {
+                messageMap.put(roomId, 1);
+                continue;
+            }
+            messageMap.put(roomId, currentNumber + 1);
+        }
+        for (Map.Entry<Integer, Integer> entry : orderItemMap.entrySet()) {
+            MDiningRoomNewsDto dto = new MDiningRoomNewsDto();
+            dto.setRoomId(entry.getKey());
+            dto.setOrderNewsNumber(entry.getValue());
+            newsMap.put(entry.getKey(), dto);
+        }
+        for (Map.Entry<Integer, Integer> entry : messageMap.entrySet()) {
+            MDiningRoomNewsDto dto = newsMap.get(entry.getKey());
+            if (null == dto) {
+                dto = new MDiningRoomNewsDto();
+                dto.setRoomId(entry.getKey());
+            }
+            dto.setCustomerMessageNewsNumber(entry.getValue());
+            newsMap.put(entry.getKey(), dto);
+        }
+        return new LinkedList(newsMap.entrySet());
     }
 
 }

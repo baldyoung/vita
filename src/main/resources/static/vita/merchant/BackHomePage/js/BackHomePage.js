@@ -10,7 +10,7 @@ var isFullScreen = false; //记录当前是否为全屏
 
 //修改是否播放声音的参数
 function changeAudioState(){
-	console.log('changeAudioState:');
+	//console.log('changeAudioState:');
 			
 	PlayAudioState = PlayAudioState == false ? true : false  ;
 	ACI.className = PlayAudioState == false ? "glyphicon glyphicon-volume-off" : "glyphicon glyphicon-volume-up";

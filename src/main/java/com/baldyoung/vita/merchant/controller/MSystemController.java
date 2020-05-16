@@ -135,6 +135,15 @@ public class MSystemController {
         return success();
     }
 
+    /**
+     * 获取当前的系统未读数据
+     * @return
+     */
+    @GetMapping("currentNews")
+    public ResponseResult getCurrentNews() {
+        return success(mSystemService.getCurrentDiningRoomNews());
+    }
+
 
 
 }

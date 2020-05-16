@@ -167,12 +167,13 @@ DROP TABLE IF EXISTS V_OrderProductItem;
 CREATE TABLE V_OrderProductItem (
 	orderProductItemId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]商品条目编号：唯一、非空',
 	orderId INT UNSIGNED NOT NULL COMMENT'所属订单编号',
+	ownerId INT UNSIGNED NULL COMMENT'餐桌编号',
 	orderProductId INT UNSIGNED COMMENT'商品编号',
 	orderProductName VARCHAR(60) NOT NULL COMMENT'商品名称：非空',
 	orderProductImg VARCHAR(100) NOT NULL COMMENT'商品图片：非空',
 	orderProductQuantity SMALLINT UNSIGNED NOT NULL COMMENT'商品数量：非空',
 	orderProductPrice DECIMAL(10,1) NOT NULL COMMENT'商品单价：非空',
-	orderProductItemStatusFlag TINYINT NOT NULL DEFAULT 0 COMMENT'商品无效标识（0/有效, 1/无效, 2/删除）：非空',
+	orderProductItemStatusFlag TINYINT NOT NULL DEFAULT 0 COMMENT'商品无效标识（0/下单修改, 1/库存不足, 2/备货中, 3/已完成）：非空',
 	orderProductItemStatusDesc VARCHAR(100) COMMENT'商品无效说明',
 	orderProductRemarks VARCHAR(40) COMMENT'商品项备注',
 	PRIMARY KEY (orderProductItemId)

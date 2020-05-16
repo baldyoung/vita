@@ -19,4 +19,6 @@ public interface OrderItemDao {
 
     void updateOrderItemList(@Param("itemList")List<OrderItemEntity> item);
 
+    List<OrderItemEntity> selectOrderItemListWithCondition(@Param("item")OrderItemEntity item);
+
 }

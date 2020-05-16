@@ -61,6 +61,7 @@ public class OrderServiceImpl {
             }
             entity.setOrderId(orderId);
             entity.setOrderProductItemStatusFlag(0);
+            entity.setOwnerId(roomId);
             if (null == entity.getOrderProductImg()) {
                 entity.setOrderProductImg("default.gif");
             }
