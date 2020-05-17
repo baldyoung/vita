@@ -10,11 +10,12 @@ $(function() {
  * @type {{currentStatus: boolean}}
  */
 var AudioModule = {
-    ACI : document.getElementById('AudioActionIcon'),
+    ACI : null,
     currentStatus : true,
     intervalCell : undefined,
     myAudioUnit : undefined,
     init : function() {
+        AudioModule.ACI = document.getElementById('AudioActionIcon');
         //声音模块初始化
         AudioModule.myAudioUnit = createAudioModel(false);
         //设置所要播放的音乐
@@ -27,7 +28,7 @@ var AudioModule = {
     },
     changeStatus : function() {
         AudioModule.currentStatus = !AudioModule.currentStatus;
-        AudioModule.ACI.className = AudioModule.currentStatus ? "glyphicon glyphicon-volume-up" : "glyphicon glyphicon-volume-off";
+        AudioModule.ACI.className = (AudioModule.currentStatus ? "glyphicon glyphicon-volume-up" : "glyphicon glyphicon-volume-off");
         if (!AudioModule.currentStatus) {
             AudioModule.close();
         } else {
