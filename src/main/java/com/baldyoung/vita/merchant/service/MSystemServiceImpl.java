@@ -165,7 +165,7 @@ public class MSystemServiceImpl {
             dto.setCustomerMessageNewsNumber(entry.getValue());
             newsMap.put(entry.getKey(), dto);
         }
-        return new LinkedList(newsMap.entrySet());
+        return new LinkedList(newsMap.values());
     }
 
 }

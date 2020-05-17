@@ -80,15 +80,15 @@ var RoomModule = {
 			'<div class="team-members roomOptionalArea">' +
 			'<button onclick="BillModule.requestAndLoadData('+item.diningRoomId+')" class="btn btn-info " type="button" data-toggle="modal" data-target="#OrderFormWindow" style="margin-bottom:5px; " >' +
 			'<i class="fa fa-paste"></i> 订单详情' +
-			'<span class="badge badge-danger" style="background:#ED5565; color:black;  display:;    ">10</span>' +
+			'<span id="orderItemNewsTip'+item.diningRoomId+'" class="badge badge-danger newsTip" style="background:#ED5565; color:black;  display:none;    "></span>' +
 			'</button>' +
 			'<button class="btn btn-primary " data-toggle="modal" data-target="#customerMsgPanel" type="button" style="margin-bottom:5px; " onclick="MessageModule.loadCurrentRoomMessage('+item.diningRoomId+', \''+item.diningRoomName+'\')">' +
 			'<i class="glyphicon glyphicon-envelope"></i> 客户消息' +
-			'<span class="badge badge-danger" style="background:#ED5565; color:black; display:;    ">3</span>' +
+			'<span id="messageNewsTip'+item.diningRoomId+'" class="badge badge-danger newsTip" style="background:#ED5565; color:black; display:none;    "></span>' +
 			'</button>' +
 			'<button onclick="DiningRoomReservationModule.loadRoomReservationInfo('+item.diningRoomId+')" class="btn btn-primary " data-toggle="modal" data-target="#roomPreOrderHistoryPanel" type="button" style="margin-bottom:5px; background:#e0a9f9; " >' +
 			'<i class="glyphicon glyphicon-tag"></i> 预定记录' +
-			'<span class="badge badge-danger" style="background:#ED5565; color:black;  display:;    ">6</span>' +
+			'<span class="badge badge-danger" style="background:#ED5565; color:black;  display:none;    "></span>' +
 			'</button>' +
 			'<button onclick="DiningRoomStatusModule.readyToSelect('+item.diningRoomId+')" class="btn btn-primary " data-toggle="modal" data-target="#roomStatusPanel" type="button" style="margin-bottom:5px; " >' +
 			'<i class="glyphicon glyphicon-edit"></i> 修改状态' +
@@ -1270,6 +1270,26 @@ var DiningRoomReservationModule = {
 	}
 }
 
+var NewsModule = {
+	loadData : function(data) {
+		if (undefined == data || undefined == data.length) {
+			return;
+		}
+		$('.newsTip').hide();
+		for (var i=0; i<data.length; i++) {
+			var cell = data[i];
+			var roomId = cell.roomId;
+			if (undefined != cell.orderNewsNumber) {
+				$('#orderItemNewsTip'+roomId).show();
+				$('#orderItemNewsTip'+roomId).text(cell.orderNewsNumber);
+			}
+			if (undefined != cell.customerMessageNewsNumber) {
+				$('#messageNewsTip'+roomId).show();
+				$('#messageNewsTip'+roomId).text(cell.customerMessageNewsNumber)
+			}
+		}
+	}
+}
 
 
 

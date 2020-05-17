@@ -58,7 +58,7 @@ public class CommonMethod {
     }
 
     public static Integer getRoomIdFromSession(HttpSession session) throws UtilityException {
-        return 1;
+        return 2;
         /*Object object = session.getAttribute("roomId");
         if (null == object) {
             throw new UtilityException(ROOM_ID_NOT_EXISTS);

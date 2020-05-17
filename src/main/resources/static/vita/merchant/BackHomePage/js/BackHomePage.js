@@ -15,7 +15,6 @@ function changeAudioState(){
 	PlayAudioState = PlayAudioState == false ? true : false  ;
 	ACI.className = PlayAudioState == false ? "glyphicon glyphicon-volume-off" : "glyphicon glyphicon-volume-up";
 	mainIframe.contentWindow.updatePlayAudioState();
-			
 }
 //改变全屏状态
 function changeFullScreenState(){

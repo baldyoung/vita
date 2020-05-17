@@ -24,13 +24,20 @@
 		<script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
 		<script src="../../res/js/plugins/metisMenu/jquery.metisMenu.js"></script>
 		<script src="../../res/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-		<script src="../../res/js/plugins/layer/layer.min.js"></script>
+		<!--<script src="../../res/js/plugins/layer/layer.min.js"></script>-->
 
 		<script src="../../res/js/hAdmin.js?v=4.1.0"></script>
 		<script type="text/javascript" src="../../res/js/index.js"></script>
 
 		<!-- 第三方插件 -->
 		<script src="../../res/js/plugins/pace/pace.min.js"></script>
+
+		<!-- 全局js -->
+		<script src="../../resource/configFile/globalConfig.js"></script>
+		<!-- 自定义js -->
+		<script src="js/AudioModel.js"></script>
+		<script src="js/FullScreenModel.js"></script>
+		<script src="js/BackHomePageL.js"></script>
 
 	</head>
 
@@ -134,7 +141,7 @@
 							<a href="">
 								<i class="fa fa-shopping-cart"></i>
 								<span class="nav-label">商品管理</span>
-								<span class="fa arrow">
+								<!--<span class="fa arrow">-->
 								
 							</a>
 							<ul class="nav nav-second-level">
@@ -288,7 +295,7 @@
 						<ul class="nav navbar-top-links navbar-right">
 
 							<li class="dropdown" style='margin-right:5px;'>
-								<a id='AudioAction' class="dropdown-toggle count-info" href="#" onclick='changeAudioState()'>
+								<a id='AudioAction' class="dropdown-toggle count-info" href="#" onclick='AudioModule.changeStatus()'>
 									<i id='AudioActionIcon' class="glyphicon glyphicon-volume-up"></i>
 									<!-- <span class="label label-primary">8</span>
                                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>-->
@@ -300,7 +307,7 @@
 						<ul class="nav navbar-top-links navbar-right">
 
 							<li class="dropdown" style='margin-right:5px;'>
-								<a id='FullScreenAction' class="dropdown-toggle count-info" href="#" onclick='changeFullScreenState()'>
+								<a id='FullScreenAction' class="dropdown-toggle count-info" href="#" onclick='FullScreenModule.changeFullScreen()'>
 									<i id='FullScreenIcon' class="glyphicon glyphicon-fullscreen"></i>
 									<!-- <span class="label label-primary">8</span>
                                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>-->
@@ -337,8 +344,9 @@
 			</div>
 		</div>
 
-		<script src="js/FullScreenModel.js"></script>
-		<script src="js/BackHomePage.js"></script>
+		<div><audio id="myAudioInAudioModel" src="audio/1.mp3" style=" display:none ; " controls="controls"> Your browser does not support the audio element.  </audio></div>
+
+
 		<script>
 		</script>
 

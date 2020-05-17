@@ -111,12 +111,13 @@ function closeAudioLoop(){
 		loopStop(IntervalCell, MyAudioModelCell);
 		IntervalCell=undefined;
 	}
-	
+
 }
 //关闭周期音乐播放
 function startAudioLoop(){
-	if(IntervalCell!=undefined)
+	if(IntervalCell!=undefined) {
 		closeAudioLoop();
+	}
 	MyAudioModelCell.playAudio();
 	IntervalCell = loopExcute("MyAudioModelCell.playAudio()", 5000);
 }
