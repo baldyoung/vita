@@ -66,8 +66,8 @@ var RoomModule = {
 		var  html = '<div id="Room3" class="col-sm-4 roomPanel" style="width:480px; height:300px; ">' +
 			'<div class="ibox roomPanel" style=" ">' +
 			'<div class="ibox-title roomPanelTop" style="height:50px;">' +
-			'<span class="pull-left" style="cursor:pointer; font-size:10px;">' +
-			'<span class="glyphicon glyphicon-qrcode" aria-hidden="true" data-toggle="modal" data-target="#qrCodePanel"></span>' +
+			'<span  class="pull-left" style="cursor:pointer; font-size:10px;">' +
+			'<span onclick="QRCodeModule.requestRoomCodeImgName('+item.diningRoomId+')" class="glyphicon glyphicon-qrcode" aria-hidden="true" data-toggle="modal" data-target="#qrCodePanel"></span>' +
 			'</span>' +
 			'<span id="roomStatusStyleArea'+item.diningRoomId+'" class=" pull-right roomStatusLabel">'+DiningRoomStatusModule.toDiningRoomStatusNameStyle(item.diningRoomStatus)+'</span>' +
 			'<h5>' +
@@ -1291,7 +1291,60 @@ var NewsModule = {
 	}
 }
 
-
+var QRCodeModule = {
+	currentRoomId : undefined,
+	refreshFlag : false,
+	requestRoomCodeImgName : function(roomId) {
+		QRCodeModule.currentRoomId = roomId;
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mSystem/positionQRcode",
+			type: 'GET',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				roomId : roomId
+			},
+			success: function (data) {
+				if (data.code == 0) {
+					QRCodeModule.loadData(data.data);
+				} else {
+					swal("获取顾客就餐二维码失败", data.desc, "error");
+				}
+			}
+		});
+	},
+	refreshQRCode : function() {
+		if (true == QRCodeModule.refreshFlag) {
+			swal('正在刷新中', '', 'error');
+			return;
+		}
+		QRCodeModule.refreshFlag = true;
+		var roomId = QRCodeModule.currentRoomId;
+		$.ajax({
+			url: GlobalConfig.serverAddress + "/mSystem/refreshPositionQRcode",
+			type: 'POST',
+			cache: false,
+			dataType:'json',
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: {
+				roomId : QRCodeModule.currentRoomId
+			},
+			success: function (data) {
+				if (data.code == 0) {
+					QRCodeModule.requestRoomCodeImgName(roomId);
+					QRCodeModule.refreshFlag = false;
+				} else {
+					QRCodeModule.refreshFlag = false;
+					swal("刷新顾客就餐二维码失败", data.desc, "error");
+				}
+			}
+		});
+	},
+	loadData : function(data) {
+		$('#positionCodeImg').attr('src', "/vita/resource/qrcodeImg/"+data);
+	}
+}
 
 
 

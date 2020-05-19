@@ -8,6 +8,8 @@ import com.baldyoung.vita.customer.controller.CShoppingCartController;
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
 
+import static com.baldyoung.vita.common.pojo.enums.systemEnums.SystemExceptionEnums.ROOM_ID_NOT_EXISTS;
+
 public class CommonMethod {
 
     public static String ObjectToString(Object  object) {
@@ -58,13 +60,11 @@ public class CommonMethod {
     }
 
     public static Integer getRoomIdFromSession(HttpSession session) throws UtilityException {
-        return 2;
-        /*Object object = session.getAttribute("roomId");
+        Object object = session.getAttribute("roomId");
         if (null == object) {
             throw new UtilityException(ROOM_ID_NOT_EXISTS);
         }
         return Integer.parseInt(String.valueOf(object));
-        */
     }
 
     public static String getHeartBeatKeyFromSession(HttpSession session) {

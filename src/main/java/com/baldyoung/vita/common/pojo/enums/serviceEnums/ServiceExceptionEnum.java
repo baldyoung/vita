@@ -31,6 +31,9 @@ public enum ServiceExceptionEnum implements EnumBase {
     // 账单相关100600***
     BILL_NO_FOUND("无账单", 100600100),
 
+    // 就餐位相关100700***
+    ROOM_NOT_FOUND("该就餐位不存在", 100700100),
+
 
 
     ;

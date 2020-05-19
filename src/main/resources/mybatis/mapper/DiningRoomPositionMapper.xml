@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baldyoung.vita.common.dao.DiningRoomPositionDao">
+
+    <resultMap id="baseMap" type="com.baldyoung.vita.common.pojo.entity.DiningRoomPositionEntity">
+        <id property="positionId" column="positionId"></id>
+        <!--非主键字段的对应-->
+        <result property="diningRoomId" column="diningRoomId"></result>
+        <result property="positionKey" column="positionKey"></result>
+        <result property="requestQRCodeImgName" column="requestQRCodeImgName"></result>
+        <result property="createDateTime" column="createDateTime"></result>
+        <result property="updateDateTime" column="updateDateTime"></result>
+    </resultMap>
+
+    <sql id="allFiled">
+        positionId, diningRoomId, positionKey, requestQRCodeImgName, createDateTime, updateDateTime
+    </sql>
+
+    <select id="selectAll" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from V_DiningRoomPosition
+    </select>
+
+    <insert id="insertPosition" >
+        insert into
+        V_DiningRoomPosition(diningRoomId, positionKey, requestQRCodeImgName)
+        values (#{position.diningRoomId}, #{position.positionKey}, #{position.requestQRCodeImgName})
+    </insert>
+
+    <update id="updatePosition">
+        update
+        V_DiningRoomPosition
+        set positionId = positionId
+        <if test="position.positionKey != null">
+            , positionKey = #{position.positionKey}
+        </if>
+        <if test="position.requestQRCodeImgName != null">
+            , requestQRCodeImgName = #{position.requestQRCodeImgName}
+        </if>
+        <choose>
+            <when test="position.positionId != null">
+                where positionId = #{position.positionId}
+            </when>
+            <when test="position.diningRoomId != null">
+                where diningRoomId = #{position.positionId}
+            </when>
+            <otherwise>
+                where 1 = 2
+            </otherwise>
+        </choose>
+    </update>
+
+    <delete id="deletePositionByPositionId">
+        delete from V_DiningRoomPosition
+        where positionId = #{positionId}
+    </delete>
+
+    <delete id="deletePositionByDiningRoomId" >
+        delete from V_DiningRoomPosition
+        where diningRoomId = #{diningRoomId}
+    </delete>
+
+
+
+
+
+</mapper>

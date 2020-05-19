@@ -3,13 +3,16 @@ package com.baldyoung.vita;
 
 import com.baldyoung.vita.common.dao.Z_TestDao;
 import com.baldyoung.vita.common.service.RedisServiceImpl;
+import com.baldyoung.vita.common.service.impl.DiningRoomRequestPositionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -21,6 +24,9 @@ public class Z_DefaultController {
 
     @Autowired
     RedisServiceImpl redisService;
+
+    @Autowired
+    private DiningRoomRequestPositionServiceImpl diningRoomRequestPositionService;
 
 
     @GetMapping
@@ -51,6 +57,18 @@ public class Z_DefaultController {
         PrintWriter writer = response.getWriter();
         writer.println("当你看到这串字符时，代表redis服务正常");
         return null;
+    }
+
+    @GetMapping("c/{key}")
+    public void setCustomerPosition(@PathVariable("key")String key,
+                                    HttpSession session,
+                                    HttpServletResponse response) throws IOException {
+        Integer roomId = diningRoomRequestPositionService.getDiningRoomId(key);
+        if (null != roomId) {
+            session.setAttribute("roomId", roomId);
+            response.sendRedirect("/vita/customer/index.html");
+        }
+        System.out.println("get key is "+key);
     }
 
 }

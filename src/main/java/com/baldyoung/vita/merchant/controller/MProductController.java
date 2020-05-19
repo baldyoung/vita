@@ -5,14 +5,15 @@ import com.baldyoung.vita.common.pojo.dto.product.NewProductDto;
 import com.baldyoung.vita.common.pojo.entity.ProductEntity;
 import com.baldyoung.vita.common.pojo.exception.ExceptionBase;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
+import com.baldyoung.vita.common.service.impl.SystemInfoServiceImpl;
 import com.baldyoung.vita.common.utility.FileDataSaveModule;
 import com.baldyoung.vita.merchant.service.MProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ClassUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.validation.Valid;
 import java.awt.image.BufferedImage;
@@ -32,10 +33,18 @@ import static java.lang.System.out;
 public class MProductController {
 
     // 商品图片存储路径
-    private static String ProductImgPath = createProductImgPath();
+    private String ProductImgPath;
 
     @Autowired
     private MProductServiceImpl productService;
+
+    @Autowired
+    private SystemInfoServiceImpl systemInfoService;
+
+    @PostConstruct
+    public void init() {
+        ProductImgPath = systemInfoService.getProductImgPath();
+    }
 
     /**
      * 获取商品的统计数据
@@ -213,10 +222,11 @@ public class MProductController {
 
 
 
-    static private String createProductImgPath() {
-        String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
-        return FileDataSaveModule.adjustPathNameSeparator(staticPath+"/vita/resource/productImg/");
-    }
+    /*static private String createProductImgPath() {
+        return
+        // String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+        // return FileDataSaveModule.adjustPathNameSeparator(staticPath+"/vita/resource/productImg/");
+    }*/
 
 
 

@@ -3,6 +3,7 @@ package com.baldyoung.vita.merchant.controller;
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.entity.DiningRoomReservationEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
+import com.baldyoung.vita.common.service.impl.DiningRoomRequestPositionServiceImpl;
 import com.baldyoung.vita.merchant.service.MSystemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,9 @@ import static com.baldyoung.vita.common.utility.CommonMethod.isAnyEmpty;
 public class MSystemController {
     @Autowired
     private MSystemServiceImpl mSystemService;
+
+    @Autowired
+    private DiningRoomRequestPositionServiceImpl diningRoomRequestPositionService;
 
     /**
      * 获取指定就餐位的所有消息
@@ -144,6 +148,28 @@ public class MSystemController {
         return success(mSystemService.getCurrentDiningRoomNews());
     }
 
+    /**
+     * 获取指定就餐位的点餐二维码
+     * @param roomId
+     * @return
+     */
+    @GetMapping("positionQRcode")
+    public ResponseResult getPositionQRcode(@RequestParam("roomId")Integer roomId) {
+        String qrcodeImgName = diningRoomRequestPositionService.getDiningRoomKey(roomId) + ".jpg";
+        return success(qrcodeImgName);
+    }
+
+    /**
+     * 刷新指定就餐位的点餐二维码
+     * @param roomId
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("refreshPositionQRcode")
+    public ResponseResult refreshPositionQRcode(@RequestParam("roomId")Integer roomId) throws Exception {
+        diningRoomRequestPositionService.createNewPosition(roomId);
+        return success();
+    }
 
 
 }
