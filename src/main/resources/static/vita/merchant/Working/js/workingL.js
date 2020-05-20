@@ -1294,6 +1294,10 @@ var NewsModule = {
 var QRCodeModule = {
 	currentRoomId : undefined,
 	refreshFlag : false,
+	qrcodeImgName : undefined,
+	printCode : function() {
+		GlobalMethod.redirectURL("../PrintPage/qrcodePrintPage.html?t="+QRCodeModule.qrcodeImgName);
+	},
 	requestRoomCodeImgName : function(roomId) {
 		QRCodeModule.currentRoomId = roomId;
 		$.ajax({
@@ -1307,6 +1311,7 @@ var QRCodeModule = {
 			},
 			success: function (data) {
 				if (data.code == 0) {
+					QRCodeModule.qrcodeImgName = data.data;
 					QRCodeModule.loadData(data.data);
 				} else {
 					swal("获取顾客就餐二维码失败", data.desc, "error");

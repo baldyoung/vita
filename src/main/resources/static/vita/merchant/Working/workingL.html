@@ -769,10 +769,11 @@
                         </button>
 						<span class="pull-left" style="font-size:17px; font-weight: bold;"> &nbsp;-&nbsp;点餐二维码</span>
 					</div>
-					<div class="modal-body" style="padding: 20px 0 20px 0; text-align: center;" >
+					<div id="diningRoomQRCodeArea" class="modal-body" style="padding: 20px 0 20px 0; text-align: center;" >
 						<img id="positionCodeImg" style="width:500px; height:500px; " src="../../resource/otherImg/testQRCode.png" />
 					</div>
 					<div class="modal-footer">
+						<a data-toggle="modal" class="btn btn-primary" onclick="QRCodeModule.printCode()">打印</a>
 						<a data-toggle="modal" class="btn btn-primary" onclick="">保存到本地</a>
 						<a data-toggle="modal" class="btn btn-warning" style="float:left; " onclick="QRCodeModule.refreshQRCode()">刷新二维码</a>
 						<button type="button" class="btn btn-white" data-dismiss="modal" onclick="">关闭</button>

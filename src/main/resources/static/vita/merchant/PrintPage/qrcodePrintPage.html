@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>打印预览</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link href="../../res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="../../res/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+		<link href="../../res/css/animate.css" rel="stylesheet">
+		<link href="../../res/css/style.css?v=4.1.0" rel="stylesheet">
+
+		<script src="../../res/js/jquery.min.js?v=2.1.4"></script>
+		<script src="../../res/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
+		<!-- 全局js -->
+		<script src="../../resource/configFile/globalConfig.js"></script>
+		<!-- 自定义js -->
+		<script src="js/qrcodePrintPage.js"></script>
+
+		<style>
+			.A4Size {
+				width: 525px;
+				height: 743px;
+			}
+		</style>
+	</head>
+
+	<body class="gray-bg ">
+		<div style="width:100%; border: 1px solid;" ondblclick="GlobalMethod.goBack()">
+			<table style='width:100%; ' border="0xp">
+				<tr style='width:100%;'>
+					<td style='width:30%;'>
+						<img id="printUnit" src="" style="width:99%; margin-left:1px; margin-top:3px;" />
+					</td>
+					<td style='width:50%;'>
+						<div style='width:100%; height:130px;'>
+							<div style="width:100%; text-align: center; font-size:18px; font-weight: bolder;">
+								用心做餐饮，健康美味选天天！
+							</div>
+							<div style="width:100%; text-align: center;">
+								WIFI名称：天天农庄
+							</div>
+							<div style="width:100%; text-align: center;">
+								密码：88888888
+							</div>
+							<div style="width:100%; text-align: center;">
+								天天农庄 <span>祝您用餐愉快</span>
+							</div>
+							</br>
+							<div style="width:100%; text-align: center; font-size:15px; font-family: '楷体'; font-weight: bold;">
+								订餐热线：183 7977 7776（冯）
+							</div>
+						</div>
+					</td>
+					<td style="width:20%;">
+						<img src="../../resource/qrcodeImg/print-1.jpg" style="width:99%; "  />
+					</td>
+				</tr>
+				<tr style='width:100%;'>
+					<td colspan="3" style="width:100%; font-size:15px; text-align: center; font-family: '楷体'; font-weight: bold;">
+						精选农家菜，土生土长更健康；地道兴国人，勤勤恳恳名远扬。
+					</td>
+				</tr>
+			</table>
+
+		</div>
+
+	</body>
+
+</html>
