@@ -13,5 +13,7 @@ public interface BillDao {
 
     void updateBillEntity(@Param("bill")BillEntity bill);
 
+    // List<BillEntity> selectWithCondition(@Param("bill")BillEntity bill);
+
 
 }

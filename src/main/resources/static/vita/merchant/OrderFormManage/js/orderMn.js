@@ -15,6 +15,124 @@ $(function() {
 	//requestorderList();
 });
 
+/**
+ * 账单表格模块
+ * @type {{init: BillTableModule.init, requestAndLoadData: BillTableModule.requestAndLoadData, loadData: BillTableModule.loadData}}
+ */
+var BillTableModule = {
+	init : function() {
+
+	},
+	loadData : function(data) {
+		var dataTable = $('#orderTable');
+		if ($.fn.dataTable.isDataTable(dataTable)) {
+			dataTable.DataTable().destroy();
+		}
+		dataTable.DataTable({
+			'searching': false, //去掉搜索框
+			'bLengthChange': false, //去掉每页显示多少条数据方法
+			"serverSide": false, //关闭分页操作，默认就是关闭
+			"autoWidth": false, //
+			"bSort": false, //打开排序功能
+			"order": [
+				[0, "desc"]
+			], //默认排序的指标
+			"paging" : false,
+			"info" :false,
+			"pageLength": 25, //默认每页显示的数据条数
+			'data': t, //表格的数据源
+			'columns': [{
+				data: 'orderId'
+			}, {
+				data: 'orderTypeName'
+			}, {
+				data: 'orderDiningTypeName'
+			}, {
+				data: 'orderTotalAmount'
+			}, {
+				data: 'orderReceivedAmount'
+			}, {
+				data: 'orderItemQuantity'
+			}, {
+				data: 'orderCustomerName'
+			}, {
+				data: "orderCreateDate"
+			}],
+			"columnDefs": [{
+				"render": function(data, type, row) {
+					var a = "";
+					a += "<button class=\"btn btn-primary \" style='margin-top:3px;' type=\"button\" data-toggle=\"modal\" data-target=\"#OrderFormWindow\" onclick=\"deleteorder('" + row.id + "')\"><i class=\"fa fa-building-o\"></i>删除"
+					a += "</button>"
+					a += "<button class=\"btn btn-primary \" style='margin-top:3px; margin-left:5px; ' type=\"button\" data-toggle=\"modal\" data-target=\"#orderInfoPanel\"onclick=\"requestorderDList('" + row.id + "')\"><i class=\"fa fa-building-o\"></i>详情"
+					a += "</button>"
+					return a;
+				},
+				"targets": 8
+			}]
+		})
+	},
+	requestAndLoadData : function() {
+		$.ajax({
+			url: GlobalConfig.serverAddress + "",
+			type: 'GET',
+			cache: false,
+			dataType: 'json',
+			//async: false, //设置同步
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			data: filterData,
+			success: function(data) {
+				if (data.code != 0) {
+					swal('获取数据失败', data.desc, 'error');
+				} else {
+
+				}
+			},
+			error: function() {
+				swal('服务器连接失败', '请检查网络是否通畅', 'warning');
+			}
+		});
+	}
+}
+/**
+ * 账单筛选模块
+ * @type {{init: BillFilterModule.init, packageData: BillFilterModule.packageData, reset: BillFilterModule.reset}}
+ */
+var BillFilterModule = {
+	init : function() {
+
+	},
+	reset : function() {
+
+	},
+	packageData : function() {
+
+	}
+}
+/**
+ * 账单统计模块
+ * @type {{init: BillCountModule.init, requestAndLoadData: BillCountModule.requestAndLoadData, loadData: BillCountModule.loadData}}
+ */
+var BillCountModule = {
+	init : function() {
+
+	},
+	loadData : function() {
+
+	},
+	requestAndLoadData : function() {
+
+	}
+}
+/**
+ * 账单详情模块
+ * @type {{}}
+ */
+var BillInfoModule = {
+
+}
+
+
+
 //加载订单表格数据表格
 function loadorderTable(t) {
 	var dataTable = $('#orderTable');
