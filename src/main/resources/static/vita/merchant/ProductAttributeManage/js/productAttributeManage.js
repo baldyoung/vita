@@ -8,10 +8,12 @@ $(function(){
  * @type {{init: AttributeTypeModule.init, requestAndLoadData: AttributeTypeModule.requestAndLoadData, loadData: AttributeTypeModule.loadData, createDisplayUnitHTML: (function(*): string)}}
  */
 var AttributeTypeModule = {
+	attributeTypeBuffer : [],
 	init: function() {
 		AttributeTypeModule.requestAndLoadData();
 	},
 	loadData: function(data) {
+		AttributeTypeModule.attributeTypeBuffer = data;
 		var target = $('#attributeTypeDisplayArea');
 		target.html('');
 		for (var i = 0; i < data.length; i++) {
@@ -55,10 +57,22 @@ var AttributeTypeModule = {
  */
 var AttributeValueModule = {
 	init: function() {
-
+		AttributeValueModule.requestAndLoadData();
 	},
 	loadTargetTypeValue: function(tTypeId) {},
-	loadData: function() {},
+	loadData: function(data) {
+		var list = AttributeTypeModule.attributeTypeBuffer;
+		for (var i=0; i<list.length; i++) {
+			var cell = list[i];
+			cell.valueList = [];
+			for (var j=0; j<data.length; j++) {
+				var temp = data[j];
+				if (cell.productAttributeTypeId == temp.productAttributeTypeId) {
+					cell.valueList[cell.valueList.length] = temp;
+				}
+			}
+		}
+	},
 	createDisplayUnitHTML: function(item) {
 		var html = '<li class="dd-item" ><div class="dd-handle">' +
 			item.productAttributeValueName +
