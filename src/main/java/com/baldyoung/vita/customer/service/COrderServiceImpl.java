@@ -103,6 +103,11 @@ public class COrderServiceImpl {
             productIds.add(dto.getProductId());
             quantityMap.put(dto.getProductId(), dto.getProductQuantity());
         }
+        // 商品属性图
+        Map<Integer, Integer> itemAttributeMap = new HashMap();
+        for (OrderItemReceiveDto dto : itemReceiveDtoList) {
+            itemAttributeMap.put(dto.getProductId(), dto.getProductAttributeId());
+        }
         // 获取指定商品集的详细数据
         List<CProductDto> productList = cProductService.getProductWithProductIds(productIds);
         // 获取所有的商品属性数据
@@ -123,7 +128,8 @@ public class COrderServiceImpl {
             entity.setOrderProductImg(dto.getProductImgName());
             entity.setOrderProductPrice(dto.getProductPrice());
             entity.setOrderProductQuantity(quantityMap.get(dto.getProductId()));
-            String attributeName = attributeMap.get(dto.getProductAttributeTypeId());
+            Integer attributeId = itemAttributeMap.get(dto.getProductId());
+            String attributeName = attributeMap.get(attributeId);
             if (null == attributeName) {
                 attributeName = "";
             }

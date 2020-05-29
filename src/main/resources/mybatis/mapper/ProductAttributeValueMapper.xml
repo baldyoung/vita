@@ -13,6 +13,7 @@
     <select id="selectAll" resultMap="baseMap">
         select productAttributeValueId, productAttributeTypeId, productAttributeValueName
         from V_ProductAttributeValue
+        order by productAttributeValueId desc
     </select>
 
     <select id="selectByProductAttributeTypeId" resultMap="baseMap">
@@ -22,5 +23,19 @@
         productAttributeTypeId = #{productAttributeTypeId}
     </select>
 
+    <insert id="insertEntity">
+        insert into V_ProductAttributeValue(productAttributeTypeId, productAttributeValueName)
+        values(#{entity.productAttributeTypeId}, #{entity.productAttributeValueName})
+    </insert>
+
+    <delete id="deleteEntityByTypeId">
+        delete from V_ProductAttributeValue
+        where productAttributeTypeId = #{typeId}
+    </delete>
+
+    <delete id="deleteEntity">
+        delete from V_ProductAttributeValue
+        where productAttributeValueId = #{entityId}
+    </delete>
 
 </mapper>

@@ -8,10 +8,7 @@ import com.baldyoung.vita.common.pojo.entity.ProductAttributeValueEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class MProductAttributeServiceImpl {
@@ -37,6 +34,45 @@ public class MProductAttributeServiceImpl {
 
     public List<ProductAttributeValueEntity> getAttributeValueListByAttributeTypeId(Integer attributeTypeId) {
         return productAttributeValueDao.selectByProductAttributeTypeId(attributeTypeId);
+    }
+
+    /**
+     * 新增属性类别
+     * @param attributeTypeName
+     */
+    public void addAttributeType(String attributeTypeName) {
+        ProductAttributeTypeEntity entity = new ProductAttributeTypeEntity();
+        entity.setProductAttributeTypeName(attributeTypeName);
+        productAttributeTypeDao.insertEntity(entity);
+    }
+
+    /**
+     * 新增属性值
+     * @param attributeValueName
+     * @param attributeTypeId
+     */
+    public void addAttributeValue(String attributeValueName, Integer attributeTypeId) {
+        ProductAttributeValueEntity entity = new ProductAttributeValueEntity();
+        entity.setProductAttributeTypeId(attributeTypeId);
+        entity.setProductAttributeValueName(attributeValueName);
+        productAttributeValueDao.insertEntity(entity);
+    }
+
+    /**
+     * 删除属性类别
+     * @param typeId
+     */
+    public void deleteAttributeType(Integer typeId) {
+        productAttributeTypeDao.deleteEntity(typeId);
+        productAttributeValueDao.deleteEntityByTypeId(typeId);
+    }
+
+    /**
+     * 删除属性值
+     * @param valueId
+     */
+    public void deleteAttributeValue(Integer valueId) {
+        productAttributeValueDao.deleteEntity(valueId);
     }
 
 }

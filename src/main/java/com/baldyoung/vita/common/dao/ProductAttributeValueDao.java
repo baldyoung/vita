@@ -12,4 +12,10 @@ public interface ProductAttributeValueDao {
     List<ProductAttributeValueEntity> selectAll();
 
     List<ProductAttributeValueEntity> selectByProductAttributeTypeId(@Param("attributeTypeId")Integer attributeTypeId);
+
+    void insertEntity(@Param("entity")ProductAttributeValueEntity entity);
+
+    void deleteEntity(@Param("entityId")Integer entityId);
+
+    void deleteEntityByTypeId(@Param("typeId")Integer typeId);
 }
