@@ -23,4 +23,10 @@ public class CommonConfig {
     @Value("${positionAddress}")
     public String positionAddress;
 
+    @Value("${merchantSessionTime}")
+    public Integer merchantSessionTime;
+
+    @Value("${customerSessionTime}")
+    public Integer customerSessionTime;
+
 }

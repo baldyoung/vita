@@ -1,47 +1,37 @@
 /**
  * 
  */
-var url = "/Vita_war_exploded"
+function forgetPWD() {
+    swal("请联系客服或工作人员", "", "success");
+}
 
 function login(){
 	var temp = {
-			account:$('#userAccount').val(),
-			pwd:$('#userPassword').val()
+			a:$('#userAccount').val(),
+			p:$('#userPassword').val()
 	}
-	if(temp.account=='' || temp.pwd==''){
-	    alert("内容不能留空");
+	if(GlobalMethod.isEmpty(temp.a) || GlobalMethod.isEmpty(temp.p)){
+        swal('登录失败', "账号名和密码不能为空", 'error');
 	    return;
     }
-	//console.log(temp);
-	$.ajax({
-        url: url+"/Vita_Back/login",
+    $.ajax({
+        url: GlobalConfig.serverAddress + "/mUser/login",
         type: 'POST',
         cache: false,
-        //dataType:'json',
-        dataType:'text',
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(temp),
-        //data:temp,
-        //processData: false,
-        //contentType: false,
-        beforeSend: function () {
-        },
-        success: function (data) {
-        	//将json字符串转换为json对象
-        	data = JSON.parse(data);
-        	if(data.result=='succeed') {
-        	    location.href=url+"/Vita_Back/BackHomePage.html"
+        dataType: 'json',
+        //async: false, //设置同步
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        data: temp,
+        success: function(data) {
+            if (data.code != 0) {
+                swal('登录失败', data.desc, 'error');
+            } else {
+                GlobalMethod.replaceURL(data.data);
             }
-        	else if(data.result=='default') alert("登录失败\n"+data.inf);
-        	console.log(data);
-        	
-        	//window.location.href='../../index.html'
         },
-        error: function(data){
-        	
-        	console.log("登录失败\n浏览器异常")
+        error: function() {
+            swal('服务器连接失败', '请检查网络是否通畅', 'warning');
         }
-        
     });
 }
 

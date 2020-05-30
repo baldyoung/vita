@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baldyoung.vita.common.dao.MerchantUserDao">
+
+    <resultMap id="baseMap" type="com.baldyoung.vita.common.pojo.entity.MerchantUserEntity">
+        <id property="merchantUserId" column="merchantUserId"></id>
+        <!--非主键字段的对应-->
+        <result property="merchantUserGrade" column="merchantUserGrade"></result>
+        <result property="merchantUserName" column="merchantUserName"></result>
+        <result property="merchantUserAccount" column="merchantUserAccount"></result>
+        <result property="merchantUserPassword" column="merchantUserPassword"></result>
+        <result property="createDateTime" column="createDateTime"></result>
+        <result property="lastModifiedDateTime" column="lastModifiedDateTime"></result>
+    </resultMap>
+
+    <sql id="allFiled">
+        merchantUserId, merchantUserGrade, merchantUserName, merchantUserAccount, merchantUserPassword, createDateTime, lastModifiedDateTime
+    </sql>
+
+    <insert id="insertMerchantUserEntity" >
+        insert into V_MerchantUser(merchantUserGrade, merchantUserName, merchantAccount, merchantUserPassword)
+        values (#{user.merchantUserGrade}, #{user.merchantUserName}, #{user.merchantUserAccount}, #{user.merchantUserPassword})
+    </insert>
+
+    <insert id="deleteMerchantUserEntity" >
+        delete from V_MerchantUser
+        where merchantUserId = #{userId}
+    </insert>
+
+    <update id="updateMerchantUserEntity">
+        update V_MerchantUser
+        set merchantUserId = merchantUserId
+        <if test="user.merchantUserGrade != null">
+            , merchantUserGrade = #{user.merchantUserGrade}
+        </if>
+        <if test="user.merchantUserName != null">
+            , merchantUserName = #{user.merchantUserName}
+        </if>
+        <if test="user.merchantUserAccount != null">
+            , merchantUserAccount = #{user.merchantUserAccount}
+        </if>
+        <if test="user.merchantUserPassword != null">
+            , merchantUserPassword = #{user.merchantUserPassword}
+        </if>
+        where merchantUserId = #{user.merchantUserId}
+    </update>
+
+    <select id="selectByMerchantUserId" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from V_MerchantUser
+        where merchantUserId = #{userId}
+    </select>
+
+    <select id="selectByMerchantUserAccount" resultMap="baseMap">
+        select
+        <include refid="allFiled" />
+        from V_MerchantUser
+        where merchantUserAccount = #{account}
+    </select>
+
+    <select id="selectWithMaxGrade" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from V_MerchantUser
+        where #{maxGrade} > merchantUserGrade
+    </select>
+
+
+
+
+
+
+
+
+</mapper>

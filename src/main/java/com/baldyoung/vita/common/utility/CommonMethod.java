@@ -8,6 +8,7 @@ import com.baldyoung.vita.customer.controller.CShoppingCartController;
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
 
+import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.MERCHANT_GRADE_FORBIDDEN;
 import static com.baldyoung.vita.common.pojo.enums.systemEnums.SystemExceptionEnums.ROOM_ID_NOT_EXISTS;
 
 public class CommonMethod {
@@ -63,6 +64,14 @@ public class CommonMethod {
         Object object = session.getAttribute("roomId");
         if (null == object) {
             throw new UtilityException(ROOM_ID_NOT_EXISTS);
+        }
+        return Integer.parseInt(String.valueOf(object));
+    }
+
+    public static Integer getMerchantUserIdFromSession(HttpSession session) throws UtilityException {
+        Object object = session.getAttribute("merchantUserId");
+        if (null == object) {
+            throw new UtilityException(MERCHANT_GRADE_FORBIDDEN);
         }
         return Integer.parseInt(String.valueOf(object));
     }

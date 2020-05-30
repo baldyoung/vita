@@ -1,7 +1,9 @@
 package com.baldyoung.vita;
 
 
+import com.baldyoung.vita.common.CommonConfig;
 import com.baldyoung.vita.common.dao.Z_TestDao;
+import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
 import com.baldyoung.vita.common.service.RedisServiceImpl;
 import com.baldyoung.vita.common.service.impl.DiningRoomRequestPositionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static com.baldyoung.vita.common.utility.CommonMethod.getMerchantUserIdFromSession;
+
 @RestController
 @RequestMapping("/")
 public class Z_DefaultController {
@@ -24,6 +28,9 @@ public class Z_DefaultController {
 
     @Autowired
     RedisServiceImpl redisService;
+
+    @Autowired
+    private CommonConfig commonConfig;
 
     @Autowired
     private DiningRoomRequestPositionServiceImpl diningRoomRequestPositionService;
@@ -65,10 +72,23 @@ public class Z_DefaultController {
                                     HttpServletResponse response) throws IOException {
         Integer roomId = diningRoomRequestPositionService.getDiningRoomId(key);
         if (null != roomId) {
+            session.setMaxInactiveInterval(commonConfig.customerSessionTime);
             session.setAttribute("roomId", roomId);
             response.sendRedirect("/vita/customer/index.html");
         }
-        System.out.println("get key is "+key);
+        // System.out.println("get key is "+key);
+    }
+
+    @GetMapping("ls")
+    public void loginSuccess(HttpSession session,
+                             HttpServletResponse response) throws UtilityException, IOException {
+        Integer merchantUserId = getMerchantUserIdFromSession(session);
+        response.sendRedirect("/vita/merchant/BackHomePage/BackHomePage.html");
+    }
+
+    @GetMapping("noLogin")
+    public void loginFailed(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/vita/merchant/Login/login.html");
     }
 
 }

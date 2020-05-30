@@ -13,14 +13,18 @@
     <link href="../../res/css/animate.css" rel="stylesheet">
     <link href="../../res/css/style.css" rel="stylesheet">
     <link href="./css/login.css" rel="stylesheet"/>
-    <!--[if lt IE 9]>
-    <meta http-equiv="refresh" content="0;ie.html" />
-    <![endif]-->
     <script>
         if (window.top !== window.self) {
             window.top.location = window.location;
         }
     </script>
+    <!-- sweetalert -->
+    <link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- 全局 -->
+    <script src="../../res/js/jquery.min.js"></script>
+    <script src="../../resource/configFile/globalConfig.js"></script>
+    <script src="js/login.js"></script>
 
 </head>
 
@@ -33,7 +37,7 @@
                     <p class="m-t-md">登录到后台管理系统</p>
                     <input id='userAccount' type="text" class="form-control uname" placeholder="用户名" />
                     <input id='userPassword' type="password" class="form-control pword m-b" placeholder="密码" />
-                    <a href="" style="color: white">忘记密码了？</a>
+                    <a onclick="forgetPWD()" style="color: white">忘记密码了？</a>
                     <button type='button' class="btn btn-success btn-block" onclick='login()'>登录</button>
                 </form>
             </div>
@@ -45,6 +49,5 @@
         </div>
     </div>
 </body>
-<script src="../../res/js/jquery.min.js"></script>
-<script src="js/login.js"></script>
+
 </html>

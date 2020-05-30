@@ -34,6 +34,12 @@ public enum ServiceExceptionEnum implements EnumBase {
     // 就餐位相关100700***
     ROOM_NOT_FOUND("该就餐位不存在", 100700100),
 
+    // 商家用户相关100800***
+    MERCHANT_GRADE_FORBIDDEN("账号权限不足", 100800100),
+    MERCHANT_LOGIN_FILED("账号或密码错误", 100800101),
+    MERCHANT_ACCOUNT_EXISTS("账号名已存在", 100800102),
+
+
 
 
     ;
