@@ -5,7 +5,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<title>订单类型管理</title>
+		<title>就餐位管理</title>
 		<meta name="keywords" content="">
 		<meta name="description" content="">
 		<script src="../../res/js/jquery.min.js?v=2.1.4"></script>
@@ -15,17 +15,17 @@
 		<link href="../../res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
 		<link href="../../res/css/font-awesome.css?v=4.4.0" rel="stylesheet">
 
-		<link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 		<link href="../../res/css/animate.css" rel="stylesheet">
 		<link href="../../res/css/style.css?v=4.1.0" rel="stylesheet">
 		<link href="../../res/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
-
 		<script src="../../res/js/plugins/dataTables/jquery.dataTables.js"></script>
 		<script src="../../res/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+		<!-- sweetalert -->
+		<link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 		<script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
-		<script src="../../res/js/plugins/toastr/toastr.min.js"></script>
+		<!-- 全局 -->
+		<script src="../../resource/configFile/globalConfig.js"></script>
 		<!-- 自定义js -->
-
 		<script src="js/orderTMn.js"></script>
 	</head>
 
@@ -39,7 +39,7 @@
 						<div class="ibox-title">
 							<h5>当前可查阅订单类型</h5>
 							<div class="ibox-tools">
-								<button type='button' class="btn btn-primary btn-xs" data-toggle="modal" data-target="#addOrderTypePanel" onclick="readForAddOrderType()">新增</button>
+								<button type='button' class="btn btn-primary btn-xs" data-toggle="modal" data-target="#addOrderTypePanel" onclick="AddDiningRoomModule.readyToAction()">新增</button>
 							</div>
 						</div>
 						<div class="ibox-content">
@@ -67,7 +67,7 @@
 			<div class="modal-dialog" style="width:600px;">
 				<div class="modal-content animated bounceInRight">
 					<div class="modal-header">
-						<span id="myModal_title">订单类型信息-添加</span>
+						<span id="myModal_title">就餐位-新增</span>
 						<button type="button" class="close" data-dismiss="modal">
 							<span aria-hidden="true">&times;</span>
 							<span class="sr-only">关闭</span>
@@ -75,21 +75,21 @@
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
-							<label>类型名<span style="color:red;">（必填）</span>：</label> 
-							<input id='NAMEText' type="text" placeholder="请输入类型名" class="form-control" style="width:70%; ">
+							<label>名称<span style="color:red;">（必填）</span>：</label>
+							<input id='newDiningRoomNameText' type="text" placeholder="请输入新增就餐位的名称" class="form-control" style="width:70%; ">
 						</div>
 						<div class="form-group">
 							<label>优先级</label> 
-							<input id='gradeText' type="number" placeholder="默认为50" class="form-control" style="width:70%; ">
+							<input id='newDiningRoomGradeText' type="number" placeholder="作为实时营业时排序的依据（默认是0）" class="form-control" style="width:70%; ">
 						</div>
 						<div class="form-group">
 							<label>备注信息：</label> 
-							<textarea style="width:500px; height:200px; resize:none; "  placeholder="请输入备注信息"></textarea>
+							<textarea id="newDiningRoomInfoText" style="width:500px; height:200px; resize:none; "  placeholder="请输入就餐位的描述信息"></textarea>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button id='btnSaveInfWin' type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-						<button type="button" class="btn btn-primary" onclick="saveOrderTypeInf()">保存</button>
+						<button id='closeAddWindowBtn' type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="AddDiningRoomModule.addAction()">保存</button>
 					</div>
 				</div>
 			</div>
@@ -99,7 +99,7 @@
 			<div class="modal-dialog" style="width:600px;">
 				<div class="modal-content animated bounceInRight">
 					<div class="modal-header">
-						<span id="myModal_title1">订单类型信息-修改</span>
+						<span id="myModal_title1">就餐位-修改</span>
 						<button type="button" class="close" data-dismiss="modal">
 							<span aria-hidden="true">&times;</span>
 							<span class="sr-only">关闭</span>

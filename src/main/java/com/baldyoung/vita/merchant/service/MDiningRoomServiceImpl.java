@@ -49,16 +49,68 @@ public class MDiningRoomServiceImpl {
         return list;
     }
 
+    /**
+     * 修改指定就餐位的数据
+     * @param entity
+     */
     public void updateDiningRoom(DiningRoomEntity entity) {
         diningRoomDao.updateDiningRoom(entity);
     }
 
+    /**
+     * 获取所有就餐位数据
+     * @return
+     */
+    public List<DiningRoomEntity> getDiningRoomList() {
+        return diningRoomDao.selectAll();
+    }
 
+    /**
+     * 获取指定编号的就餐位信息
+     * @param roomId
+     * @return
+     */
+    public DiningRoomEntity getDiningRoom(Integer roomId) {
+        return diningRoomDao.selectByDiningRoomId(roomId);
+    }
+
+    /**
+     * 新增就餐位
+     * @param roomName
+     * @param roomGrade
+     * @param roomInfo
+     */
+    public void addDiningRoom(String roomName, Integer roomGrade, String roomInfo) {
+        DiningRoomEntity entity = new DiningRoomEntity();
+        entity.setDiningRoomName(roomName);
+        entity.setDiningRoomGrade(roomGrade);
+        entity.setDiningRoomInfo(roomInfo);
+        entity.setDiningRoomStatus(0);
+        diningRoomDao.insertDiningRoom(entity);
+    }
+
+    /**
+     * 删除指定就餐位
+     * @param roomId
+     */
+    public void deleteDiningRoom(Integer roomId) {
+        diningRoomDao.deleteDiningRoom(roomId);
+    }
+
+
+
+    /**
+     * 设置预定消息
+     * @param entity
+     * @return
+     */
     private String toReservationData(DiningRoomReservationEntity entity) {
         if (null == entity) {
             return "";
         }
         return entity.getDiningDate() + "【" + entity.getDiningTime() + "】 " + entity.getCustomerName();
     }
+
+
 
 }

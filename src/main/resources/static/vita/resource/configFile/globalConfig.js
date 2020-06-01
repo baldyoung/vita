@@ -85,6 +85,15 @@ var GlobalMethod = {
         var d = new Date(date);
         var dateString = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
         return dateString;
+    },
+    toSimpleString : function (str, maxLength) {
+        if (undefined == str) {
+            return '';
+        }
+        if (str.length < maxLength) {
+            return str;
+        }
+        return str.substring(0, maxLength) + '...';
     }
 
 }
