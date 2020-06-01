@@ -281,11 +281,11 @@
 								</a>
 								<ul class="dropdown-menu dropdown-alerts" style="width:100px; ">
 									<li>
-										<button type="button" class="btn btn-warning" style='width:80px;' onclick="logoutUser()"><!--<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>-->用户注销</button>
+										<button type="button" class="btn btn-warning" style='width:80px;' onclick="UserModule.readyToLogout()"><!--<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>-->用户注销</button>
 									</li>
 									<li class="divider"></li>
 									<li>
-										<button type="button" class="btn btn-primary" style='width:80px;' data-toggle="modal" data-target="#myModal6"><!--<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>-->修改密码</button>
+										<button onclick="UserModule.readyToUpdateUserInfo()" type="button" class="btn btn-primary" style='width:80px;' data-toggle="modal" data-target="#myModal6"><!--<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>-->修改信息</button>
 									</li>
 								</ul>
 							</li>
@@ -328,16 +328,18 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-						<h5 class="modal-title">修改密码</h5>
+						<h5 class="modal-title">当前登录账号</h5>
 					</div>
 					<div class="modal-body">
-						<div class="form-group"><label>旧密码：</label> <input id='oldPWD' type="text" placeholder="请输入当前登录密码" class="form-control" style="width:100%; "></div>
-						<div class="form-group"><label>新密码：</label> <input id='newPWD' type="text" placeholder="请输入更改后的密码" class="form-control" style="width:100%; "></div>
-
+						<div class="form-group"><label>账号类型：</label> <input id='userGradeText' type="text" placeholder="账号类型" class="form-control" readonly="true" style="width:100%; "></div>
+						<div class="form-group"><label>用户名：</label> <input id='userNameText' type="text" placeholder="用户名称" class="form-control" style="width:100%; "></div>
+						<div class="form-group"><label>登录名：</label> <input id='userAccountText' type="text" placeholder="登录名" class="form-control" style="width:100%; "></div>
+						<div class="form-group"><label>新密码：</label> <input id='userNewPasswordText' type="text" placeholder="不输入，则不会改变原密码" class="form-control" style="width:100%; "></div>
+						<div class="form-group"><label>旧密码：</label> <input id='userOldPasswordText' type="text" placeholder="请输入当前登录密码" class="form-control" style="width:100%; "></div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-						<button type="button" class="btn btn-primary" onclick="changePWD()">保存</button>
+						<button id="closeUpdateCurrentInfoWindowBtn" type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="UserModule.updateAction()">保存</button>
 					</div>
 				</div>
 			</div>

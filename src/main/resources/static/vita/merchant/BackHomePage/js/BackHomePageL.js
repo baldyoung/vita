@@ -131,12 +131,122 @@ var FullScreenModule = {
  * @type {{readyToLogout: UserModule.readyToLogout, readyToUpdatePWD: UserModule.readyToUpdatePWD}}
  */
 var UserModule = {
-    
-    readyToUpdatePWD : function () {
-        
+    readyToUpdateUserInfo : function () {
+        $('#userNameText').val('');
+        $('#userAccountText').val('');
+        $('#userNewPasswordText').val('');
+        $('#userOldPasswordText').val('');
+        $.ajax({
+            url: GlobalConfig.serverAddress + "/mUser/currentUserInfo",
+            type: 'GET',
+            cache: false,
+            dataType: 'json',
+            //async: false, //设置同步
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            data: null,
+            success: function(data) {
+                if (data.code != 0) {
+                    swal('获取登录信息失败', data.desc, 'error');
+                } else {
+                    var temp = data.data;
+                    temp.userTypeName = (temp.merchantUserGrade >= 3 ? '管理员' : '普通' );
+                    $('#userNameText').val(temp.merchantUserName);
+                    $('#userAccountText').val(temp.merchantUserAccount);
+                    $('#userNewPasswordText').val('');
+                    $('#userOldPasswordText').val('');
+                    $('#userGradeText').val(temp.userTypeName);
+                }
+            },
+            error: function() {
+                swal('服务器连接失败', '请检查网络是否通畅', 'warning');
+            }
+        });
     },
     readyToLogout : function () {
-        
+        swal({
+                title: "您确定要退出系统吗?",
+                text: "删除后将无法恢复，请谨慎操作！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    UserModule.logout();
+                } else {
+                    swal("已取消", "已取消登出！", "error");
+                }
+            });
+    },
+    logout : function() {
+        $.ajax({
+            url: GlobalConfig.serverAddress + "/mUser/logout",
+            type: 'GET',
+            cache: false,
+            dataType: 'json',
+            //async: false, //设置同步
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            data: null,
+            success: function(data) {
+                if (data.code != 0) {
+                    swal('操作异常', data.desc, 'error');
+                } else {
+                    location.reload();
+                }
+            },
+            error: function() {
+                swal('服务器连接失败', '请检查网络是否通畅', 'warning');
+            }
+        });
+    },
+    updateAction : function() {
+        var data = {};
+        var temp = $('#userNameText').val();
+        if (!GlobalMethod.isEmpty(temp)) {
+            data.userName = temp;
+        }
+        temp = $('#userAccountText').val();
+        if (!GlobalMethod.isEmpty(temp)) {
+            data.userAccount = temp;
+        }
+        temp = $('#userNewPasswordText').val();
+        if (!GlobalMethod.isEmpty(temp)) {
+            data.userNewPassword = temp;
+        }
+        temp = $('#userOldPasswordText').val();
+        if (!GlobalMethod.isEmpty(temp)) {
+            data.userOldPassword = temp;
+        } else {
+            swal('请输入旧密码', '', 'error');
+            return;
+        }
+        UserModule.sendData(data);
+    },
+    sendData : function(data) {
+        $.ajax({
+            url: GlobalConfig.serverAddress + "/mUser/updateCurrentUser",
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            //async: false, //设置同步
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            data: data,
+            success: function(data) {
+                if (data.code != 0) {
+                    swal('修改失败', data.desc, 'error');
+                } else {
+                    swal('修改成功', '', 'success');
+                    $('#closeUpdateCurrentInfoWindowBtn').trigger('click');
+                }
+            },
+            error: function() {
+                swal('服务器连接失败', '请检查网络是否通畅', 'warning');
+            }
+        });
     }
 
 }

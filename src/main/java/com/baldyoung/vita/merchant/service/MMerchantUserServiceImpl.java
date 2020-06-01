@@ -61,12 +61,39 @@ public class MMerchantUserServiceImpl {
      * @param entity
      * @throws ServiceException
      */
-    public void updateMerchantUser(MerchantUserEntity entity) throws ServiceException {
+    public void updateMerchantUser(MerchantUserEntity entity, Integer currentGrade) throws ServiceException {
         if (null != entity.getMerchantUserAccount()) {
             MerchantUserEntity existsUser = merchantUserDao.selectByMerchantUserAccount(entity.getMerchantUserAccount());
-            if (entity.getMerchantUserId().intValue() != existsUser.getMerchantUserId().intValue()) {
+            if (null != existsUser && null != existsUser.getMerchantUserId() && entity.getMerchantUserId().intValue() != existsUser.getMerchantUserId().intValue()) {
                 throw new ServiceException(MERCHANT_ACCOUNT_EXISTS);
             }
+        }
+        if (null != entity.getMerchantUserGrade() && entity.getMerchantUserGrade().intValue() >= currentGrade) {
+            throw new ServiceException(MERCHANT_GRADE_FORBIDDEN);
+        }
+        merchantUserDao.updateMerchantUserEntity(entity);
+    }
+
+    /**
+     * 修改当前登录账号的信息
+     * @param entity
+     * @param oldPWD
+     * @param currentGrade
+     * @throws ServiceException
+     */
+    public void updateCurrentMerchantUser(MerchantUserEntity entity, String oldPWD, Integer currentGrade) throws ServiceException {
+        if (null != entity.getMerchantUserAccount()) {
+            MerchantUserEntity existsUser = merchantUserDao.selectByMerchantUserAccount(entity.getMerchantUserAccount());
+            if (null != existsUser && null != existsUser.getMerchantUserId() && entity.getMerchantUserId().intValue() != existsUser.getMerchantUserId().intValue()) {
+                throw new ServiceException(MERCHANT_ACCOUNT_EXISTS);
+            }
+        }
+        if (null != entity.getMerchantUserGrade() && entity.getMerchantUserGrade().intValue() >= currentGrade) {
+            throw new ServiceException(MERCHANT_GRADE_FORBIDDEN);
+        }
+        MerchantUserEntity currentEntity = merchantUserDao.selectByMerchantUserId(entity.getMerchantUserId());
+        if (!currentEntity.getMerchantUserPassword().equals(oldPWD)) {
+            throw new ServiceException(MERCHANT_PASSWORD_ERROR);
         }
         merchantUserDao.updateMerchantUserEntity(entity);
     }
@@ -100,6 +127,13 @@ public class MMerchantUserServiceImpl {
             entity.setMerchantUserPassword("******");
         }
         return list;
+    }
+
+
+    public MerchantUserEntity getTargetUserInfo(Integer userId) {
+        MerchantUserEntity entity = merchantUserDao.selectByMerchantUserId(userId);
+        entity.setMerchantUserPassword("******");
+        return entity;
     }
 
 }

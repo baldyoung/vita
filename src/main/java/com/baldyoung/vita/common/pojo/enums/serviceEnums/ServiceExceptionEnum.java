@@ -38,7 +38,7 @@ public enum ServiceExceptionEnum implements EnumBase {
     MERCHANT_GRADE_FORBIDDEN("账号权限不足", 100800100),
     MERCHANT_LOGIN_FILED("账号或密码错误", 100800101),
     MERCHANT_ACCOUNT_EXISTS("账号名已存在", 100800102),
-
+    MERCHANT_PASSWORD_ERROR("密码错误", 100800103),
 
 
 

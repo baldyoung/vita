@@ -119,9 +119,61 @@ public class MMerchantUserController {
         entity.setMerchantUserAccount(userAccount);
         entity.setMerchantUserPassword(userPassword);
         entity.setMerchantUserGrade(userGrade);
-        mMerchantUserService.updateMerchantUser(entity);
+        mMerchantUserService.updateMerchantUser(entity, grade);
         return success();
     }
+
+    @GetMapping("currentUserInfo")
+    public ResponseResult getCurrentUserInfo(HttpSession session) throws UtilityException {
+        Integer userId = getMerchantUserIdFromSession(session);
+        return success(mMerchantUserService.getTargetUserInfo(userId));
+
+    }
+
+    @PostMapping("updateCurrentUser")
+    public ResponseResult updateCurrentUserInfo(@RequestParam(value = "userName", required = false)String userName,
+                                                @RequestParam(value = "userAccount", required = false)String userAccount,
+                                                @RequestParam(value = "userNewPassword", required = false)String userNewPassword,
+                                                @RequestParam(value = "userOldPassword", required = false)String userOldPassword,
+                                                //@RequestParam(value = "userGrade", required = false)Integer userGrade,
+                                                HttpSession session) throws UtilityException, ServiceException {
+        if (null != userName && isEmpty(userName)) {
+            return defeat("用户名称不能全由空格组成");
+        }
+        if (null != userAccount && isEmpty(userAccount)) {
+            return defeat("登录名不能全由空格组成");
+        }
+        if (null != userNewPassword && isEmpty(userNewPassword)) {
+            return defeat("新密码不能全由空格组成");
+        }
+        if (null != userOldPassword && isEmpty(userOldPassword)) {
+            return defeat("旧密码不能全由空格组成");
+        }
+        if (!isEmpty(userName) && userName.length() > 20) {
+            return defeat("名称不能超过20个字");
+        }
+        if (!isEmpty(userAccount) && userAccount.length() > 10) {
+            return defeat("登录名不能超过10个字");
+        }
+        if (!isEmpty(userNewPassword) && userNewPassword.length() > 10) {
+            return defeat("新密码不能超过20个字");
+        }
+        if (null != userOldPassword && isEmpty(userOldPassword)) {
+            return defeat("旧密码不能全由空格组成");
+        }
+        Integer userId = getMerchantUserIdFromSession(session);
+        Integer userGrade = getMerchantUserGradeFromSession(session);
+        MerchantUserEntity entity = new MerchantUserEntity();
+        entity.setMerchantUserId(userId);
+        entity.setMerchantUserName(userName);
+        entity.setMerchantUserAccount(userAccount);
+        entity.setMerchantUserPassword(userNewPassword);
+        // entity.setMerchantUserGrade(userGrade);
+        mMerchantUserService.updateCurrentMerchantUser(entity, userOldPassword, userGrade);
+        return success();
+    }
+
+    
 
 
 }
