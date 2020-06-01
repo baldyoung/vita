@@ -98,6 +98,10 @@ var NewsModule = {
                 } else {
                     swal("操作失败", data.desc, "error");
                 }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                location.reload();
+                //console.log(XMLHttpRequest);
             }
         });
     }

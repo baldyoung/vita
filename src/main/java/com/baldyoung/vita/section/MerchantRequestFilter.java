@@ -56,7 +56,7 @@ public class MerchantRequestFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         HttpSession httpSession = httpServletRequest.getSession();
         String url = httpServletRequest.getRequestURI();
-        System.out.println("##"+url);
+        // System.out.println("##"+url);
         if (url.indexOf("Login") != -1 ||
                 url.indexOf("login") != -1) {
             filterChain.doFilter(servletRequest, servletResponse);
