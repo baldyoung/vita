@@ -19,7 +19,7 @@
     </sql>
 
     <insert id="insertMerchantUserEntity" >
-        insert into V_MerchantUser(merchantUserGrade, merchantUserName, merchantAccount, merchantUserPassword)
+        insert into V_MerchantUser(merchantUserGrade, merchantUserName, merchantUserAccount, merchantUserPassword)
         values (#{user.merchantUserGrade}, #{user.merchantUserName}, #{user.merchantUserAccount}, #{user.merchantUserPassword})
     </insert>
 

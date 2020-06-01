@@ -210,7 +210,7 @@ CREATE TABLE V_CustomerMessage (
 DROP TABLE IF EXISTS V_MerchantUser;
 CREATE TABLE V_MerchantUser (
 	merchantUserId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]账户主键：唯一、非空',
-	merchantUserGrade INT UNSIGNED NOT NULL DEFAULT 333333 COMMENT'账户等级：非空',
+	merchantUserGrade INT UNSIGNED NOT NULL DEFAULT 1 COMMENT'账户等级：非空',
 	merchantUserName VARCHAR(20) NOT NULL COMMENT'账户名称：非空',
 	merchantUserAccount VARCHAR(10) UNIQUE NOT NULL COMMENT'账户的登录名：唯一、非空',
 	merchantUserPassword VARCHAR(20) NOT NULL COMMENT'账户登录密码：非空',

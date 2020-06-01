@@ -6,6 +6,8 @@ import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceExceptio
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.*;
 @Service
 public class MMerchantUserServiceImpl {
@@ -24,6 +26,10 @@ public class MMerchantUserServiceImpl {
     public void addMerchantUser(String userName, String account, String password, Integer grade, Integer currentUserGrade) throws ServiceException {
         if (grade.intValue() >= currentUserGrade.intValue()) {
             throw new ServiceException(MERCHANT_GRADE_FORBIDDEN);
+        }
+        MerchantUserEntity existsUser = merchantUserDao.selectByMerchantUserAccount(account);
+        if (null != existsUser && null != existsUser.getMerchantUserId()) {
+            throw new ServiceException(MERCHANT_ACCOUNT_EXISTS);
         }
         MerchantUserEntity entity = new MerchantUserEntity();
         entity.setMerchantUserName(userName);
@@ -82,4 +88,18 @@ public class MMerchantUserServiceImpl {
         }
         return entity;
     }
+
+    /**
+     * 获取指定权限等级下可以操作的商家账号
+     * @param grade
+     * @return
+     */
+    public List<MerchantUserEntity> getReadableMerchantUser(Integer grade) {
+        List<MerchantUserEntity> list = merchantUserDao.selectWithMaxGrade(grade);
+        for(MerchantUserEntity entity : list) {
+            entity.setMerchantUserPassword("******");
+        }
+        return list;
+    }
+
 }

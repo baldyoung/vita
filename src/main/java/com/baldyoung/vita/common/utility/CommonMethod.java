@@ -76,6 +76,14 @@ public class CommonMethod {
         return Integer.parseInt(String.valueOf(object));
     }
 
+    public static Integer getMerchantUserGradeFromSession(HttpSession session) throws UtilityException {
+        Object object = session.getAttribute("grade");
+        if (null == object) {
+            throw new UtilityException(MERCHANT_GRADE_FORBIDDEN);
+        }
+        return Integer.parseInt(String.valueOf(object));
+    }
+
     public static String getHeartBeatKeyFromSession(HttpSession session) {
         Object object = session.getAttribute(CShoppingCartController.SHOPPING_CART_HEART_BEAT_KEY);
         return String.valueOf(object);
