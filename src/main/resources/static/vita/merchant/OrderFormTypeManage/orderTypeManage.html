@@ -109,21 +109,21 @@
 						<div class="modal-body">
 						<div class="form-group">
 							<label>类型名<span style="color:red;">（必填）</span>：</label> 
-							<input id='NAMEText' type="text" placeholder="请输入类型名" class="form-control" style="width:70%; ">
+							<input id='diningRoomNameText' type="text" placeholder="就餐位的名称" class="form-control" style="width:70%; ">
 						</div>
 						<div class="form-group">
 							<label>优先级</label> 
-							<input id='gradeText' type="number" placeholder="默认为50" class="form-control" style="width:70%; ">
+							<input id='diningRoomGradeText' type="number" placeholder="实时营业时的排序值" class="form-control" style="width:70%; ">
 						</div>
 						<div class="form-group">
 							<label>备注信息：</label> 
-							<textarea style="width:500px; height:200px; resize:none; "  placeholder="请输入备注信息"></textarea>
+							<textarea id="diningRoomInfoText" style="width:500px; height:200px; resize:none; "  placeholder="就餐位备注信息"></textarea>
 						</div>
 					</div>
 					</div>
 					<div class="modal-footer">
-						<button id='btnCloseAddWin' type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-						<button type="button" class="btn btn-primary" onclick="">保存</button>
+						<button id='btnCloseUpdateWindow' type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="UpdateDiningRoomModule.updateAction()">保存</button>
 					</div>
 
 				</div>

@@ -2,6 +2,7 @@ package com.baldyoung.vita.merchant.controller;
 
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.entity.DiningRoomEntity;
+import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.merchant.service.MDiningRoomServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +53,7 @@ public class MDiningRoomController {
     public ResponseResult addDiningRoom(@RequestParam("roomName")String roomName,
                                         @RequestParam(value = "roomInfo", required = false)String roomInfo,
                                         @RequestParam(value = "roomGrade", required = false)Integer roomGrade) {
-        if (isEmpty(roomGrade)) {
+        if (isEmpty(roomName)) {
             return defeat("就餐位名称不能为空");
         }
         if (isEmpty(roomInfo)) {
@@ -77,7 +78,7 @@ public class MDiningRoomController {
      * @return
      */
     @PostMapping("deleteDiningRoom")
-    public ResponseResult deleteDiningRoom(@RequestParam("roomId")Integer roomId) {
+    public ResponseResult deleteDiningRoom(@RequestParam("roomId")Integer roomId) throws ServiceException {
         mDiningRoomService.deleteDiningRoom(roomId);
         return success();
     }
@@ -93,11 +94,25 @@ public class MDiningRoomController {
     @PostMapping("updateDiningRoom")
     public ResponseResult updateDiningRoom(@RequestParam("roomId")Integer roomId,
                                            @RequestParam("roomName")String roomName,
-                                           @RequestParam("roomInfo")String roomInfo,
-                                           @RequestParam("roomGrade")Integer roomGrade) {
+                                           @RequestParam(value = "roomInfo", required = false)String roomInfo,
+                                           @RequestParam(value = "roomGrade", required = false)Integer roomGrade) {
+        if (isEmpty(roomName)) {
+            return defeat("就餐位名称不能为空");
+        }
+        if (isEmpty(roomInfo)) {
+            roomInfo = " ";
+        }
+        if (null == roomGrade) {
+            roomGrade = 0;
+        }
+        if (roomName.length() > 10) {
+            return defeat("名称不能超过10个字");
+        }
+        if (roomInfo.length() > 150) {
+            return defeat("名称不能超过150个字");
+        }
         DiningRoomEntity entity = new DiningRoomEntity();
         entity.setDiningRoomId(roomId);
-        entity.setDiningRoomId(roomGrade);
         entity.setDiningRoomName(roomName);
         entity.setDiningRoomGrade(roomGrade);
         entity.setDiningRoomInfo(roomInfo);

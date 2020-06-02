@@ -5,6 +5,8 @@ import com.baldyoung.vita.common.dao.DiningRoomReservationDao;
 import com.baldyoung.vita.common.pojo.dto.diningRoom.RoomInfoDto;
 import com.baldyoung.vita.common.pojo.entity.DiningRoomEntity;
 import com.baldyoung.vita.common.pojo.entity.DiningRoomReservationEntity;
+import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
+import com.baldyoung.vita.common.service.impl.DiningRoomServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,9 @@ public class MDiningRoomServiceImpl {
 
     @Autowired
     private DiningRoomReservationDao diningRoomReservationDao;
+
+    @Autowired
+    private DiningRoomServiceImpl diningRoomService;
 
     /**
      * 获取就餐位的静态数据
@@ -86,15 +91,17 @@ public class MDiningRoomServiceImpl {
         entity.setDiningRoomGrade(roomGrade);
         entity.setDiningRoomInfo(roomInfo);
         entity.setDiningRoomStatus(0);
-        diningRoomDao.insertDiningRoom(entity);
+        // diningRoomDao.insertDiningRoom(entity);
+        diningRoomService.addDiningRoom(entity);
     }
 
     /**
      * 删除指定就餐位
      * @param roomId
      */
-    public void deleteDiningRoom(Integer roomId) {
+    public void deleteDiningRoom(Integer roomId) throws ServiceException {
         diningRoomDao.deleteDiningRoom(roomId);
+        diningRoomService.deleteDiningRoom(roomId);
     }
 
 

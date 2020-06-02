@@ -49,6 +49,7 @@ var RoomModule = {
 		});
 	},
 	loadData : function (data) {
+		RoomModule.sortDiningRoomList(data);
 		var target = $('#RoomList');
 		target.html('');
 		for (var i=0; i<data.length; i++) {
@@ -56,6 +57,21 @@ var RoomModule = {
 			var html = RoomModule.createDisplayUnitHtml(item);
 			target.append(html);
 		}
+	},
+	sortDiningRoomList : function(data) {
+		var list = [];
+		for (var i=0; i<data.length; i++) {
+			for (var j=1; j<data.length; j++) {
+				var cellA = data[j-1];
+				var cellB = data[j];
+				if (cellA.diningRoomGrade < cellB.diningRoomGrade || (cellA.diningROomGrade == cellB.diningRoomGrade && cellA.diningRoomId > cellB.diningRoomId)) {
+					var temp = cellA;
+					data[j-1] = cellB;
+					data[j] = temp;
+				}
+			}
+		}
+		return list;
 	},
 	createDisplayUnitHtml : function (item) {
 		if (!GlobalMethod.isEmpty(item.reservationData)) {
@@ -166,7 +182,7 @@ var BillModule = {
 		$('#customerNameText').text(data.billCustomerName);
 		$('#createDateTimeText').text(GlobalMethod.toDateString(data.billStartDateTime));
 		$('#customerNumberText').text(data.billCustomerNumber);
-		$('#orderNumberText').text(data.billOrderQuantity);
+		// $('#orderNumberText').text(data.billOrderQuantity);   // ******************* 前端计算订单数量
 		$('#billAmount').text();
 		// 加载订单统览
 		var target = $('#tab-orderList');
@@ -199,6 +215,7 @@ var BillModule = {
 		// 账单总价
 		BillModule.billAmount = amount;
 		$('#billAmount').text(amount);
+		$('#orderNumberText').text(orderList.length);
 	},
 	createBillOrderTitleHTML : function(order, index) {
 		var html = '<div class="feed-element" style="margin-top:0px; padding-bottom: 0px; background:#D0E9C6; border-bottom: 1px solid;">' +

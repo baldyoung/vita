@@ -18,6 +18,6 @@ public interface DiningRoomDao {
 
     void deleteDiningRoom(@Param("diningRoomId")Integer diningRoomId);
 
-    void insertDiningRoom(@Param("diningRoom")DiningRoomEntity diningRoomEntity);
+    void insertDiningRoom(DiningRoomEntity diningRoomEntity);
 
 }

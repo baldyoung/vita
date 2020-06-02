@@ -39,6 +39,9 @@
         <if test="diningRoom.diningRoomGrade != null">
             , diningRoomGrade = #{diningRoom.diningRoomGrade}
         </if>
+        <if test="diningRoom.diningRoomInfo != null">
+            , diningRoomInfo = #{diningRoom.diningRoomInfo}
+        </if>
         <if test="diningRoom.diningRoomStatus != null">
             , diningRoomStatus = #{diningRoom.diningRoomStatus}
         </if>
@@ -57,7 +60,7 @@
     <insert id="insertDiningRoom" parameterType="com.baldyoung.vita.common.pojo.entity.DiningRoomEntity" useGeneratedKeys="true" keyProperty="diningRoomId">
         insert into
         v_diningRoom(diningRoomName, diningRoomGrade, diningRoomStatus, diningRoomInfo)
-        values (#{diningRoom.diningRoomName}, #{diningRoom.diningRoomGrade}, #{diningRoom.diningRoomStatus}, #{diningRoom.diningRoomInfo})
+        values (#{diningRoomName}, #{diningRoomGrade}, #{diningRoomStatus}, #{diningRoomInfo})
     </insert>
 
 
