@@ -32,7 +32,8 @@ public class SystemInfoServiceImpl {
     public String getProductImgPath() {
         if (null == productImgPath) {
             URL url = ClassUtils.getDefaultClassLoader().getResource("static");
-            if (url != null) {
+            System.out.println("当前项目的位置："+(url != null ? url.getPath() : ""));
+            if (url != null && -1 == url.getPath().indexOf(".jar")) {
                 // 如果是idea中开发运行，请使用下面这两行代码生成存储路径
                 String projectPath = url.getPath();
                 productImgPath = projectPath + File.separator + commonConfig.productImgPath.replace(".", File.separator) + File.separator;
@@ -53,7 +54,8 @@ public class SystemInfoServiceImpl {
     public String getQRcodeImgPath() {
         if (null == qrcodeImgPath) {
             URL url = ClassUtils.getDefaultClassLoader().getResource("static");
-            if (url != null) {
+            System.out.println("当前项目的位置："+(url != null ? url.getPath() : ""));
+            if (url != null && -1 == url.getPath().indexOf(".jar")) {
                 // 如果是idea中开发运行，请使用下面这两行代码生成存储路径
                 String projectPath = url.getPath();
                 qrcodeImgPath = projectPath + File.separator + commonConfig.qrcodeImgPath.replace(".", File.separator) + File.separator;
