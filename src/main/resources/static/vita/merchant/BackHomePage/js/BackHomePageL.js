@@ -119,7 +119,7 @@ var FullScreenModule = {
     changeFullScreen : function () {
         //改变全屏状态
         FullScreenModule.currentStatus = !FullScreenModule.currentStatus;
-        if(true == isFullScreen) {
+        if(true == FullScreenModule.currentStatus) {
             openFullScreen();
             return;
         }
@@ -185,7 +185,7 @@ var UserModule = {
     logout : function() {
         $.ajax({
             url: GlobalConfig.serverAddress + "/mUser/logout",
-            type: 'GET',
+            type: 'POST',
             cache: false,
             dataType: 'json',
             //async: false, //设置同步
@@ -249,4 +249,26 @@ var UserModule = {
         });
     }
 
+}
+
+
+var OptionModule = {
+    optionAreaStation : 'down',
+    changeOptionArea : function() {
+        if ('down' == OptionModule.optionAreaStation) {
+            OptionModule.optionAreaUp();
+        } else {
+            OptionModule.optionAreaDown();
+        }
+    },
+    optionAreaUp : function () {
+        $('#optionTitleArea').slideUp();
+        $('#optionTitleTip').show();
+        OptionModule.optionAreaStation = 'up';
+    },
+    optionAreaDown : function () {
+        $('#optionTitleTip').hide();
+        $('#optionTitleArea').slideDown();
+        OptionModule.optionAreaStation = 'down';
+    }
 }

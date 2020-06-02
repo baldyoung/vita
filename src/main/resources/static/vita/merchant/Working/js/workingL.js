@@ -85,7 +85,7 @@ var RoomModule = {
 			'<span  class="pull-left" style="cursor:pointer; font-size:10px;">' +
 			'<span onclick="QRCodeModule.requestRoomCodeImgName('+item.diningRoomId+')" class="glyphicon glyphicon-qrcode" aria-hidden="true" data-toggle="modal" data-target="#qrCodePanel"></span>' +
 			'</span>' +
-			'<span id="roomStatusStyleArea'+item.diningRoomId+'" class=" pull-right roomStatusLabel">'+DiningRoomStatusModule.toDiningRoomStatusNameStyle(item.diningRoomStatus)+'</span>' +
+			'<span  data-toggle="modal" data-target="#roomStatusPanel"  onclick="DiningRoomStatusModule.readyToSelect('+item.diningRoomId+')" id="roomStatusStyleArea'+item.diningRoomId+'" class=" pull-right roomStatusLabel">'+DiningRoomStatusModule.toDiningRoomStatusNameStyle(item.diningRoomStatus)+'</span>' +
 			'<h5>' +
 			'<span class="pull-left">&nbsp;&nbsp;'+item.diningRoomName+'&nbsp;&nbsp;-&nbsp;&nbsp;</span>' +
 			'</h5>' +

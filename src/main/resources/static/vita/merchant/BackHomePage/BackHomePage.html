@@ -270,7 +270,14 @@
 			<!--左侧导航结束-->
 			<!--右侧部分开始-->
 			<div id="page-wrapper" class="gray-bg dashbard-1">
-				<div class="row border-bottom">
+				<div id="optionTitleTip" hidden>
+					<div style="text-align:center;">
+						<a class="dropdown-toggle count-info "  onclick='OptionModule.changeOptionArea()'>
+							<i class="glyphicon glyphicon-chevron-down "></i>
+						</a>
+					</div>
+				</div>
+				<div id="optionTitleArea" class="row border-bottom">
 					<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 						<div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-info " href="#"><i class="fa fa-bars"></i> </a>
 							<form role="search" class="navbar-form-custom" method="post" action="search_results.html">
@@ -279,9 +286,8 @@
 								</div>
 							</form>
 						</div>
-
+						<!-- 用户相关 -->
 						<ul class="nav navbar-top-links navbar-right">
-
 							<li class="dropdown">
 								<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
 									<i class="glyphicon glyphicon-user"></i>
@@ -315,6 +321,15 @@
 									<i id='FullScreenIcon' class="glyphicon glyphicon-fullscreen"></i>
 								</a>
 
+							</li>
+						</ul>
+						<!-- 上拉按钮 -->
+						<ul class="nav navbar-top-links navbar-right">
+
+							<li class="dropdown" style='margin-right:5px;'>
+								<a class="dropdown-toggle count-info"  onclick='OptionModule.changeOptionArea()'>
+									<i class="glyphicon glyphicon-chevron-up"></i>
+								</a>
 							</li>
 						</ul>
 					</nav>
