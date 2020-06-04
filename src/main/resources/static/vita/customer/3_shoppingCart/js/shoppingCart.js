@@ -155,7 +155,7 @@ var ShopingCartModule = {
 			success: function(data) {
 				if (data.code != '0') {
 					layer.open({
-						content: '获取购物车数据失败！'+data.desc,
+						content: '获取购物车数据失败！'+(undefined == data.desc ? '【无效访问】' : data.desc),
 						skin: 'msg',
 						time: 2 //3秒后自动关闭
 					});

@@ -52,7 +52,7 @@ var OrderModule = {
 					targetData = OrderModule.filterData(data.data);
 				} else {
 					layer.open({
-						content: '获取订单数据失败：'+data.desc,
+						content: '获取订单数据失败：'+(undefined == data.desc ? '【无效访问】' : data.desc),
 						skin: 'msg',
 						time: 2 //3秒后自动关闭
 					});
