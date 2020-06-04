@@ -46,8 +46,9 @@ function init() {
  * @type {{init: HeartBeatModule.init, sendData: HeartBeatModule.sendData}}
  */
 var HeartBeatModule = {
+	currentHandler : undefined,
 	init : function () {
-		setInterval('HeartBeatModule.sendData()', 1000);
+		HeartBeatModule.currentHandler = setInterval('HeartBeatModule.sendData()', 1000);
 	},
 	sendData : function () {
 		$.ajax({
@@ -62,19 +63,23 @@ var HeartBeatModule = {
 				if (data.code == 0) {
 					targetData = data.data;
 				} else {
+					clearInterval(HeartBeatModule.currentHandler);
 					layer.open({
 						content: 'heart beat defeat:'+data.desc,
 						skin: 'msg',
-						time: 1 //3秒后自动关闭
+						time: 2 //3秒后自动关闭
 					});
+					GlobalMethod.replaceURL("../3_shoppingCart/shoppingCart.html");
 				}
 			},
 			error: function() {
+				clearInterval(HeartBeatModule.currentHandler);
 				layer.open({
 					content: '连接服务器失败，请检查网络是否通畅！',
 					skin: 'msg',
 					time: 2 //3秒后自动关闭
 				});
+				GlobalMethod.replaceURL("../3_shoppingCart/shoppingCart.html");
 			}
 		});
 	}

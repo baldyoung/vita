@@ -1,5 +1,6 @@
 package com.baldyoung.vita.common.pojo;
 
+import com.baldyoung.vita.common.CommonConfig;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 
 import java.util.Date;
@@ -37,6 +38,11 @@ public class ShoppingCartOptionUnit {
      */
     private String heartBeatKey;
 
+    /**
+     * 心跳次数
+     */
+    private int heartBeatTimes = 0;
+
     @Override
     public String toString() {
         return "ShoppingCartOptionUnit{" +
@@ -64,11 +70,12 @@ public class ShoppingCartOptionUnit {
         }
         Date date = new Date();
         long second = (date.getTime() - this.lastHeartBeat.getTime()) / 1000;
-        if (second <= 3) {
-            return false;
+        if (second > 3 || ++this.heartBeatTimes > CommonConfig.customerHeartBeatMaxTimes) {
+            this.lastHeartBeat = null;
+            this.heartBeatTimes = 0;
+            return true;
         }
-        this.lastHeartBeat = null;
-        return true;
+        return false;
     }
 
     /**【线程安全】

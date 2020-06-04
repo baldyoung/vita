@@ -539,7 +539,7 @@ var ShopingCartModule = {
 			success: function(data) {
 				if (data.code != '0') {
 					layer.open({
-						content: '无法提交购物车（'+data.desc+'）',
+						content: '提交失败（'+(undefined == data.desc ? '【无效访问】' : data.desc)+'）',
 						skin: 'msg',
 						time: 3 //3秒后自动关闭
 					});

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.SHOPPING_CART_EMPTY;
+import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.SHOPPING_SUBMIT_EMPTY;
 import static com.baldyoung.vita.common.utility.CommonMethod.isEmptyCollection;
 import static com.baldyoung.vita.common.utility.CommonMethod.toInteger;
 
@@ -90,7 +90,7 @@ public class CShoppingCartServiceImpl {
     public String readySubmitShoppingCart(Integer roomId, String diningTime, Integer diningType, List<ShoppingCartItem> itemList) throws ServiceException {
         // 锁定购物车，操作期间不允许修改购物车数据
         if (isEmptyCollection(itemList)) {
-            throw new ServiceException(SHOPPING_CART_EMPTY);
+            throw new ServiceException(SHOPPING_SUBMIT_EMPTY);
         }
         DiningData diningData = new DiningData();
         diningData.setDiningType(diningType);
