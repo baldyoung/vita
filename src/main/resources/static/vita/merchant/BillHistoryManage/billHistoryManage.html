@@ -1,0 +1,265 @@
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>账单管理</title>
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+
+		<link href="../../res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="../../res/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="../../res/css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+		<link href="../../res/css/animate.css" rel="stylesheet">
+		<link href="../../res/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="../../res/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+
+		<script src="../../res/js/jquery.min.js?v=2.1.4"></script>
+		<script src="../../res/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="../../res/js/plugins/iCheck/icheck.min.js"></script>
+		<script src="../../res/js/plugins/dataTables/jquery.dataTables.js"></script>
+		<script src="../../res/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+		<script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
+		<script src="../../res/js/plugins/toastr/toastr.min.js"></script>
+		<script src="../Common/js/PagingBarModule.js"></script>
+		<!-- 自定义js -->
+
+		<script src="js/billHistoryManage.js"></script>
+
+	</head>
+
+	<body class="gray-bg">
+		<div>
+			<!-- 账单筛选模块 -->
+			<div class='col-sm-7'>
+				<div class="ibox float-e-margins">
+					<div class='ibox-title'>
+						<label class="col-sm-2 control-label">账单查询</label>
+					</div>
+					<div class="ibox-content">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">订单归属</label>
+								<div class="col-sm-6">
+									<div class="input-group m-b" style='width:100%; '>
+										<select id="filterDiningRoom" class="form-control" style="font-size:10px; width:100%; height:40px;">
+											<option value='全部'>全部</option>
+											<option value='未指定'>未指定</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-4" style='float:right; '>
+									<button class="btn btn-primary pull-right" type="button" onclick=''>搜索</button>
+									<button class="btn btn-white pull-right" style="margin-right:15px;" type="button" onclick='BillFilterModule.reset()'>重置</button>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class='col-sm-2 control-label'>账类选择</label>
+								<label class="checkbox-inline i-checks" onclick="BillFilterModule.click('filterNoZeroBill')">
+                                    <div id='filterNoZeroBill' class="icheckbox_square-green checked" style="position: relative;"  >
+									</div>
+										非零金额账单
+								</label>
+								<label class="checkbox-inline i-checks" onclick="BillFilterModule.click('filterZeroBill')">
+                                    <div id="filterZeroBill" class="icheckbox_square-green checked" style="position: relative;"  >
+									</div>
+										零金额账单
+								</label>
+								<label class="checkbox-inline i-checks" onclick="BillFilterModule.click('filterUnReceiveBill')">
+                                    <div id="filterUnReceiveBill" class="icheckbox_square-green checked" style="position: relative;"  >
+									</div>
+										未结账单
+								</label>
+							</div>
+						</form>
+					</div>
+				</div>
+
+			</div>
+
+			<div class='col-sm-5'>
+				<div class="ibox float-e-margins">
+					<div class='ibox-title'>
+						<label class="col-sm-4 control-label">账单数据统计</label>
+					</div>
+					<div class="ibox-content">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">账单总数</label>
+								<label class='col-sm-2 control-label'>零金额数</label>
+								<label class='col-sm-2 control-label'>未结账数</label>
+								<label class='col-sm-3 control-label'>销售总额</label>
+								<label class='col-sm-3 control-label'>未结总额</label>
+								<div class="col-sm-10">
+								</div>
+							</div>
+							<div class="form-group">
+								<label id='infProAmount' class="col-sm-2 control-label">101</label>
+								<label id='infProAmount_isShow' class='col-sm-2 control-label' style='color:red; '>3</label>
+								<label id='infProAmount_stock' class='col-sm-2 control-label' style='color:red; '>13</label>
+								<label id='infProAmount_picture' class='col-sm-3 control-label'>53030.00</label>
+								<label id='infProAmount_type' class='col-sm-3 control-label' style='color:red; '>5300.00</label>
+								<div class="col-sm-10">
+								</div>
+							</div>
+							<div class="hr-line-dashed"></div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<div class="modal-dialog" style="width:100%;">
+				<div class="col-sm-12">
+					<div class="ibox">
+						<div class="ibox-title">
+							<h5>搜索结果</h5>
+						</div>
+						<div class="ibox-content">
+							<div>
+								<table id="orderTable" style="width:100%; ">
+									<thead>
+										<tr>
+											<td width="5%" style='font-size:10px;'>编号</td>
+											<td width="7%" style='font-size:10px;'>归属</td>
+											<td width="7%" style='font-size:10px;'>餐点</td>
+											<td width="7%" style='font-size:10px;'>账单总额</td>
+											<td width="7%" style='font-size:10px;'>实收金额</td>
+											<td width="6%" style='font-size:10px;'>商品条目数</td>
+											<td width="10%" style='font-size:10px;'>顾客名称</td>
+											<td width="15%" style='font-size:10px;'>时间</td>
+											<td width="25%">操作</td>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<!-- 分页控制区 -->
+							<div id='pagingBtnDisplayArea' style='text-align: right;'>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal inmodal" id="orderInfoPanel" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" style="width: 1000px">
+				<div class="modal-content animated bounceInRight">
+					<div class="modal-header" style="padding-bottom: 3px;">
+						<div class="row" style="margin-top:10px;">
+							<div class="col-sm-6" style="text-align:left;"><strong>服务编号 : </strong><span></span> </div>
+							<div class="col-sm-6" style="text-align:left;"><strong>就餐人数 : </strong><span></span> </div>
+							<div class="col-sm-6" style="text-align:left;"><strong>所属餐桌 : </strong><span></span> </div>
+							<div class="col-sm-6" style="text-align:left;"><strong>商品数量 : </strong><span></span> </div>
+							<div class="col-sm-6" style="text-align:left;"><strong>客户名称 : </strong><span></span> </div>
+							<div class="col-sm-6" style="text-align:left;"><strong>消费金额 : </strong><span></span> </div>
+							<div class="col-sm-6" style="text-align:left;"><strong>服务时间 : </strong><span>2020-02-04 12:33:36 至 2020-02-04 13:35:36</span> </div>
+							<div class="col-sm-6" style="text-align:left;"><strong>实收金额 : </strong><span style="color:red;">未结账</span> </div>
+							<div class="col-sm-6" style="text-align:left;"><strong>结账时间 : </strong><span></span> </div>
+							<div class="col-sm-6" style="text-align:left;">
+								<button type="button" data-toggle="modal" data-target="#settleAccountPanel"  class="btn btn-w-m btn-success">结账</button>
+							</div>
+							<div class="col-sm-12" style="text-align:center;">
+								<textarea style="resize:none; height:100px; width:100%; border:1px solid; margin-bottom: 5px; margin-top:5px; " placeholder="" readonly="true"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="modal-body" style="">
+						<div style="height:600px; overflow: auto;">
+							<div style="border:1px solid; border-radius:10px; margin-bottom:10px;">
+								<div>
+									<i class="orderItemUnit2" style="">订单1</i>
+									<i class="orderItemUnit2" style="">堂食 &nbsp; 12:32</i>
+									<i class="orderItemUnit2" style="float:right; margin-right:15px;">总额:263.00</i>
+									<i class="orderItemUnit2" style="float:right; margin-right:10px;">（顾客）2020-02-03 12:33:32</i>
+								</div>
+								<table class="table invoice-table" style="border-top:1px solid; ">
+									<thead>
+										<tr>
+											<th width="35%">名称</th>
+											<th width="20%">口味</th>
+											<th width="15%">数量</th>
+											<th width="15%">单价</th>
+											<th width="15%">小计</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<strong>肉末蒸蛋</strong>
+												<i class="fa fa-exclamation-circle"></i>
+												<span style="font-size:9px; color:#F1A417;">(已替换为红烧肉)</span>
+											</td>
+											<td>不辣</td>
+											<td>0</td>
+											<td>¥26.00</td>
+											<td>0.00</td>
+										</tr>
+										<tr>
+											<td>
+												<strong>肉末蒸蛋</strong>
+											</td>
+											<td>不辣</td>
+											<td>1</td>
+											<td>¥26.00</td>
+											<td>0.00</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-white pull-right" data-dismiss="modal">关闭</button>
+						<!--<button type="button" class="btn btn-primary" onclick="saveorderInf()">保存</button>-->
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div id="settleAccountPanel" class="modal fade" aria-hidden="true">
+			<div class="modal-dialog" style="width:600px;">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-sm-6 b-r">
+								<h3 class="m-t-none m-b">订单结账</h3>
+								<form role="form">
+									<div class="form-group">
+										<label>应收金额：</label>
+										<input id="shouldPay" type="text" placeholder="" class="form-control" readonly="true">
+									</div>
+									<div class="form-group">
+										<label>实收金额：</label>
+										<input id="actuallyPay" type="text" placeholder="" class="form-control">
+									</div>
+									<div>
+										<button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="button" onclick="settleAccount()">
+											<strong>确定</strong>
+                                   		</button>
+									</div>
+								</form>
+							</div>
+							<div class="col-sm-6">
+								<h4 class="m-t-none m-b">备注</h4>
+								<textarea style="resize:none; height:100px; width:100%; border:1px solid; margin-bottom: 5px; " placeholder="请在这里记录对该订单说明的备注信息！"></textarea>
+								<div style="width:100%;">
+									<a class="btn btn-info btn-rounded">商家请客</a>
+									<a class="btn btn-danger btn-rounded">活动免单</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>
