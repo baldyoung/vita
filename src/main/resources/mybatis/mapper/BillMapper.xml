@@ -76,6 +76,23 @@
         </choose>
     </update>
 
+    <select id="selectWithCondition" resultMap="baseMap">
+        select
+        <include refid="allFiled"/>
+        from V_Bill
+        <where>
+            <if test="diningRoomName != null" >
+                billOwnerName like concat('%', #{diningRoomName}, '%')
+            </if>
+            and (
+            <if test="zeroFlag != null">
+                billReceivedAmount = 0
+            </if>
+            )
+        </where>
+
+    </select>
+
 
 
 

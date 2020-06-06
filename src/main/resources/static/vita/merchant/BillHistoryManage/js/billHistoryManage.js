@@ -152,12 +152,17 @@ var BillFilterModule = {
  */
 var BillCountModule = {
 	init : function() {
-
+		BillCountModule.requestAndLoadData();
 	},
-	loadData : function() {
-
+	loadData : function(data) {
+		$('#accountBillNumberText').val(0);
+		$('#accountZeroBillNumberText').val(0);
+		$('#accountUnReceiveBillNumberText').val(0);
+		$('#accountTotalSalesText').val(0);
+		$('#accountUnReceiveAmountText').VAL(0);
 	},
 	requestAndLoadData : function() {
+		// ajax请求，并加载数据
 
 	}
 }
