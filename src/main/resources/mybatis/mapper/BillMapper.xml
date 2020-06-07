@@ -24,6 +24,14 @@
         <result property="updateDateTime" column="updateDateTime"></result>
     </resultMap>
 
+    <resultMap id="countInfoMap" type="com.baldyoung.vita.common.pojo.entity.BillCountInfoEntity">
+        <result property="billTotalNumber" column="billTotalNumber"></result>
+        <result property="zeroBillNumber" column="zeroBillNumber"></result>
+        <result property="unPayBillNumber" column="unPayBillNumber"></result>
+        <result property="totalSales" column="totalSales"></result>
+        <result property="totalUnReceive" column="totalUnReceive"></result>
+    </resultMap>
+
     <sql id="allFiled">
         billId, billNumber, billOwnerTypeFlag, billOwnerId, billOwnerName, billCustomerNumber, billOrderQuantity,
         billTotalAmount, billReceivedAmount, billReceivedDateTime, billRecentHandlerName, billCustomerName,
@@ -76,21 +84,68 @@
         </choose>
     </update>
 
+    <select id="countWithCondition">
+        select
+        count(*)
+        from V_Bill
+        <where>
+            <if test="zeroFlag == null">
+                billReceivedAmount != 0
+            </if>
+            <if test="unPay == null">
+                and billReceivedAmount not null
+            </if>
+            <if test="finishFlag == null">
+                and 0 >= billReceivedAmount
+            </if>
+            <if test="diningRoomName != null" >
+                and billOwnerName like concat('%', #{diningRoomName}, '%')
+            </if>
+        </where>
+    </select>
+
     <select id="selectWithCondition" resultMap="baseMap">
         select
         <include refid="allFiled"/>
         from V_Bill
         <where>
+            <if test="zeroFlag == null">
+                billReceivedAmount != 0
+            </if>
+            <if test="unPay == null">
+                and billReceivedAmount not null
+            </if>
+            <if test="finishFlag == null">
+                and 0 >= billReceivedAmount
+            </if>
             <if test="diningRoomName != null" >
-                billOwnerName like concat('%', #{diningRoomName}, '%')
+                and billOwnerName like concat('%', #{diningRoomName}, '%')
             </if>
-            and (
-            <if test="zeroFlag != null">
-                billReceivedAmount = 0
-            </if>
-            )
         </where>
 
+    </select>
+
+
+    <select id="countAllBillCountInfo" resultMap="countInfoMap">
+        select
+        count(*) billTotalNumber,
+        sum(billReceivedAmount) totalSales
+        from V_Bill
+    </select>
+
+    <select id="countZeroBillNumber" resultMap="countInfoMap">
+        select
+        count(*) zeroBillNumber
+        from V_Bill
+        where billReceivedAmount = 0
+    </select>
+
+    <select id="countUnPayBillCountInfo" resultMap="countInfoMap">
+        select
+        count(*) unPayBillNumber,
+        sum(billTotalAmount) totalUnReceive
+        from V_Bill
+        where billReceivedAmount is null
     </select>
 
 
