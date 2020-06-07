@@ -145,7 +145,7 @@ public class MBillServiceImpl {
      */
     public BillCountInfoEntity getBillCountInfo() {
         BillCountInfoEntity entity = billDao.countAllBillCountInfo();
-        BillCountInfoEntity temp = billDao.countUnPayBillCountInfo();
+        BillCountInfoEntity temp = billDao.countZeroBillNumber();
         entity.setZeroBillNumber(temp.getZeroBillNumber());
         temp = billDao.countUnPayBillCountInfo();
         entity.setUnPayBillNumber(temp.getUnPayBillNumber());

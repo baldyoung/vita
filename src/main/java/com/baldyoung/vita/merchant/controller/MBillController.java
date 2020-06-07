@@ -139,7 +139,7 @@ public class MBillController {
      */
     @GetMapping("billCountInfo")
     public ResponseResult getBillCountInfo() {
-        return success();
+        return success(mBillService.getBillCountInfo());
     }
 
 }
