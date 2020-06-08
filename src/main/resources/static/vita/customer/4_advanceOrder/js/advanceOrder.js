@@ -406,7 +406,7 @@ var AdvanceOrderModule = {
 			data: JSON.stringify(data),
 			success: function(data) {
 				if (data.code == 0) {
-					GlobalMethod.redirectURL('../4_orderResult/orderResult.html');
+					GlobalMethod.replaceURL('../4_orderResult/orderResult.html');
 				} else {
 					layer.open({
 						content: '提交订单失败：'+data.desc,

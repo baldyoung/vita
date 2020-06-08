@@ -84,20 +84,23 @@
         </choose>
     </update>
 
-    <select id="countWithCondition">
+    <select id="countWithCondition" resultType="int">
         select
         count(*)
         from V_Bill
         <where>
-            <if test="zeroFlag == null">
-                billReceivedAmount != 0
+            (
+            1 = 2
+            <if test="zeroFlag != null">
+                or billReceivedAmount = 0
             </if>
-            <if test="unPay == null">
-                and billReceivedAmount not null
+            <if test="unPay != null">
+                or billReceivedAmount is null
             </if>
-            <if test="finishFlag == null">
-                and 0 >= billReceivedAmount
+            <if test="finishFlag != null">
+                or billReceivedAmount > 0
             </if>
+            )
             <if test="diningRoomName != null" >
                 and billOwnerName like concat('%', #{diningRoomName}, '%')
             </if>
@@ -109,20 +112,24 @@
         <include refid="allFiled"/>
         from V_Bill
         <where>
-            <if test="zeroFlag == null">
-                billReceivedAmount != 0
+            (
+            1 = 2
+            <if test="zeroFlag != null">
+                or billReceivedAmount = 0
             </if>
-            <if test="unPay == null">
-                and billReceivedAmount not null
+            <if test="unPay != null">
+                or billReceivedAmount is null
             </if>
-            <if test="finishFlag == null">
-                and 0 >= billReceivedAmount
+            <if test="finishFlag != null">
+                or billReceivedAmount > 0
             </if>
+            )
             <if test="diningRoomName != null" >
                 and billOwnerName like concat('%', #{diningRoomName}, '%')
             </if>
         </where>
-
+        order by billId desc
+        limit #{startIndex}, #{maxSize}
     </select>
 
 

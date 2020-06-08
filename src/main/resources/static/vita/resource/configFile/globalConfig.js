@@ -82,6 +82,9 @@ var GlobalMethod = {
         }
     },
     toDateString: function (date) {
+        if (undefined == date) {
+            return '';
+        }
         var d = new Date(date);
         var dateString = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
         return dateString;

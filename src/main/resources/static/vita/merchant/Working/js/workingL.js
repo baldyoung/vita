@@ -168,7 +168,8 @@ var BillModule = {
 					BillModule.billOwnerName = data.billOwnerName;
 					BillModule.loadData(data);
 				} else {
-					swal("获取数据失败", data.desc, "error");
+					ShowTipModule.error(data.desc);
+					// swal("获取数据失败", data.desc, "error");
 					$("#closeOrderFormWindowBtn").trigger("click"); //模拟点击关闭按钮
 				}
 			}
@@ -417,7 +418,8 @@ var ItemModule = {
 						success: function (data) {
 							if (data.code == 0) {
 								BillModule.reloadCurrentRoomBill();
-								swal("删除成功", '', 'success');
+								ShowTipModule.warning("商品项（"+productName+"）已删除")
+								// swal("删除成功", '', 'success');
 							} else {
 								swal("获取数据失败", data.desc, "error");
 							}
@@ -778,7 +780,8 @@ var ItemStatusModule = {
 			success: function (data) {
 				if (data.code == 0) {
 					BillModule.reloadCurrentRoomBill();
-					swal("操作成功", '', 'success');
+					ShowTipModule.success("状态已重置");
+					// swal("操作成功", '', 'success');
 				} else {
 					swal("获取数据失败", data.desc, "error");
 				}
@@ -883,6 +886,8 @@ var BillSettleAccountModule = {
 			success: function (data) {
 				if (data.code == 0) {
 					$('#closeSettleAccountPanelBtn').trigger('click');
+					$('#OrderFormWindowBtnClose').trigger('click');
+					ShowTipModule.success("账单已完结")
 					//swal("", '', 'success');
 				} else {
 					swal("获取数据失败", data.desc, "error");
@@ -1368,6 +1373,70 @@ var QRCodeModule = {
 	}
 }
 
+/**
+ * 提示模块
+ * @type {{init: ShowTipModule.init, success: ShowTipModule.success}}
+ */
+var ShowTipModule = {
+	init : function() {
+
+	},
+	success : function(data) {
+		toastr.options = {
+			"closeButton": true,
+			"debug": false,
+			"progressBar": false,
+			"positionClass": "toast-top-left",
+			"onclick": null,
+			"showDuration": "400",
+			"hideDuration": "1000",
+			"timeOut": "1500",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		}
+		toastr.success(data);
+	},
+	warning : function(data) {
+		toastr.options = {
+			"closeButton": true,
+			"debug": false,
+			"progressBar": false,
+			"positionClass": "toast-top-right",
+			"onclick": null,
+			"showDuration": "400",
+			"hideDuration": "1000",
+			"timeOut": "1500",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		}
+		toastr.warning(data);
+	},
+	error : function(data) {
+		toastr.options = {
+			"closeButton": true,
+			"debug": false,
+			"progressBar": false,
+			"positionClass": "toast-top-center",
+			"onclick": null,
+			"showDuration": "400",
+			"hideDuration": "1000",
+			"timeOut": "1500",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		}
+		toastr.error(data);
+	}
+
+}
 
 
 

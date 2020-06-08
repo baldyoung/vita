@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.BILL_NO_FOUND;
@@ -92,10 +93,15 @@ public class MBillServiceImpl {
         if (null == bill || null == bill.getBillId()) {
             return;
         }
+        Date newDate = new Date();
         BillEntity newBill = new BillEntity();
         newBill.setBillId(bill.getBillId());
         newBill.setBillTotalAmount(totalAmount);
         newBill.setBillReceivedAmount(receiveAmount);
+        newBill.setBillEndDateTime(newDate);
+        if (null != receiveAmount) {
+            newBill.setBillReceivedDateTime(newDate);
+        }
         billDao.updateBillEntity(newBill);
         DiningRoomEntity room = new DiningRoomEntity();
         room.setDiningRoomId(bill.getBillOwnerId());

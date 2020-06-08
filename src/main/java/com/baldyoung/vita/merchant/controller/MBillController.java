@@ -75,7 +75,7 @@ public class MBillController {
      * @return
      */
     @PostMapping("billNumberWithCondition")
-    public ResponseResult getBillNumberWithCondition(@RequestParam("diningRoomName")String diningRoomName,
+    public ResponseResult getBillNumberWithCondition(@RequestParam(value = "diningRoomName", required = false)String diningRoomName,
                                                      @RequestParam("zeroFlag")Integer zeroFlag,
                                                      @RequestParam("unPay")Integer unPay,
                                                      @RequestParam("finishFlag")Integer finishFlag) {
@@ -85,9 +85,9 @@ public class MBillController {
         if (null != diningRoomName && diningRoomName.length() > 10) {
             return defeat("就餐位名称不能超过10个字");
         }
-        Boolean zf = (null != zeroFlag);
-        Boolean up = (null != unPay);
-        Boolean ff = (null != finishFlag);
+        Boolean zf = (0 != zeroFlag.intValue() ? true : null);
+        Boolean up = (0 != unPay.intValue() ? true : null);
+        Boolean ff = (0 != finishFlag.intValue() ? true : null);
         return success(mBillService.getBillNumberWithCondition(diningRoomName, zf, up, ff));
     }
 
@@ -102,7 +102,7 @@ public class MBillController {
      * @return
      */
     @PostMapping("billListWithCondition")
-    public ResponseResult getBillListWithCondition(@RequestParam("diningRoomName")String diningRoomName,
+    public ResponseResult getBillListWithCondition(@RequestParam(value = "diningRoomName", required = false)String diningRoomName,
                                                    @RequestParam("zeroFlag")Integer zeroFlag,
                                                    @RequestParam("unPay")Integer unPay,
                                                    @RequestParam("finishFlag")Integer finishFlag,
@@ -117,9 +117,9 @@ public class MBillController {
         if (startIndex.intValue() < 0 || maxSize.intValue() <= 0) {
             return defeat("非法请求");
         }
-        Boolean zf = (null != zeroFlag);
-        Boolean up = (null != unPay);
-        Boolean ff = (null != finishFlag);
+        Boolean zf = (0 != zeroFlag.intValue() ? true : null);
+        Boolean up = (0 != unPay.intValue() ? true : null);
+        Boolean ff = (0 != finishFlag.intValue() ? true : null);
         return success(mBillService.getBillListWithCondition(diningRoomName, zf, up, ff, startIndex, maxSize));
     }
 
