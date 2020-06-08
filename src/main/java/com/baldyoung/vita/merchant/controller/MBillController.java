@@ -125,12 +125,15 @@ public class MBillController {
 
     /**
      * 获取指定账单下的所有的订单
-     * @param billId
+     * @param billNumber
      * @return
      */
     @PostMapping("orderListInBill")
-    public ResponseResult getOrderListWithBill(@RequestParam("billId")Integer billId) {
-        return success();
+    public ResponseResult getOrderListWithBill(@RequestParam("billNumber")String billNumber) {
+        if (isEmpty(billNumber)) {
+            return defeat("非法操作");
+        }
+        return success(mBillService.getBillInfo(billNumber));
     }
 
     /**
