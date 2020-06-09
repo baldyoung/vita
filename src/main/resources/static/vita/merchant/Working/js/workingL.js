@@ -488,7 +488,7 @@ var ItemModule = {
 	requestProductTypeData : function() {
 		var targetData = [];
 		$.ajax({
-			url: GlobalConfig.serverAddress + "/productType/list",
+			url: GlobalConfig.serverAddress + "/mProductType/validList",
 			type: 'GET',
 			cache: false,
 			dataType: 'json',

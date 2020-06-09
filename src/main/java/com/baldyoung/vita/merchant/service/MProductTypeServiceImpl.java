@@ -69,4 +69,20 @@ public class MProductTypeServiceImpl {
     public void updateSimpleProductTypeList(List<Integer> list, Integer isShow) {
         productTypeDao.updateSimpleProductType(isShow, list);
     }
+
+    /**
+     * 获取有效品类集
+     * @return
+     */
+    public List<ProductTypeEntity> getAllValidProductType() {
+        ProductTypeEntity entity = new ProductTypeEntity();
+        entity.setIsShow(1);
+        List<ProductTypeEntity> list = productTypeDao.selectWithCondition(entity);
+        if (null != list) {
+            for (ProductTypeEntity item : list) {
+                item.setProductTypeGrade(productTypeSortService.getProductTypeGradeByProductTypeId(item.getProductTypeId()));
+            }
+        }
+        return list;
+    }
 }

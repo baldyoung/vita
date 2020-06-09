@@ -27,6 +27,14 @@ public class MProductTypeController {
         return success(productTypeService.getAllProductType());
     }
 
+    /**
+     * 获取所有上架的品类
+     * @return
+     */
+    @GetMapping("validList")
+    public ResponseResult getValidType() {
+        return success(productTypeService.getAllValidProductType());
+    }
     @GetMapping("details")
     public ResponseResult getProductTypeInfo(@RequestParam("productTypeId")Integer productTypeId) {
         return success(productTypeService.findByProductTypeId(productTypeId));
