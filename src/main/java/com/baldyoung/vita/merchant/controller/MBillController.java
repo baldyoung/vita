@@ -55,11 +55,14 @@ public class MBillController {
     public ResponseResult settleAccount(@RequestParam("billNumber")String billNumber,
                                         @RequestParam("totalAmount")BigDecimal totalAmount,
                                         @RequestParam(value = "receiveAmount", required = false)BigDecimal receiveAmount,
-                                        @RequestParam("remarks")String remarks) throws ServiceException {
+                                        @RequestParam(value = "remarks", required = false)String remarks) throws ServiceException {
         if (isEmpty(billNumber) || billNumber.length() >= 30) {
             return defeat("非法数据");
         }
-        if (null != remarks && remarks.length() >= 100) {
+        if (null == remarks) {
+            remarks = "";
+        }
+        if (remarks.length() >= 100) {
             return defeat("账单备注字数要小于100");
         }
         mBillService.settleAccount(billNumber, totalAmount, receiveAmount, remarks);

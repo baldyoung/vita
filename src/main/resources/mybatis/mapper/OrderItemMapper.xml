@@ -80,38 +80,6 @@
         where orderProductItemId = #{item.orderProductItemId}
     </update>
 
-    <update id="updateOrderItemList">
-        update v_orderProductItem
-        set orderProductItemId = #{item.orderProductItemId}
-        <if test="item.orderProductId != null">
-            , orderProductId = #{item.orderProductId}
-        </if>
-        <if test="item.orderProductName != null">
-            , orderProductName = #{item.orderProductName}
-        </if>
-        <if test="item.orderProductImg != null">
-            , orderProductImg = #{item.orderProductImg}
-        </if>
-        <if test="item.orderProductQuantity != null">
-            , orderProductQuantity = #{item.orderProductQuantity}
-        </if>
-        <if test="item.orderProductPrice != null" >
-            , orderProductPrice = #{item.orderProductPrice}
-        </if>
-        <if test="item.orderProductItemStatusFlag != null">
-            , orderProductItemStatusFlag = #{item.orderProductItemStatusFlag}
-        </if>
-        <if test="item.orderProductItemStatusDesc != null">
-            , orderProductItemStatusDesc = #{item.orderProductItemStatusDesc}
-        </if>
-        <if test="item.orderProductRemarks != null">
-            , orderProductRemarks = #{item.orderProductRemarks}
-        </if>
-        where orderProductItemId in
-        <foreach collection="itemList" item="item" index="index" open="(" separator="," close=")">
-            #{item.orderProductItemId}
-        </foreach>
-    </update>
 
 
     <select id="selectOrderItemListWithCondition" resultMap="baseMap">
@@ -121,6 +89,16 @@
         where orderProductItemStatusFlag = #{item.orderProductItemStatusFlag}
     </select>
 
+    <update id="updateOrderItemListStatus" >
+        update V_OrderProductItem
+        set
+            orderProductItemStatusFlag = #{newStatus}
+        where
+        orderProductItemId in
+        <foreach collection="itemIdList" item="item" index="index" open="(" separator=", " close=")">
+            #{item}
+        </foreach>
+    </update>
 
 
 

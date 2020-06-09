@@ -32,6 +32,9 @@ var ProductTypeModule = {
 					}
 					ProductTypeModule.selectUnit(targetData[0].productTypeId);
 				} else {
+					if (undefined == data.code) {
+						GlobalMethod.replaceURL("../3_system/invalidPage.html")
+					}
 					swal('获取品类数据失败', data.desc, 'error');
 				}
 			},
@@ -314,12 +317,9 @@ function init() {
         $(".sort").children(".sort-img").show();
 		$(".sort").children(".sort-img2").hide();
 	});
-	
-};
-function test() {
 	ProductTypeModule.init();
 };
+
 $(function(){
 	init();
-	test();
 });

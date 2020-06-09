@@ -71,6 +71,9 @@
         <if test="bill.billReceivedDateTime != null">
             , billReceivedDateTime = #{bill.billReceivedDateTime}
         </if>
+        <if test="bill.billRemarks != null">
+            , billRemarks = #{bill.billRemarks}
+        </if>
         <choose>
             <when test="bill.billId != null">
                 where billId = #{bill.billId}

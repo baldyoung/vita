@@ -245,6 +245,7 @@ var BillInfoModule = {
 	},
 	loadData : function(data) {
 		BillInfoModule.billBuffer = data;
+		data.billRemarks = (undefined == data.billRemarks ? '' : data.billRemarks);
 		data.billReceivedDateTime = GlobalMethod.toDateString(data.billReceivedDateTime);
 		data.billStartDateTime = GlobalMethod.toDateString(data.billStartDateTime);
 		data.billEndDateTime = GlobalMethod.toDateString(data.billEndDateTime);
@@ -253,6 +254,7 @@ var BillInfoModule = {
 		$('#billOwnerNameText').text(data.billOwnerName);
 		$('#billCustomerNameText').text(data.billCustomerName);
 		$('#billTotalAmountText').text(data.billTotalAmount);
+		$('#billRemarksText').val(data.billRemarks);
 		if (undefined != data.billReceivedAmount) {
 			$('#billReceivedAmountText').css('color', 'black');
 			$('#billReceivedAmountText').text(data.billReceivedAmount);
@@ -420,6 +422,7 @@ var BillSettleAccountModule = {
 					$('#billReceivedAmountText').css('color', 'black');
 					$('#billReceivedAmountText').text(sendData.receiveAmount);
 					$('#billReceivedDateTimeText').text(GlobalMethod.getCurrentDateTime());
+					$('#billRemarksText').val(sendData.remarks);
 					$('#settleAmountBtn').hide();
 					BillTableModule.reloadCurrentPageData();
 					$('#closeSettleAccountPanelBtn').trigger('click');

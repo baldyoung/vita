@@ -16,11 +16,11 @@ public enum SystemExceptionEnums implements EnumBase {
 
     @Override
     public String getDesc() {
-        return null;
+        return this.desc;
     }
 
     @Override
     public Integer getCode() {
-        return null;
+        return this.code;
     }
 }

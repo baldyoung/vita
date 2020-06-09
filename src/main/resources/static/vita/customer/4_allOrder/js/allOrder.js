@@ -51,6 +51,9 @@ var OrderModule = {
 				if (data.code == 0) {
 					targetData = OrderModule.filterData(data.data);
 				} else {
+					if (undefined == data.code) {
+						GlobalMethod.replaceURL("../3_system/invalidPage.html")
+					}
 					layer.open({
 						content: '获取订单数据失败：'+(undefined == data.desc ? '【无效访问】' : data.desc),
 						skin: 'msg',
@@ -139,94 +142,3 @@ var OrderModule = {
 $(function() {
 	OrderModule.init();
 });
-
-var test_orderList = [{
-			orderId: "k00101",
-			diningTypeName: "堂食",
-			diningTime: "现在",
-			itemNumber: "10",
-			orderAmount: "300",
-			discount: "0.8",
-			receivableAmount: "240",
-			createTime: "2020-02-05 12:33:32",
-			itemList: [{
-				itemId: "1001",
-				productName: "赣南脐橙",
-				productPrice: "30.00",
-				productPicture: "3.png",
-				productQuantity: "1",
-				labelValueColor: "009F95",
-				labelValueName: "正常",
-				isValid: true
-			}, {
-				itemId: "1002",
-				productName: "赣北苹果",
-				productPrice: "25.00",
-				productPicture: "1.png",
-				productQuantity: "2",
-				labelValueColor: "009F95",
-				labelValueName: "正常",
-				isValid: true
-			}, {
-				itemId: "1003",
-				productName: "失效商品测试",
-				productPrice: "888.00",
-				productPicture: "6.png",
-				productQuantity: "1",
-				labelValueColor: "009F95",
-				labelValueName: "正常",
-				invalidMsg: "已替换为红烧鱼",
-				isValid: false
-			}, {
-				itemId: "1004",
-				productName: "赣北苹果",
-				productPrice: "25.00",
-				productPicture: "1.png",
-				productQuantity: "1",
-				isValid: true
-			}]
-		}, {
-			orderId: "k00101",
-			diningTypeName: "堂食",
-			diningTime: "现在",
-			itemNumber: "10",
-			orderAmount: "300",
-			discount: "0.8",
-			receivableAmount: "240",
-			createTime: "2020-02-05 12:33:32",
-			itemList: [{
-				itemId: "1001",
-				productName: "赣南脐橙",
-				productPrice: "30.00",
-				productPicture: "3.png",
-				productQuantity: "1",
-				labelValueColor: "009F95",
-				labelValueName: "正常",
-				isValid: true
-			}, {
-				itemId: "1002",
-				productName: "赣北苹果",
-				productPrice: "25.00",
-				productPicture: "1.png",
-				productQuantity: "2",
-				labelValueColor: "009F95",
-				labelValueName: "正常",
-				isValid: true
-			}, {
-				itemId: "1003",
-				productName: "失效商品测试",
-				productPrice: "888.00",
-				productPicture: "6.png",
-				productQuantity: "1",
-				labelValueColor: "009F95",
-				labelValueName: "正常",
-				invalidMsg: "已替换为红烧鱼",
-				isValid: false
-			}, {
-				itemId: "1004",
-				productName: "赣北苹果",
-				productPrice: "25.00",
-				productPicture: "1.png",
-				productQuantity: "1",
-				isValid: true
-			}]}];

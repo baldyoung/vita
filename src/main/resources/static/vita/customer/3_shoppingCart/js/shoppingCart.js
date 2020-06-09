@@ -119,6 +119,9 @@ var ProductTypeModule = {
 				if (data.code == 0) {
 					targetData = data.data;
 				} else {
+					if (undefined == data.code) {
+						GlobalMethod.replaceURL("../3_system/invalidPage.html")
+					}
 					layer.open({
 						content: '获取品类数据失败,'+data.desc,
 						skin: 'msg',
@@ -154,6 +157,9 @@ var ShopingCartModule = {
 			data: {},
 			success: function(data) {
 				if (data.code != '0') {
+					if (undefined == data.code) {
+						GlobalMethod.replaceURL("../3_system/invalidPage.html")
+					}
 					layer.open({
 						content: '获取购物车数据失败！'+(undefined == data.desc ? '【无效访问】' : data.desc),
 						skin: 'msg',

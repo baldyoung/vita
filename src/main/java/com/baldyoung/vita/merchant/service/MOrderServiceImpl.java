@@ -109,13 +109,6 @@ public class MOrderServiceImpl {
         orderItemDao.updateOrderItem(entity);
     }
 
-    /**
-     * 修改指定订单集合的内容
-     * @param entityList
-     */
-    public void updateOrderItemList(List<OrderItemEntity> entityList) {
-        orderItemDao.updateOrderItemList(entityList);
-    }
 
     /**
      * 替换订单商品
@@ -145,6 +138,14 @@ public class MOrderServiceImpl {
      */
     public void addOrderItem(Integer roomId, Integer diningTypeFlag, OrderItemEntity item) {
         orderService.doOrder(roomId, diningTypeFlag, "", 0, Arrays.asList(item));
+    }
+
+    /**
+     * 批量将指定商品项变成已完成状态
+     * @param itemIdList
+     */
+    public void setOrderProductItemToFinish(List<Integer> itemIdList) {
+        orderItemDao.updateOrderItemListStatus(itemIdList, 3);
     }
 
 }

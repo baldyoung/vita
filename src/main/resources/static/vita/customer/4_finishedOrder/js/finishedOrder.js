@@ -51,6 +51,9 @@ var OrderModule = {
 				if (data.code == 0) {
 					targetData = OrderModule.filterData(data.data);
 				} else {
+					if (undefined == data.code) {
+						GlobalMethod.replaceURL("../3_system/invalidPage.html")
+					}
 					layer.open({
 						content: '获取订单数据失败：'+(undefined == data.desc ? '【无效访问】' : data.desc),
 						skin: 'msg',

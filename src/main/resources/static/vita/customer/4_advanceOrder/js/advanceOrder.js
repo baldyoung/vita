@@ -63,6 +63,9 @@ var HeartBeatModule = {
 				if (data.code == 0) {
 					targetData = data.data;
 				} else {
+					if (undefined == data.code) {
+						GlobalMethod.replaceURL("../3_system/invalidPage.html")
+					}
 					clearInterval(HeartBeatModule.currentHandler);
 					layer.open({
 						content: 'heart beat defeat:'+data.desc,

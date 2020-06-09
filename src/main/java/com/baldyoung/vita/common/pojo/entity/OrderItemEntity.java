@@ -18,6 +18,7 @@ public class OrderItemEntity {
      * 1 库存不足，下单失败
      * 2 商家已确认，等待商家发货
      * 3 商家已发货，交易完成
+     * 4 已删除
      */
     private Integer orderProductItemStatusFlag;
     private String orderProductItemStatusDesc;

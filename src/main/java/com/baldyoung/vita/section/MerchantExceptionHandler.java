@@ -1,7 +1,8 @@
 package com.baldyoung.vita.section;
 
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
-import com.baldyoung.vita.common.pojo.exception.ExceptionBase;
+import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
+import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,10 +20,25 @@ public class MerchantExceptionHandler {
      * @param response
      * @return
      */
-    @ExceptionHandler(ExceptionBase.class)
+    @ExceptionHandler(ServiceException.class)
     @ResponseBody
-    public ResponseResult doExceptionBase(ExceptionBase e, HttpServletResponse response) {
-        //out.println(this.getClass()+"get message");
+    public ResponseResult doServiceException(ServiceException e, HttpServletResponse response) {
+        return error(e.getCode(), e.getDesc());
+    }
+
+    /**
+     * 系统工具类处理
+     * @param e
+     * @param response
+     * @return
+     */
+    @ExceptionHandler(UtilityException.class)
+    @ResponseBody
+    public ResponseResult doUtilityException(UtilityException e, HttpServletResponse response) {
+        // 顾客端，身份失效
+        if (200100100 == e.getCode().intValue()) {
+            return error(null, null);
+        }
         return error(e.getCode(), e.getDesc());
     }
 

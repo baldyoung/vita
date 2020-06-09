@@ -3,6 +3,8 @@ package com.baldyoung.vita.merchant.service;
 import com.baldyoung.vita.common.dao.BillDao;
 import com.baldyoung.vita.common.dao.DiningRoomDao;
 import com.baldyoung.vita.common.pojo.dto.bill.MBillDto;
+import com.baldyoung.vita.common.pojo.dto.order.MOrderDto;
+import com.baldyoung.vita.common.pojo.dto.orderItem.MOrderItemDto;
 import com.baldyoung.vita.common.pojo.entity.BillCountInfoEntity;
 import com.baldyoung.vita.common.pojo.entity.BillEntity;
 import com.baldyoung.vita.common.pojo.entity.DiningRoomEntity;
@@ -13,11 +15,13 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.BILL_NO_FOUND;
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.ILLEGAL_OPERATION;
 import static com.baldyoung.vita.common.utility.CommonMethod.isEmpty;
+import static com.baldyoung.vita.common.utility.CommonMethod.isEmptyCollection;
 
 @Service
 public class MBillServiceImpl {
@@ -108,12 +112,14 @@ public class MBillServiceImpl {
         if (null != receiveAmount) {
             newBill.setBillReceivedDateTime(newDate);
         }
+        newBill.setBillRemarks(remarks);
         billDao.updateBillEntity(newBill);
         DiningRoomEntity room = new DiningRoomEntity();
         room.setDiningRoomId(bill.getBillOwnerId());
         room.setCurrentBillNumber("");
         diningRoomDao.updateDiningRoom(room);
         billService.deleteBillNumberBuffer(bill.getBillOwnerId());
+        setAllProductItemToFinish(billNumber);
     }
 
     /**
@@ -163,6 +169,37 @@ public class MBillServiceImpl {
         entity.setUnPayBillNumber(temp.getUnPayBillNumber());
         entity.setTotalUnReceive(temp.getTotalUnReceive());
         return entity;
+    }
+
+    /**
+     * 将指定账单下所有未完成的商品项设置为已完成
+     * @param billNumber
+     */
+    public void setAllProductItemToFinish(String billNumber) {
+        List<MOrderDto> orderList = mOrderService.getAllOrderInRoom(billNumber);
+        if (isEmptyCollection(orderList)) {
+            return;
+        }
+        List<Integer> orderProductItemIdList = new LinkedList();
+        for (MOrderDto order : orderList) {
+            List<MOrderItemDto> itemList = order.getItemList();
+            if (isEmptyCollection(itemList)) {
+                continue;
+            }
+            for (MOrderItemDto item : itemList) {
+                if (item.getOrderProductItemStatusFlag() == null) {
+                    continue;
+                }
+                int status = item.getOrderProductItemStatusFlag().intValue();
+                // 收集状态为“待确定”和“待发货”的商品项编号
+                if (0 == status || 2 == status) {
+                    orderProductItemIdList.add(item.getOrderProductItemId());
+                }
+            }
+        }
+        if (!isEmptyCollection(orderProductItemIdList)) {
+            mOrderService.setOrderProductItemToFinish(orderProductItemIdList);
+        }
     }
 
 }

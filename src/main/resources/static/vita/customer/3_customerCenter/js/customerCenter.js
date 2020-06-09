@@ -190,6 +190,9 @@ var DiningRoomModule = {
 				if (data.code == 0) {
 					targetData = data.data
 				} else {
+					if (undefined == data.code) {
+						GlobalMethod.replaceURL("../3_system/invalidPage.html")
+					}
 					layer.open({
 						content: '获取就餐位数据失败：'+data.desc,
 						skin: 'msg',
