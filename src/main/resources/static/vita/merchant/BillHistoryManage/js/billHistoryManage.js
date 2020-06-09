@@ -5,6 +5,7 @@ $(function() {
 	BillFilterModule.init();
 	BillTableModule.init();
 	BillCountModule.init();
+	BillSettleAccountModule.init();
 });
 
 /**
@@ -28,6 +29,11 @@ var BillTableModule = {
 			run : BillTableModule.requestTargetPageBill
 			//loadPageIndex : 3,
 		});
+	},
+	reloadCurrentPageData : function() {
+		var temp = PagingBarModule.currentPageIndex;
+		PagingBarModule.currentPageIndex = undefined;
+		PagingBarModule.loadTargetPage(temp);
 	},
 	loadData : function(data) {
 		var dataTable = $('#orderTable');
@@ -361,7 +367,7 @@ var BillSettleAccountModule = {
 		BillSettleAccountModule.loadDefaultRemarks();
 	},
 	loadCurrentBill : function() {
-		$('#shouldPay').val(BillInfoModule.billBuffer.billTo.billAmount);
+		$('#shouldPay').val(BillInfoModule.billBuffer.billTotalAmount);
 		$('#actuallyPay').val('');
 		$('#billRemarksArea').val('');
 	},
@@ -371,7 +377,7 @@ var BillSettleAccountModule = {
 	},
 	settleAccount : function(type) {
 		var data = {
-			billNumber : BillModule.billNumber,
+			billNumber : BillInfoModule.billBuffer.billNumber,
 			totalAmount : $('#shouldPay').val(),
 			remarks : $('#billRemarksArea').val()
 		}
@@ -382,24 +388,45 @@ var BillSettleAccountModule = {
 				return;
 			}
 		}
-		BillSettleAccountModule.requestSettleAccount(data);
+		swal({
+				title: "您确定结账金额为 " + data.receiveAmount + " 吗？",
+				text: "结账后不可更改，请谨慎操作！",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "确定",
+				cancelButtonText: "取消",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			},
+			function(isConfirm) {
+				if (isConfirm) {
+					BillSettleAccountModule.requestSettleAccount(data);
+				} else {
+					swal("已取消结账", "", "error");
+				}
+			});
 	},
-	requestSettleAccount : function (data) {
+	requestSettleAccount : function (sendData) {
 		$.ajax({
 			url: GlobalConfig.serverAddress + "/mBill/settleAccount",
 			type: 'POST',
 			cache: false,
 			dataType:'json',
 			contentType: "application/x-www-form-urlencoded;charset=utf-8",
-			data: data,
+			data: sendData,
 			success: function (data) {
 				if (data.code == 0) {
+					$('#billReceivedAmountText').css('color', 'black');
+					$('#billReceivedAmountText').text(sendData.receiveAmount);
+					$('#billReceivedDateTimeText').text(GlobalMethod.getCurrentDateTime());
+					$('#settleAmountBtn').hide();
+					BillTableModule.reloadCurrentPageData();
 					$('#closeSettleAccountPanelBtn').trigger('click');
-					$('#OrderFormWindowBtnClose').trigger('click');
 					ShowTipModule.success("账单已完结")
 					//swal("", '', 'success');
 				} else {
-					swal("获取数据失败", data.desc, "error");
+					swal("结账操作失败", data.desc, "error");
 				}
 			}
 		});
@@ -423,7 +450,70 @@ var BillSettleAccountModule = {
 var BillDeleteModule = {
 
 }
+/**
+ * 提示模块
+ * @type {{init: ShowTipModule.init, success: ShowTipModule.success}}
+ */
+var ShowTipModule = {
+	init : function() {
 
+	},
+	success : function(data) {
+		toastr.options = {
+			"closeButton": true,
+			"debug": false,
+			"progressBar": false,
+			"positionClass": "toast-top-left",
+			"onclick": null,
+			"showDuration": "400",
+			"hideDuration": "1000",
+			"timeOut": "1500",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		}
+		toastr.success(data);
+	},
+	warning : function(data) {
+		toastr.options = {
+			"closeButton": true,
+			"debug": false,
+			"progressBar": false,
+			"positionClass": "toast-top-right",
+			"onclick": null,
+			"showDuration": "400",
+			"hideDuration": "1000",
+			"timeOut": "1500",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		}
+		toastr.warning(data);
+	},
+	error : function(data) {
+		toastr.options = {
+			"closeButton": true,
+			"debug": false,
+			"progressBar": false,
+			"positionClass": "toast-top-center",
+			"onclick": null,
+			"showDuration": "400",
+			"hideDuration": "1000",
+			"timeOut": "1500",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		}
+		toastr.error(data);
+	}
+
+}
 
 /*****************************************************************************************************************/
 

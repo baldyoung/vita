@@ -55,7 +55,7 @@ public class MBillController {
     public ResponseResult settleAccount(@RequestParam("billNumber")String billNumber,
                                         @RequestParam("totalAmount")BigDecimal totalAmount,
                                         @RequestParam(value = "receiveAmount", required = false)BigDecimal receiveAmount,
-                                        @RequestParam("remarks")String remarks) {
+                                        @RequestParam("remarks")String remarks) throws ServiceException {
         if (isEmpty(billNumber) || billNumber.length() >= 30) {
             return defeat("非法数据");
         }

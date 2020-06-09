@@ -41,6 +41,9 @@ public enum ServiceExceptionEnum implements EnumBase {
     MERCHANT_ACCOUNT_EXISTS("账号名已存在", 100800102),
     MERCHANT_PASSWORD_ERROR("密码错误", 100800103),
 
+    // 通用100900***
+    ILLEGAL_OPERATION("非法操作", 100900100),
+
 
 
     ;

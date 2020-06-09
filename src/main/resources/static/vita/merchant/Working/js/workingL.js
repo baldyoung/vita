@@ -873,7 +873,25 @@ var BillSettleAccountModule = {
 				return;
 			}
 		}
-		BillSettleAccountModule.requestSettleAccount(data);
+		var title = (undefined == data.receiveAmount ? "您确定要记账吗？" : ("您确定结账金额为 " + data.receiveAmount + " 吗？"));
+		swal({
+				title: title,
+				text: "请谨慎操作！",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "确定",
+				cancelButtonText: "取消",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			},
+			function(isConfirm) {
+				if (isConfirm) {
+					BillSettleAccountModule.requestSettleAccount(data);
+				} else {
+					swal("已取消结账", "", "error");
+				}
+			});
 	},
 	requestSettleAccount : function (data) {
 		$.ajax({

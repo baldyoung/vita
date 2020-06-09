@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.BILL_NO_FOUND;
+import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.ILLEGAL_OPERATION;
 import static com.baldyoung.vita.common.utility.CommonMethod.isEmpty;
 
 @Service
@@ -88,7 +89,7 @@ public class MBillServiceImpl {
      * @param totalAmount
      * @param receiveAmount
      */
-    public void settleAccount (String billNumber, BigDecimal totalAmount, BigDecimal receiveAmount, String remarks) {
+    public void settleAccount (String billNumber, BigDecimal totalAmount, BigDecimal receiveAmount, String remarks) throws ServiceException {
         BillEntity bill = billDao.selectBill(billNumber);
         if (null == bill || null == bill.getBillId()) {
             return;
@@ -96,7 +97,12 @@ public class MBillServiceImpl {
         Date newDate = new Date();
         BillEntity newBill = new BillEntity();
         newBill.setBillId(bill.getBillId());
-        newBill.setBillTotalAmount(totalAmount);
+        if (null == bill.getBillTotalAmount() || (0 == bill.getBillTotalAmount().compareTo(new BigDecimal(0))) ) {
+            newBill.setBillTotalAmount(totalAmount);
+        }
+        if (null != bill.getBillReceivedAmount()) {
+            throw new ServiceException(ILLEGAL_OPERATION);
+        }
         newBill.setBillReceivedAmount(receiveAmount);
         newBill.setBillEndDateTime(newDate);
         if (null != receiveAmount) {
