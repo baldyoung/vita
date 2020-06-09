@@ -202,6 +202,9 @@ var BillCountModule = {
 		BillCountModule.requestAndLoadData();
 	},
 	loadData : function(data) {
+		if (undefined == data.totalSales) {
+			data.totalSales = 0;
+		}
 		$('#accountBillNumberText').text(data.billTotalNumber);
 		$('#accountZeroBillNumberText').text(data.zeroBillNumber);
 		$('#accountUnReceiveBillNumberText').text(data.unPayBillNumber);
