@@ -259,7 +259,7 @@ var OFFModule = {
     createProductUnitHTML : function (data) {
         var html = '<li productId="'+data.productId+'" class="info-element">' +
             '<img style="width:100px; height:100px; border: 1px solid #D3D4D3;" src="'+GlobalConfig.productImgRelativePath+data.productImgName+'" />' +
-            '<div style="width:255px; padding-left:3px;  float:right; ">' +
+            '<div style="width:253px; padding-left:3px;  float:right; ">' +
             '<div style="width:255px; height:33px; font-size:23px; font-weight: bold; overflow: hidden;">' + data.productName +
             '</div>' +
             '<div style="width:255px; height:27px; overflow: hidden;">' +
@@ -362,7 +362,7 @@ var ONModule = {
     createProductUnitHTML : function (data) {
         var html = '<li productId="'+data.productId+'" class="info-element">' +
             '<img style="width:100px; height:100px; border: 1px solid #D3D4D3;" src="'+GlobalConfig.productImgRelativePath+data.productImgName+'" />' +
-            '<div style="width:255px; padding-left:3px;  float:right; ">' +
+            '<div style="width:253px; padding-left:3px;  float:right; ">' +
             '<div style="width:255px; height:33px; font-size:23px; font-weight: bold; overflow: hidden;">' + data.productName +
             '</div>' +
             '<div style="width:255px; height:27px; overflow: hidden;">' +

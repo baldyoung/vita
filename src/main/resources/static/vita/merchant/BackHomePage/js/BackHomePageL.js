@@ -165,7 +165,7 @@ var UserModule = {
     readyToLogout : function () {
         swal({
                 title: "您确定要退出系统吗?",
-                text: "删除后将无法恢复，请谨慎操作！",
+                text: "",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
