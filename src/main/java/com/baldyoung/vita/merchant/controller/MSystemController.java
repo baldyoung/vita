@@ -4,6 +4,7 @@ import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.entity.DiningRoomReservationEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.service.impl.DiningRoomRequestPositionServiceImpl;
+import com.baldyoung.vita.merchant.service.MProductStockServiceImpl;
 import com.baldyoung.vita.merchant.service.MSystemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,15 @@ public class MSystemController {
 
     @Autowired
     private DiningRoomRequestPositionServiceImpl diningRoomRequestPositionService;
+
+    @Autowired
+    private MProductStockServiceImpl mProductStockService;
+
+    @GetMapping("resetAllProductStock")
+    public ResponseResult resetAllProductStock() throws ServiceException {
+        mProductStockService.productStockReset();
+        return success();
+    }
 
     /**
      * 获取指定就餐位的所有消息

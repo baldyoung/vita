@@ -4,6 +4,7 @@ import com.baldyoung.vita.common.dao.OrderDao;
 import com.baldyoung.vita.common.dao.OrderItemDao;
 import com.baldyoung.vita.common.pojo.entity.OrderEntity;
 import com.baldyoung.vita.common.pojo.entity.OrderItemEntity;
+import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,9 @@ public class OrderServiceImpl {
 
     @Autowired
     private BillServiceImpl billService;
+
+    @Autowired
+    private ProductStockServiceImpl productStockService;
 
 
     private Integer createNewOrder(String billNumber, Integer orderTypeFlag, String orderPresetTime, Integer orderInitiatorFlag) {
@@ -51,16 +55,22 @@ public class OrderServiceImpl {
      * @param itemList
      * @return
      */
-    public List<OrderItemEntity> doOrder(Integer roomId, Integer orderTypeFlag, String orderPresetTime, Integer orderInitiatorFlag, List<OrderItemEntity> itemList) {
+    public List<OrderItemEntity> doOrder(Integer roomId, Integer orderTypeFlag, String orderPresetTime, Integer orderInitiatorFlag, List<OrderItemEntity> itemList) throws ServiceException {
         String billNumber = billService.getRoomBillNumber(roomId);
         Integer orderId = createNewOrder(billNumber, orderTypeFlag, orderPresetTime, orderInitiatorFlag);
         for (OrderItemEntity entity : itemList) {
-            if (null != entity.getOrderId()) {
-                // 进行下单校验，校验成功的标记下单成功
-                // ------------------------------------------------------------------------
+            if (null == entity.getOrderProductId()) {
+                continue;
+            }
+            // 进行下单校验，校验成功的标记下单成功
+            // ------------------------------------------------------------------------
+            if (!productStockService.pruneStock(entity.getOrderProductId(), entity.getOrderProductQuantity())) {
+                entity.setOrderProductItemStatusFlag(1);
+                entity.setOrderProductQuantity(0);
+            } else {
+                entity.setOrderProductItemStatusFlag(0);
             }
             entity.setOrderId(orderId);
-            entity.setOrderProductItemStatusFlag(0);
             entity.setOwnerId(roomId);
             if (null == entity.getOrderProductImg()) {
                 entity.setOrderProductImg("default.gif");

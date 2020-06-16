@@ -146,7 +146,7 @@ public class MOrderController {
                                        @RequestParam("productQuantity")Integer productQuantity,
                                        @RequestParam("diningType")Integer diningType,
                                        @RequestParam(value = "productImgName", required = false)String productImgName,
-                                       @RequestParam(value = "productRemarks", required = false)String productRemarks) {
+                                       @RequestParam(value = "productRemarks", required = false)String productRemarks) throws ServiceException {
         if (isEmpty(productName)) {
             return defeat("商品名称不能为空");
         }

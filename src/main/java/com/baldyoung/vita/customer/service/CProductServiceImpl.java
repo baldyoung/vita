@@ -4,6 +4,7 @@ import com.baldyoung.vita.common.dao.ProductDao;
 import com.baldyoung.vita.common.pojo.dto.product.CProductDto;
 import com.baldyoung.vita.common.pojo.entity.ProductEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
+import com.baldyoung.vita.common.service.impl.ProductStockServiceImpl;
 import com.baldyoung.vita.common.service.impl.ShoppingCartServiceImpl;
 import com.baldyoung.vita.merchant.service.MProductSortServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class CProductServiceImpl {
     //@Qualifier("shoppingCartServiceImpl")
     private ShoppingCartServiceImpl shoppingCartService;
 
+    @Autowired
+    private ProductStockServiceImpl productStockService;
+
     public List<CProductDto> getValidProductForProductType(Integer productTypeId, Integer roomId) throws ServiceException {
         ProductEntity entity = new ProductEntity();
         entity.setProductTypeId(productTypeId);
@@ -39,6 +43,7 @@ public class CProductServiceImpl {
         List<CProductDto> result = new ArrayList(list.size());
         if (!isEmptyCollection(list)) {
             Map currentQuantityMap = shoppingCartService.getAllProductFromShoppingCart(roomId);
+            Map<Integer, Integer> stockMap = productStockService.getStockMap();
             for (ProductEntity cell : list) {
                 CProductDto dto = new CProductDto(cell);
                 // 获取商品排序值
@@ -46,6 +51,15 @@ public class CProductServiceImpl {
                 // 获取当前商品在购物车中的数量
                 Integer currentQuantity = toInteger(currentQuantityMap.get(String.valueOf(dto.getProductId())));
                 dto.setCurrentQuantity(currentQuantity);
+                // 如果有库存限制，则设置库存
+                Integer currentStock = stockMap.get(dto.getProductId());
+                if (null == currentStock) {
+                    dto.setProductStock(null);
+                    dto.setProductStockFlag(0);
+                } else {
+                    dto.setProductStock(currentStock);
+                    dto.setProductStockFlag(1);
+                }
                 result.add(dto);
             }
         }

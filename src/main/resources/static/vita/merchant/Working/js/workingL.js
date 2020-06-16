@@ -206,7 +206,7 @@ var BillModule = {
 			var itemList = order.itemList;
 			for (var j=0; j<itemList.length; j++) {
 				var orderItem = itemList[j];
-				if (4 == orderItem.orderProductItemStatusFlag) {
+				if (4 == orderItem.orderProductItemStatusFlag || 1 == orderItem.orderProductItemStatusFlag) {
 					continue;
 				}
 				html += BillModule.createBillItemUnitHTML(itemList[j], t++);

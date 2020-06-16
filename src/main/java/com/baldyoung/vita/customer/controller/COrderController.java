@@ -29,8 +29,8 @@ public class COrderController {
 
     @PostMapping("do")
     public ResponseResult receiveOrder(@RequestBody List<OrderItemReceiveDto> itemList, HttpSession session) throws UtilityException, ServiceException {
-        out.println("新订单数据");
-        out.println(itemList);
+        //out.println("新订单数据");
+        //out.println(itemList);
         Integer roomId = getRoomIdFromSession(session);
         DiningData diningData = cShoppingCartService.getDiningData(roomId);
         return success(cOrderService.doOrder(roomId, diningData.getDiningType(), diningData.getDiningTime(), itemList));

@@ -52,6 +52,7 @@ public class MerchantExceptionHandler {
     @ResponseBody
     public ResponseResult doException(Exception e, HttpServletResponse response) {
         //out.println(this.getClass()+"get message");
+        e.printStackTrace();
         return error();
     }
 

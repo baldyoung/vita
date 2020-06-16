@@ -136,7 +136,7 @@ public class MOrderServiceImpl {
      * @param diningTypeFlag
      * @param item
      */
-    public void addOrderItem(Integer roomId, Integer diningTypeFlag, OrderItemEntity item) {
+    public void addOrderItem(Integer roomId, Integer diningTypeFlag, OrderItemEntity item) throws ServiceException {
         orderService.doOrder(roomId, diningTypeFlag, "", 0, Arrays.asList(item));
     }
 

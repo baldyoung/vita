@@ -4,6 +4,7 @@ import com.baldyoung.vita.common.dao.ProductDao;
 import com.baldyoung.vita.common.pojo.dto.product.NewProductDto;
 import com.baldyoung.vita.common.pojo.entity.ProductEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
+import com.baldyoung.vita.common.service.impl.ProductStockServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.*;
+import static com.baldyoung.vita.common.utility.CommonMethod.isEmptyCollection;
 
 @Service
 public class MProductServiceImpl {
@@ -21,6 +23,9 @@ public class MProductServiceImpl {
     private static Logger logger = LoggerFactory.getLogger(MProductServiceImpl.class);
     @Autowired
     private ProductDao productDao;
+
+    @Autowired
+    private ProductStockServiceImpl productStockService;
 
     @Autowired
     private MProductSortServiceImpl productSortService;
@@ -55,7 +60,17 @@ public class MProductServiceImpl {
             }
         }
         productEntity.setProductIsShow(null);
+        // 更新数据库
         productDao.updateProduct(productEntity);
+
+        if (null != productEntity.getProductStockFlag() &&
+                1 == productEntity.getProductStockFlag().intValue() &&
+                null != productEntity.getProductStock()) {
+            // 更新redis
+            productStockService.changeStock(productEntity.getProductId(), productEntity.getProductStock());
+        } else {
+            productStockService.cancelStock(productEntity.getProductId());
+        }
     }
 
     /**
@@ -124,8 +139,19 @@ public class MProductServiceImpl {
      */
     public List<ProductEntity> getAllProduct() {
         List<ProductEntity> list = productDao.selectAllProduct();
+        Map<Integer, Integer> stockMap = productStockService.getStockMap();
         for (ProductEntity entity : list) {
             entity.setProductGrade(productSortService.getProductGradeByProductId(entity.getProductId()));
+            if (1 == entity.getProductIsShow().intValue()) {
+                Integer currentStock = stockMap.get(entity.getProductId());
+                if (null == currentStock) {
+                    entity.setProductStock(null);
+                    entity.setProductStockFlag(0);
+                } else {
+                    entity.setProductStock(currentStock);
+                    entity.setProductStockFlag(1);
+                }
+            }
         }
         return list;
     }
@@ -141,7 +167,21 @@ public class MProductServiceImpl {
     public List<ProductEntity> getAllValidProduct() {
         ProductEntity entity = new ProductEntity();
         entity.setProductIsShow(1);
-        return productDao.selectProductWithCondition(entity);
+        List<ProductEntity> list = productDao.selectProductWithCondition(entity);
+        if (!isEmptyCollection(list)) {
+            Map<Integer, Integer> stockMap = productStockService.getStockMap();
+            for (ProductEntity product : list) {
+                Integer currentStock = stockMap.get(product.getProductId());
+                if (null == currentStock) {
+                    product.setProductStock(null);
+                    product.setProductStockFlag(0);
+                } else {
+                    product.setProductStock(currentStock);
+                    product.setProductStockFlag(1);
+                }
+            }
+        }
+        return list;
     }
 
     /**

@@ -217,7 +217,9 @@ CREATE TABLE V_MerchantUser (
 	createDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT'创建时间',
 	lastModifiedDateTime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT'最近修改时间',
 	PRIMARY KEY (merchantUserId)
-)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'商家账号表';	
+)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'商家账号表';
+INSERT INTO V_MerchantUser(merchantUserGrade, merchantUserName, merchantUserAccount, merchantUserPassword)
+VALUES (333, '系统管理员', 'admin', '123');
 -- 就餐位预定表
 DROP TABLE IF EXISTS V_DiningRoomReservation;
 CREATE TABLE V_DiningRoomReservation (
