@@ -1387,7 +1387,12 @@ var QRCodeModule = {
 		});
 	},
 	loadData : function(data) {
-		$('#positionCodeImg').attr('src', "/vita/resource/qrcodeImg/"+data);
+		var temp = "/vita/resource/qrcodeImg/"+data;
+		$('#positionCodeImg').attr('src', temp);
+		//var reg = new RegExp("/", "g");
+		//temp = temp.replace(reg, "\\");
+		$('#saveImgInLocal').attr('href', temp);
+		$('#saveImgInLocal').attr('download', data);
 	}
 }
 
