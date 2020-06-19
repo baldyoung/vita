@@ -100,7 +100,15 @@ public class DiningRoomRequestPositionServiceImpl {
         if (null == diningRoomEntity || null == diningRoomEntity.getDiningRoomId()) {
             throw new ServiceException(ROOM_NOT_FOUND);
         }
-        String key = RandomStringModule.getRandomString(12);
+        // 获取唯一的一个映射key，并与现有的key进行匹配，确保没有重复的key出现
+        String key = null;
+        while(true) {
+            key = RandomStringModule.getRandomString(12);
+            DiningRoomPositionEntity diningRoomPositionEntity = diningRoomPositionDao.selectByPositionKey(key);
+            if (null == diningRoomPositionEntity || null == diningRoomPositionEntity.getDiningRoomId()) {
+                break;
+            }
+        }
         DiningRoomPositionEntity entity = new DiningRoomPositionEntity();
         entity.setDiningRoomId(diningRoomId);
         entity.setPositionKey(key);

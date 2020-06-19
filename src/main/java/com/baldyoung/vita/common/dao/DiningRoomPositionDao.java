@@ -19,5 +19,7 @@ public interface DiningRoomPositionDao {
 
     void deletePositionByDiningRoomId(@Param("diningRoomId")Integer diningRoomId);
 
+    DiningRoomPositionEntity selectByPositionKey(@Param("positionKey")String positionKey);
+
 
 }

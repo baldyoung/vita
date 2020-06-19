@@ -63,6 +63,13 @@
     </delete>
 
 
+    <select id="selectByPositionKey" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from V_DiningRoomPosition
+        where positionKey = #{positionKey}
+    </select>
+
 
 
 
