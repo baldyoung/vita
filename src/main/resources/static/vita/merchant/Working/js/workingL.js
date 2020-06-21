@@ -919,7 +919,7 @@ var BillSettleAccountModule = {
 					DiningRoomStatusModule.selectStatus(4);
 					ShowTipModule.success("账单已完结")
 				} else {
-					swal("获取数据失败", data.desc, "error");
+					swal("结账失败", data.desc, "error");
 				}
 			}
 		});

@@ -132,7 +132,7 @@
 					for (var i=0; i<list.length; i++) {
 						var cell = list[i];
 						var k = '';
-						if (GlobalMethod.isEmpty(cell.orderProductRemarks)) {
+						if (!GlobalMethod.isEmpty(cell.orderProductRemarks)) {
 							k = ' ('+cell.orderProductRemarks+')';
 						}
 						var temp = '<div><span style="width:10%; display:inline-block; text-align:center;">'+(i+1)+'</span>' + 
