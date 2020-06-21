@@ -6,7 +6,10 @@ import com.baldyoung.vita.common.pojo.dto.diningRoom.RoomInfoDto;
 import com.baldyoung.vita.common.pojo.entity.DiningRoomEntity;
 import com.baldyoung.vita.common.pojo.entity.DiningRoomReservationEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
+import com.baldyoung.vita.common.service.ShoppingCartService;
+import com.baldyoung.vita.common.service.impl.DiningRoomRequestPositionServiceImpl;
 import com.baldyoung.vita.common.service.impl.DiningRoomServiceImpl;
+import com.baldyoung.vita.common.service.impl.InvoiceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,15 @@ public class MDiningRoomServiceImpl {
 
     @Autowired
     private DiningRoomServiceImpl diningRoomService;
+
+    @Autowired
+    private ShoppingCartService shoppingCartService;
+
+    @Autowired
+    private InvoiceServiceImpl invoiceService;
+
+    @Autowired
+    private DiningRoomRequestPositionServiceImpl diningRoomRequestPositionService;
 
     /**
      * 获取就餐位的静态数据
@@ -58,7 +70,24 @@ public class MDiningRoomServiceImpl {
      * 修改指定就餐位的数据
      * @param entity
      */
-    public void updateDiningRoom(DiningRoomEntity entity) {
+    public void updateDiningRoom(DiningRoomEntity entity) throws ServiceException {
+        if (null != entity && null != entity.getDiningRoomStatus()) {
+            int currentStatus = entity.getDiningRoomStatus().intValue();
+            if (3 == currentStatus) {
+                // 出单状态，挂起出单URL的映射
+                // 这里不单独做电子账单的挂载处理，只有当账单结账后，系统会自动将电子账单进行挂载。
+            }
+            if (0 == currentStatus || 2 == currentStatus) {
+                // 空闲状态或清理状态，清空对应就餐位的购物车数据，并取消电子账单的挂载
+                shoppingCartService.clearShoppingCart(entity.getDiningRoomId());
+                String key = diningRoomRequestPositionService.getDiningRoomKey(entity.getDiningRoomId());
+                invoiceService.removeInvoiceKeyValue(key);
+            }
+            if (-1 == currentStatus) {
+                // 将指定就餐位设置为禁用状态，即顾客无法使用该就餐位
+
+            }
+        }
         diningRoomDao.updateDiningRoom(entity);
     }
 

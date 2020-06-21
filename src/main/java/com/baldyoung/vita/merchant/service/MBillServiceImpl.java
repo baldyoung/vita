@@ -10,6 +10,8 @@ import com.baldyoung.vita.common.pojo.entity.BillEntity;
 import com.baldyoung.vita.common.pojo.entity.DiningRoomEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.service.impl.BillServiceImpl;
+import com.baldyoung.vita.common.service.impl.DiningRoomRequestPositionServiceImpl;
+import com.baldyoung.vita.common.service.impl.InvoiceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,15 @@ public class MBillServiceImpl {
 
     @Autowired
     private DiningRoomDao diningRoomDao;
+
+    @Autowired
+    private InvoiceServiceImpl invoiceService;
+
+    @Autowired
+    private DiningRoomRequestPositionServiceImpl diningRoomRequestPositionService;
+
+    @Autowired
+    private MDiningRoomServiceImpl mDiningRoomService;
 
     /**
      * 获取指定就餐位的账单详情
@@ -120,6 +131,15 @@ public class MBillServiceImpl {
         diningRoomDao.updateDiningRoom(room);
         billService.deleteBillNumberBuffer(bill.getBillOwnerId());
         setAllProductItemToFinish(billNumber);
+
+        // 将结账订单映射到当前就餐位的点餐二维码上，进行电子账单的挂载。
+        String key = diningRoomRequestPositionService.getDiningRoomKey(bill.getBillOwnerId());
+        invoiceService.setInvoiceKeyValue(key, billNumber);
+        // 修改对应就餐位的状态为出单状态
+        DiningRoomEntity diningRoomEntity = new DiningRoomEntity();
+        diningRoomEntity.setDiningRoomId(bill.getBillOwnerId());
+        diningRoomEntity.setDiningRoomStatus(3);
+        mDiningRoomService.updateDiningRoom(diningRoomEntity);
     }
 
     /**

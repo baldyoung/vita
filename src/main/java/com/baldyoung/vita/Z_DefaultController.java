@@ -6,6 +6,7 @@ import com.baldyoung.vita.common.dao.Z_TestDao;
 import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
 import com.baldyoung.vita.common.service.RedisServiceImpl;
 import com.baldyoung.vita.common.service.impl.DiningRoomRequestPositionServiceImpl;
+import com.baldyoung.vita.common.service.impl.InvoiceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,9 @@ public class Z_DefaultController {
 
     @Autowired
     private DiningRoomRequestPositionServiceImpl diningRoomRequestPositionService;
+
+    @Autowired
+    private InvoiceServiceImpl invoiceService;
 
 
     @GetMapping
@@ -70,6 +74,15 @@ public class Z_DefaultController {
     public void setCustomerPosition(@PathVariable("key")String key,
                                     HttpSession session,
                                     HttpServletResponse response) throws IOException {
+        String billNumber = invoiceService.getInvoiceValueByKey(key);
+        if (null != billNumber) {
+            // 跳转到电子账单页面
+            session.setMaxInactiveInterval(commonConfig.customerInvoiceSessionTime);
+            session.setAttribute("billNumber", billNumber);
+            response.sendRedirect("/vita/customer/4_invoice/invoice.html");
+            return;
+        }
+
         Integer roomId = diningRoomRequestPositionService.getDiningRoomId(key);
         if (null != roomId) {
             session.setMaxInactiveInterval(commonConfig.customerSessionTime);

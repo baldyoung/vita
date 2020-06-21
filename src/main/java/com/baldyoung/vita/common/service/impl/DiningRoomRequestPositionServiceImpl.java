@@ -43,6 +43,9 @@ public class DiningRoomRequestPositionServiceImpl {
     @Autowired
     private DiningRoomServiceImpl diningRoomService;
 
+    @Autowired
+    private InvoiceServiceImpl invoiceService;
+
     private Map<String, Integer> keyMap;
 
     private Map<Integer, DiningRoomPositionEntity> positionMap;
@@ -134,6 +137,7 @@ public class DiningRoomRequestPositionServiceImpl {
         if (null == entity || null == entity.getPositionKey()) {
             return;
         }
+        invoiceService.removeInvoiceKeyValue(entity.getPositionKey());
         String key = entity.getPositionKey();
         keyMap.put(key, null);
         diningRoomPositionDao.deletePositionByDiningRoomId(diningRoomId);

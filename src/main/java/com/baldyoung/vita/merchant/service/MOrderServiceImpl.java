@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.PRODUCT_NOT_FOUND;
+import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.PRODUCT_UNDERSTOCK;
 import static com.baldyoung.vita.common.utility.CommonMethod.isEmpty;
 import static com.baldyoung.vita.common.utility.CommonMethod.isEmptyCollection;
 
@@ -137,7 +138,11 @@ public class MOrderServiceImpl {
      * @param item
      */
     public void addOrderItem(Integer roomId, Integer diningTypeFlag, OrderItemEntity item) throws ServiceException {
-        orderService.doOrder(roomId, diningTypeFlag, "", 0, Arrays.asList(item));
+        List<OrderItemEntity> resultList = orderService.doOrder(roomId, diningTypeFlag, "", 0, Arrays.asList(item));
+        OrderItemEntity result = resultList.get(0);
+        if (1 == result.getOrderProductItemStatusFlag().intValue()) {
+            throw new ServiceException(PRODUCT_UNDERSTOCK);
+        }
     }
 
     /**

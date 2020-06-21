@@ -29,6 +29,9 @@ public class CommonConfig {
     @Value("${customerSessionTime}")
     public Integer customerSessionTime;
 
+    @Value("${customerInvoiceSessionTime}")
+    public Integer customerInvoiceSessionTime;
+
     public static int customerHeartBeatMaxTimes = 300;
 
 }

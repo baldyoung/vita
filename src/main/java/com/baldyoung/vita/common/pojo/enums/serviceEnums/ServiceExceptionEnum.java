@@ -9,6 +9,7 @@ public enum ServiceExceptionEnum implements EnumBase {
     PRODUCT_NAME_EXISTS("商品名称已存在", 100100101),
     PRODUCT_NOT_FOUND("商品不存在", 100100102),
     PRODUCT_ID_IS_NULL("商品编号为空", 100100103),
+    PRODUCT_UNDERSTOCK("商品库存不足", 100100104),
 
     // 商品类型相关100200***
     PRODUCT_TYPE_FORMAT_WRONG("商品类型编号格式错误", 100200000),

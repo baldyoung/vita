@@ -10,6 +10,7 @@ public class DiningRoomEntity {
      * 0  未使用
      * 1  使用中
      * 2  清理中
+     * 3  出单中
      */
     private Integer diningRoomStatus;
     private String currentBillNumber;

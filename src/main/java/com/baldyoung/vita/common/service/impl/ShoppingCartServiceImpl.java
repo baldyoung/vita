@@ -12,9 +12,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.SHOPPING_CART_NOT_FOUND;
@@ -144,8 +142,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
      */
     @Override
     public void clearShoppingCart(Integer shoppingCartId) throws ServiceException {
+        String tableName = toTableName(shoppingCartId);
         Lock lock = readyWriteAction(shoppingCartId);
-        stringRedisTemplate.opsForHash().delete(toTableName(shoppingCartId));
+        Set<Object> keys = stringRedisTemplate.opsForHash().keys(tableName);
+        if (null == keys || 0 == keys.size()) {
+            lock.unlock();
+            return;
+        }
+        String[] stringKeys = new String[keys.size()];
+        int i=0;
+        for (Object object : keys) {
+            stringKeys[i] = String.valueOf(object);
+            i++;
+        }
+        stringRedisTemplate.opsForHash().delete(tableName, stringKeys) ;
         lock.unlock();
     }
 

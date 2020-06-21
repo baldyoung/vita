@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" id="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="format-detection" content="telephone=no" />
+		<script type="text/javascript" src="./js/html2canvas.min.js"></script>
+		<script src='../0_common/js/layer/mobile/layer.js'></script>
+		<script type="text/javascript" src="../0_common/js/jquery-3.4.1.min.js"></script>
+		<script type="text/javascript" src="../../resource/configFile/globalConfig.js"></script>
+
+		<title>电子账单</title>
+		<style>
+			body {
+				background: #F7F7F7;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="" style="width:100%;  ">
+			<div id="customerReceiptArea" style="max-width:640px;  margin: 0 auto;">
+				<!-- 小票的首页图 -->
+				<div style="text-align:center; margin-bottom:2px; background:white;">
+					<img src="./img/test.jpg" style="width:100%; height:100%;" />
+				</div>
+				<!-- 小票标题 -->
+				<div style="text-align:center; margin-bottom:5px; background:white;">
+					<span style="font-size:20px; font-weight:bolder;">天天农庄</span>
+					<span>电子小票</span>
+				</div>
+				<!-- 小票简要 -->
+				<div style=" margin-bottom:5px; background:white; border-bottom: 2px solid #20a03f;">
+					<table>
+						<tr>
+							<td colspan="2">订单编号：<span id="billNumberText"></span></td>
+						</tr>
+						<tr >
+							<td colspan="2">就餐位：<span id="diningRoomNameText"></span></td>
+						</tr>
+						<tr>
+							<td >顾客姓名：<span id="customerNameText"></span></td>
+							<td >就餐人数：<span id="customerNumberText"></span></td>
+						</tr>
+						<tr>
+							<td colspan="2">时间：<span id="billDateTimeText"></span></td>
+						</tr>
+					</table>
+				</div>
+				<!-- 小票内容 -->
+				<div style=" margin-bottom:5px; background:white; padding-bottom:5px;">
+					<table id="productListTitle" style="width:100%;">
+						<tr>
+							<td width="10%">序号</td>
+							<td width="55%">商品名称</td>
+							<td width="20%">单价</td>
+							<td width="10%">数量</td>
+						</tr>
+					</table>
+					
+					
+				</div>
+				<!-- 小票统计  -->
+				<div style=" margin-bottom:2px; background:white;">
+					<div style=" padding-top:5px; padding-left:5px;">
+						<span style=" display:inline-block; text-align:left; font-size:14px; font-weight:bold;">账单总额：</span>
+						<span id="billTotalAmountText" style=" display:inline-block; text-align:left; font-size:14px; "></span>
+					</div>
+					<div style=" padding-top:1px; padding-left:5px;">
+						<span style=" display:inline-block; text-align:left; font-size:13px; font-weight:bold;">优惠金额：</span>
+						<span id="billDiscountAmountText" style=" display:inline-block; text-align:left; font-size:13px; "></span>
+					</div>
+					<div style="padding-top:1px; padding-left:5px; padding-bottom:6px;">
+						<span style=" display:inline-block; text-align:left; font-size:15px; font-weight:bold;">应收金额：</span>
+						<span id="billReceivableAmountText" style=" display:inline-block; text-align:left; font-size:15px; font-weight:bold;"></span>
+					</div>
+					<div style="padding-top:1px; padding-left:5px; padding-bottom:6px;">
+						<span style=" display:inline-block; text-align:left; font-size:17px; font-weight:bold;">实收金额：</span>
+						<span id="billReceivedAmountText" style=" display:inline-block; text-align:left; font-size:17px; font-weight:bold;"></span>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+		<script type="text/javascript">
+			$(function() {
+				BillModule.init();
+				OptionModule.init();
+			});
+
+			var BillModule = {
+				init: function() {
+					var data = BillModule.requestData();
+					var discountAmount = null;
+					if (undefined != data.billReceivedAmount) {
+						discountAmount = data.billTotalAmount - data.billReceivedAmount;
+					}
+					$('#billNumberText').text(data.billNumber);
+					$('#diningRoomNameText').text(data.billOwnerName);
+					$('#customerNameText').text(data.billCustomerName);
+					$('#customerNumberText').text(data.billCustomerNumber);
+					$('#billDateTimeText').text(GlobalMethod.toDateString(data.billStartDateTime));
+					$('#billTotalAmountText').text(data.billTotalAmount);
+					if (null != discountAmount) {
+						$('#billDiscountAmountText').text(discountAmount);
+						$('#billReceivableAmountText').text(data.billReceivedAmount);
+						$('#billReceivedAmountText').text(data.billReceivedAmount);
+					} else {
+						$('#billDiscountAmountText').text('0.00');
+						$('#billReceivableAmountText').text(data.billTotalAmount);
+						$('#billReceivedAmountText').text('未付款');
+					}
+					var list = [];
+					var orderList = data.orderList;
+					for (var i=0; i<orderList.length; i++) {
+						var itemList = orderList[i].itemList;
+						for (var j=0; j < itemList.length; j++) {
+							var cell = itemList[j];
+							if (cell.orderProductItemStatusFlag == 3) {
+								list[list.length] = cell;
+							}
+						}
+					}
+					BillModule.loadData(list);
+				},
+				loadData: function(data) {
+					var target = $('#productListTitle');
+					var list = data;
+					var html = '';
+					for (var i=0; i<list.length; i++) {
+						var cell = list[i];
+						var k = '';
+						if (GlobalMethod.isEmpty(cell.orderProductRemarks)) {
+							k = ' ('+cell.orderProductRemarks+')';
+						}
+						var temp = '<div><span style="width:10%; display:inline-block; text-align:center;">'+(i+1)+'</span>' + 
+							'<span style="width:55%; display:inline-block;">'+cell.orderProductName+k+'</span>' +
+							'<span style="width:20%; display:inline-block;">'+cell.orderProductPrice+'</span>' +
+							'<span style="width:10%; display:inline-block; ">'+cell.orderProductQuantity+'</span></div>';
+						html += temp;
+					}
+					target.after(html);
+				},
+				requestData: function() {
+					var targetData = [];
+					$.ajax({
+						url: GlobalConfig.serverAddress + "/system/invoiceInfo",
+						type: 'GET',
+						cache: false,
+						dataType: 'json',
+						async: false, //设置同步
+						contentType: "application/x-www-form-urlencoded;charset=utf-8",
+						data: null,
+						success: function(data) {
+							if (data.code != 0) {
+								GlobalMethod.replaceURL("../3_system/invalidPage.html");
+							} else {
+								targetData = data.data;
+							}
+						},
+						error: function() {
+							// swal('服务器连接失败', '请检查网络是否通畅', 'warning');
+						}
+					});
+					return targetData;
+				}
+			}
+
+			var OptionModule = {
+				init: function() {
+					var targetCell = document.getElementById("customerReceiptArea");
+					html2canvas(targetCell, {
+						useCORS: true, // 【重要】开启跨域配置
+						scale: 1, // canvas放大倍数，增加图片的清晰度
+						logging: false // 是否开启日志
+					}).then(function(canvas) {
+						// return;
+						var temp = canvas.toDataURL("image/png");
+						 // console.log(temp);
+						document.body.innerHTML = '<img id="resultImg" onclick="OptionModule.selectAction()" src="" style="width:100%; height:100%;" download="k" />';
+						var resultImgCell = document.getElementById("resultImg");
+						resultImgCell.src = temp;
+						OptionModule.selectAction();
+					});
+				},
+				downloadImage: function() {
+					// 通过选择器获取img元素
+					var img = document.getElementById('resultImg');
+					// 将图片的src属性作为URL地址
+					var url = img.src;
+					var a = document.createElement('a')
+					var event = new MouseEvent('click')
+					var currentDate = new Date();
+					a.download = currentDate.toLocaleString();
+					a.href = url
+					a.dispatchEvent(event) //根据A标签的属性来搞事情
+				},
+				selectAction: function() {
+					console.log("KK");
+					layer.open({
+						content: '是否保存该账单？',
+						btn: ['保存', '取消'],
+						yes: function(index) {
+							layer.closeAll();
+							OptionModule.downloadImage();
+						},
+						no: function() {
+							layer.open({
+								content: '双击账单，可以保存到本地！',
+								skin: 'msg',
+								time: 3 //2秒后自动关闭
+							});
+						}
+					});
+				}
+			}
+		</script>
+	</body>
+
+</html>

@@ -23,9 +23,15 @@ public class MDiningRoomController {
         return success(mDiningRoomService.getAllDiningRoom());
     }
 
+    /**
+     * 修改就餐位的状态
+     * @param roomId
+     * @param statusId
+     * @return
+     */
     @PostMapping("changeStatus")
     public ResponseResult setDiningRoomStatus(@RequestParam("roomId")Integer roomId,
-                                              @RequestParam("newStatusId")Integer statusId) {
+                                              @RequestParam("newStatusId")Integer statusId) throws ServiceException {
         DiningRoomEntity entity = new DiningRoomEntity();
         entity.setDiningRoomId(roomId);
         entity.setDiningRoomStatus(statusId);
@@ -95,7 +101,7 @@ public class MDiningRoomController {
     public ResponseResult updateDiningRoom(@RequestParam("roomId")Integer roomId,
                                            @RequestParam("roomName")String roomName,
                                            @RequestParam(value = "roomInfo", required = false)String roomInfo,
-                                           @RequestParam(value = "roomGrade", required = false)Integer roomGrade) {
+                                           @RequestParam(value = "roomGrade", required = false)Integer roomGrade) throws ServiceException {
         if (isEmpty(roomName)) {
             return defeat("就餐位名称不能为空");
         }

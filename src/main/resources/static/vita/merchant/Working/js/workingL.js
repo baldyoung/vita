@@ -27,6 +27,16 @@ function registerMonitor() {
  * @type {{init: RoomModule.init, requestAndLoadData: RoomModule.requestAndLoadData, createDisplayUnitHtml: (function(*): string), loadData: RoomModule.loadData}}
  */
 var RoomModule = {
+	diningRoomBuffer : [],
+	getRoom : function(roomId) {
+		var list = RoomModule.diningRoomBuffer;
+		for (var i=0; i<list.length; i++) {
+			if (list[i].diningRoomId == roomId) {
+				return list[i];
+			}
+		}
+		return undefined;
+	},
 	init : function () {
 		RoomModule.requestAndLoadData();
 	},
@@ -41,6 +51,7 @@ var RoomModule = {
 			success: function (data) {
 				if (data.code == 0) {
 					data = data.data;
+					RoomModule.diningRoomBuffer = data;
 					RoomModule.loadData(data);
 				} else {
 					swal("获取数据失败", data.desc, "error");
@@ -678,7 +689,7 @@ var ItemAddModule = {
 					BillModule.reloadCurrentRoomBill();
 					swal("新增成功", '', 'success');
 				} else {
-					swal("获取数据失败", data.desc, "error");
+					swal("新增失败", data.desc, "error");
 				}
 			}
 		});
@@ -905,8 +916,8 @@ var BillSettleAccountModule = {
 				if (data.code == 0) {
 					$('#closeSettleAccountPanelBtn').trigger('click');
 					$('#OrderFormWindowBtnClose').trigger('click');
+					DiningRoomStatusModule.selectStatus(4);
 					ShowTipModule.success("账单已完结")
-					//swal("", '', 'success');
 				} else {
 					swal("获取数据失败", data.desc, "error");
 				}
@@ -1054,13 +1065,14 @@ var DiningRoomStatusModule = {
 	defaultStatus : [
 		'<button class="btn btn-primary "  type="button" style="border: 0px solid;  background:#1DA02B; color:black !important;" > 空闲</button>',
 		'<button class="btn btn-primary "  type="button" style="border: 0px solid;  background:#ECBA52; color:black !important;" > 使用中</button>',
-		'<button class="btn btn-primary "  type="button" style="border: 0px solid;  background:#7266BA; color:black !important;" > 清理中</button>',
-		'<button class="btn btn-primary "  type="button" style="border: 0px solid;  background:#ee162d; color:black !important;" > 禁用</button>'
+		'<button class="btn btn-primary "  type="button" style="border: 0px solid;  background:#a38eba; color:black !important;" > 清理中</button>',
+		'<button class="btn btn-primary "  type="button" style="border: 0px solid;  background:#ee162d; color:black !important;" > 禁用</button>',
+		'<button class="btn btn-primary "  type="button" style="border: 0px solid;  background:#4ab4af; color:black !important;" > 出单中</button>'
 	],
 	selectBtnStyle : [
 		'<button onclick="DiningRoomStatusModule.selectStatus(0)" class="btn btn-primary "  type="button" style="border: 0px solid;  background:#1DA02B; color:black !important; font-weight: bolder; width:60%; margin-bottom:8px; " > 空闲</button>',
 		'<button onclick="DiningRoomStatusModule.selectStatus(1)" class="btn btn-primary "  type="button" style="border: 0px solid;  background:#ECBA52; color:black !important; font-weight: bolder; width:60%; margin-bottom:8px; " > 使用中</button>',
-		'<button onclick="DiningRoomStatusModule.selectStatus(2)" class="btn btn-primary "  type="button" style="border: 0px solid;  background:#7266BA; color:black !important; font-weight: bolder; width:60%; margin-bottom:8px; " > 清理中</button>',
+		'<button onclick="DiningRoomStatusModule.selectStatus(2)" class="btn btn-primary "  type="button" style="border: 0px solid;  background:#a38eba; color:black !important; font-weight: bolder; width:60%; margin-bottom:8px; " > 清理中</button>',
 		'<button onclick="DiningRoomStatusModule.selectStatus(3)" class="btn btn-primary "  type="button" style="border: 0px solid;  background:#ee162d; color:black !important; font-weight: bolder; width:60%; margin-bottom:8px; " > 禁用</button>'
 	],
 	currentRoomId : undefined,
@@ -1086,6 +1098,19 @@ var DiningRoomStatusModule = {
 		DiningRoomStatusModule.requestSetStatus(DiningRoomStatusModule.currentRoomId, statusId);
 	},
 	requestSetStatus : function (roomId, statusId) {
+		var list = RoomModule.diningRoomBuffer;
+		var targetCell = null;
+		for (var i=0; i<list.length; i++) {
+			var cell = list[i];
+			if (cell.diningRoomId == roomId && statusId != cell.diningRoomStatus) {
+				targetCell = cell;
+				break;
+			}
+		}
+		if (null == targetCell) {
+			$('#closeRoomStatusPanelBtn').trigger('click');
+			return;
+		}
 		$.ajax({
 			url: GlobalConfig.serverAddress + "/mDiningRoom/changeStatus",
 			type: 'POST',
@@ -1100,6 +1125,7 @@ var DiningRoomStatusModule = {
 				if (data.code == 0) {
 					$('#roomStatusStyleArea'+DiningRoomStatusModule.currentRoomId).html(DiningRoomStatusModule.toDiningRoomStatusNameStyle(statusId));
 					$('#closeRoomStatusPanelBtn').trigger('click');
+					targetCell.diningRoomStatus = statusId;
 				} else {
 					swal("获取数据失败", data.desc, "error");
 				}
@@ -1322,10 +1348,18 @@ var NewsModule = {
 			if (undefined != cell.orderNewsNumber) {
 				$('#orderItemNewsTip'+roomId).show();
 				$('#orderItemNewsTip'+roomId).text(cell.orderNewsNumber);
+				var room = RoomModule.getRoom(roomId);
+				if (undefined != room && 4 != room.diningRoomStatus)  {
+					DiningRoomStatusModule.requestSetStatus(roomId, 1);
+				}
 			}
 			if (undefined != cell.customerMessageNewsNumber) {
 				$('#messageNewsTip'+roomId).show();
-				$('#messageNewsTip'+roomId).text(cell.customerMessageNewsNumber)
+				$('#messageNewsTip'+roomId).text(cell.customerMessageNewsNumber);
+				var room = RoomModule.getRoom(roomId);
+				if (undefined != room && 4 != room.diningRoomStatus)  {
+					DiningRoomStatusModule.requestSetStatus(roomId, 1);
+				}
 			}
 		}
 	}
@@ -1379,6 +1413,7 @@ var QRCodeModule = {
 				if (data.code == 0) {
 					QRCodeModule.requestRoomCodeImgName(roomId);
 					QRCodeModule.refreshFlag = false;
+					DiningRoomStatusModule.requestSetStatus(roomId, 0);
 				} else {
 					QRCodeModule.refreshFlag = false;
 					swal("刷新顾客就餐二维码失败", data.desc, "error");
