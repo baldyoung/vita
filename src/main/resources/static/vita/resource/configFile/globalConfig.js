@@ -3,7 +3,7 @@ var GlobalConfig = {
         shopName: 'vita门店',
         shopLogo: ''
     },
-    productImgRelativePath: "/vita/resource/productImg/",
+    productImgRelativePath: "/resource/productImg/",
     currentModel: "test", // dev、test
     //currentModel: "dev", // dev、test
     serverAddress: "",

@@ -1422,7 +1422,7 @@ var QRCodeModule = {
 		});
 	},
 	loadData : function(data) {
-		var temp = "/vita/resource/qrcodeImg/"+data;
+		var temp = "/resource/qrcodeImg/"+data;
 		$('#positionCodeImg').attr('src', temp);
 		//var reg = new RegExp("/", "g");
 		//temp = temp.replace(reg, "\\");

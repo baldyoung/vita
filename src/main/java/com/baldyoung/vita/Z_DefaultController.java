@@ -45,7 +45,7 @@ public class Z_DefaultController {
         response.sendRedirect("vita/index.html");
     }
 
-    @GetMapping("db-test")
+    // @GetMapping("db-test")
     public String dbTest(HttpServletResponse response, HttpServletRequest request) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("1.服务部署成功");
@@ -60,7 +60,7 @@ public class Z_DefaultController {
         return null;
     }
 
-    @GetMapping("redis-test")
+    // @GetMapping("redis-test")
     public String redistTest(HttpServletResponse response) throws IOException {
         redisService.setTestAction();
         redisService.getTestAction();

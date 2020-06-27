@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" id="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no" />
+
+    <link href="../0_common/css/reset.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="../0_common/js/jquery-3.4.1.min.js"></script>
+
+    <link href="./css/index.css" rel="stylesheet" type="text/css">
+    <script>
+
+    </script>
+</head>
+
+<body>
+<div class="near-box">
+    <!--头部开始-->
+    <div class="yx-index-top">
+        <a href='#' class="index-top-box1">
+            <span class="index-top-img1"><img src="../0_common/img/shop.png" alt=""></span>
+            <span class="index-top-text1">介绍</span>
+        </a>
+        <div class="index-top-box2">
+            <span id='shopNameText' class="fresh-toptext1">首页</span>
+            <span class="fresh-topimg1" style='display:none;'></span>
+        </div>
+        <a href="#" class="index-top-box1">
+            <span class="index-top-img1"><img src="../0_common/img/news.png" alt=""></span>
+            <span class="index-top-text1">联系</span>
+        </a>
+    </div>
+    <!--头部结束-->
+    <div style='width:100%; text-align: center;margin-top: 50%;'>
+        <img src="../../resource/otherImg/gif1.gif" style="width:100%; height:100%; "/>
+        </br>
+        <strong>
+            <span style="font-size:19px;">首页还在建设中哦...</span>
+        </strong>
+        <div id="div"></div>
+    </div>
+    <!--bigbox结束-->
+    <div class="kaola-bottom">
+        <a href="#" class="kaola-bottom-box1">
+            <span class="kaola-bottom-img1"><img src="../0_common/img/home.png"></span>
+            <span class="kaola-bottom-text1 text2">首页</span>
+        </a>
+        <a href="../3_menu/menu.html" class="kaola-bottom-box1">
+            <span class="kaola-bottom-img1"><img src="../0_common/img/search3.png"></span>
+            <span class="kaola-bottom-text1">点餐</span>
+        </a>
+        <a href="../3_shoppingCart/shoppingCart.html" class="kaola-bottom-box1">
+            <span class="kaola-bottom-img1"><img src="../0_common/img/shop-cart1.png"></span>
+            <span class="kaola-bottom-text1">购物车</span>
+        </a>
+        <a href="../3_customerCenter/customerCenter.html" class="kaola-bottom-box1">
+            <span class="kaola-bottom-img1"><img src="../0_common/img/people1.png"></span>
+            <span class="kaola-bottom-text1">我的</span>
+        </a>
+    </div>
+    <script>
+        var height=$(Window).width();
+        var clickTimes = 0;
+        var clickOption = true;
+        function reset() {
+            $('#div').html('');
+            clickTimes = 0;
+            clickOption = true;
+        }
+        $("#div").css({
+            'height':height,
+        })
+        $("#div").click(function(e){
+            if (clickOption == false) {
+                return;
+            }
+            var tem;
+            clickTimes ++;
+            if (clickTimes < 101) {
+                tem = "<p>❤ +"+clickTimes+"</p>";
+            } else {
+                tem = "<p>❤❤ 感谢您一百分的爱 ❤❤</p>";
+            }
+            if (clickTimes > 105) {
+                clickOption = false;
+                setTimeout("reset()", "2000");
+            }
+            var x=e.pageX;
+            var y=e.pageY;
+            $(this).append(tem);
+            $("p").css({
+                "z-index": 9999,
+                'position':'absolute',
+                'top':y-20,
+                'left':x,
+                'color':'red'
+            })
+            $("p").animate({
+                'top':y-300,
+                'opacity':0,
+                'fontSize':'50px',
+            },1000,function(){
+                $(this).empty()
+            })
+
+        })
+    </script>
+</div>
+
+</body>
+
+</html>
