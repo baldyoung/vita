@@ -1,7 +1,6 @@
 
 
 $(function(){
-	console.log("workingL.js content...");
 	registerMonitor();
 	RoomModule.init();
 	ItemModule.init();
@@ -11,11 +10,9 @@ $(function(){
 function registerMonitor() {
 	$('.roomStatusLabel').bind("click", function(){
 		var id = $(this).attr("id");
-		console.log(id);
 	});
 	$(".orderPanelInfoType").bind("click", function(){
 		var id = $(this).children("a").attr("data-toggle");
-		console.log(id);
 		$(".tab-pane").removeClass("active");
 		$("#"+id).addClass("active");
 		$(".orderPanelInfoType").removeClass("active");
@@ -171,8 +168,8 @@ var BillModule = {
 				if (data.code == 0) {
 					data = data.data;
 					BillModule.currentLoadRoomId = roomId;
-					BillModule.customerName = data.billCustomerName;
-					BillModule.customerNumber = data.billCustomerNumber;
+					BillModule.customerName = (undefined == data.billCustomerName ? '未知' : data.billCustomerName);
+					BillModule.customerNumber = (undefined == data.billCustomerNumber ? '未知' : data.billCustomerNumber);
 					BillModule.billId = data.billId;
 					BillModule.billNumber = data.billNumber;
 					BillModule.billOwnerId = data.billOwnerId;
@@ -187,15 +184,15 @@ var BillModule = {
 		});
 	},
 	loadData : function (data) {
+
 		var amount = 0.0;
 		// 加载就餐位信息
 		$('#diningRoomNameText').text(data.billOwnerName);
 		$('#billNumberText').text(data.billNumber);
-		$('#customerNameText').text(data.billCustomerName);
+		$('#customerNameText').text(BillModule.customerName);
 		$('#createDateTimeText').text(GlobalMethod.toDateString(data.billStartDateTime));
-		$('#customerNumberText').text(data.billCustomerNumber);
+		$('#customerNumberText').text(BillModule.customerNumber);
 		// $('#orderNumberText').text(data.billOrderQuantity);   // ******************* 前端计算订单数量
-		$('#billAmount').text();
 		// 加载订单统览
 		var target = $('#tab-orderList');
 		target.html('');
@@ -669,7 +666,7 @@ var ItemAddModule = {
 	},
 	addItem : function() {
 		var data = ItemAddModule.packageData();
-		console.log(data);
+
 		if (undefined == data) {
 			return;
 		}
@@ -808,9 +805,9 @@ var ItemStatusModule = {
  */
 var BillSimpleInfoModule = {
 	loadCurrentBillInfo : function () {
-		var temp = (BillModule.customerName == undefined ? '' : BillModule.customerName);
+		var temp = (BillModule.customerName == undefined ? ' ' : BillModule.customerName);
 		$('#updateCustomerNameText').val(temp);
-		temp = (BillModule.customerNumber == undefined ? '' : BillModule.customerNumber);
+		temp = (BillModule.customerNumber == undefined ? ' ' : BillModule.customerNumber);
 		$('#updateCustomerNumberText').val(temp);
 	},
 	packageData : function() {
@@ -916,7 +913,7 @@ var BillSettleAccountModule = {
 				if (data.code == 0) {
 					$('#closeSettleAccountPanelBtn').trigger('click');
 					$('#OrderFormWindowBtnClose').trigger('click');
-					DiningRoomStatusModule.selectStatus(4);
+					DiningRoomStatusModule.requestSetStatus(BillModule.currentLoadRoomId, 4);
 					ShowTipModule.success("账单已完结")
 				} else {
 					swal("结账失败", data.desc, "error");
@@ -1123,7 +1120,7 @@ var DiningRoomStatusModule = {
 			},
 			success: function (data) {
 				if (data.code == 0) {
-					$('#roomStatusStyleArea'+DiningRoomStatusModule.currentRoomId).html(DiningRoomStatusModule.toDiningRoomStatusNameStyle(statusId));
+					$('#roomStatusStyleArea'+roomId).html(DiningRoomStatusModule.toDiningRoomStatusNameStyle(statusId));
 					$('#closeRoomStatusPanelBtn').trigger('click');
 					targetCell.diningRoomStatus = statusId;
 				} else {
@@ -1350,7 +1347,7 @@ var NewsModule = {
 				$('#orderItemNewsTip'+roomId).text(cell.orderNewsNumber);
 				var room = RoomModule.getRoom(roomId);
 				if (undefined != room && 4 != room.diningRoomStatus)  {
-					DiningRoomStatusModule.requestSetStatus(roomId, 1);
+					// DiningRoomStatusModule.requestSetStatus(roomId, 1);
 				}
 			}
 			if (undefined != cell.customerMessageNewsNumber) {
@@ -1358,7 +1355,7 @@ var NewsModule = {
 				$('#messageNewsTip'+roomId).text(cell.customerMessageNewsNumber);
 				var room = RoomModule.getRoom(roomId);
 				if (undefined != room && 4 != room.diningRoomStatus)  {
-					DiningRoomStatusModule.requestSetStatus(roomId, 1);
+					// DiningRoomStatusModule.requestSetStatus(roomId, 1);
 				}
 			}
 		}

@@ -198,8 +198,12 @@
 					a.dispatchEvent(event) //根据A标签的属性来搞事情
 				},
 				selectAction: function() {
-					console.log("KK");
 					layer.open({
+						content: '长按图片，保存到本地！',
+						skin: 'msg',
+						time: 4 //2秒后自动关闭
+					});
+					/*layer.open({
 						content: '是否保存该账单？',
 						btn: ['保存', '取消'],
 						yes: function(index) {
@@ -208,12 +212,12 @@
 						},
 						no: function() {
 							layer.open({
-								content: '双击账单，可以保存到本地！',
+								content: '长按图片，保存到本地！',
 								skin: 'msg',
 								time: 3 //2秒后自动关闭
 							});
 						}
-					});
+					});*/
 				}
 			}
 		</script>
