@@ -119,6 +119,37 @@ var GlobalMethod = {
     }
 
 }
+/**
+ * 将html转换为图片
+ * ！！！ 需要先将html2canvas.js加载到当前环境
+ * @type {{downloadImg: htmlToImgModule.downloadImg, toImg: htmlToImgModule.toImg}}
+ */
+var htmlToImgModule = {
+    toImg : function(cellId) {
+        var targetCell = document.getElementById(cellId);
+        html2canvas(targetCell, {
+            useCORS: true, // 【重要】开启跨域配置
+            scale: 1, // canvas放大倍数，增加图片的清晰度
+            logging: false // 是否开启日志
+        }).then(function(canvas) {
+            var temp = canvas.toDataURL("image/png");
+            var tempImgId = "htmlImgModuleTempImg";
+            targetCell.innerHTML = '<img id="htmlImgModuleTempImg" onclick="htmlToImgModule.downloadImg(\''+tempImgId+'\')" src="" style="width:100%; height:100%;"  />';
+            var resultImgCell = document.getElementById("htmlImgModuleTempImg");
+            resultImgCell.src = temp;
+        });
+    },
+    downloadImg : function(cellId) {
+        var imgCell = document.getElementById(cellId);
+        var url = imgCell.src;
+        var a = document.createElement('a');
+        var event = new MouseEvent('click');
+        var currentDate = new Date();
+        a.download = currentDate.toLocaleString();
+        a.href = url;
+        a.dispatchEvent(event);
+    }
+};
 
 /**
  * 按商品等级排序商品集
@@ -220,5 +251,7 @@ function toOrderItemStatusNameStyle(statusId) {
     html += "";
     return html;
 }
+
+
 
 

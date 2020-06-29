@@ -221,6 +221,7 @@ var BillModule = {
 			}
 			target.append(html);
 		}
+		PrintOrderModule.orderListBuffer = orderList;
 		// 账单总价
 		BillModule.billAmount = amount;
 		$('#billAmount').text(amount);
@@ -229,6 +230,7 @@ var BillModule = {
 	createBillOrderTitleHTML : function(order, index) {
 		var html = '<div class="feed-element" style="margin-top:0px; padding-bottom: 0px; background:#D0E9C6; border-bottom: 1px solid;">' +
 			'<i class="orderItemUnit" style="">#&nbsp;订单'+index+'&nbsp;('+order.diningTypeName+'&nbsp;'+order.orderPresetTime+')</i>' +
+			'<i onclick="PrintOrderModule.loadOrderByIndex('+index+')" data-toggle="modal" data-target="#orderPrintPanel"  class="orderItemUnit" style="float:right; margin-right:10px; font-weight:bold; color:#ff706b; font-style:normal; cursor:pointer;">打印</i>' +
 			'<i class="orderItemUnit" style="float:right; margin-right:5px;">总额:'+order.amount+'</i>' +
 			'<i class="orderItemUnit" style="float:right; margin-right:10px;">'+GlobalMethod.toDateString(order.orderCreateDateTime)+'</i>' +
 			'</div>';
@@ -1333,6 +1335,10 @@ var DiningRoomReservationModule = {
 	}
 }
 
+/**
+ * 未读消息控制模块
+ * @type {{loadData: NewsModule.loadData}}
+ */
 var NewsModule = {
 	loadData : function(data) {
 		if (undefined == data || undefined == data.length) {
@@ -1362,6 +1368,10 @@ var NewsModule = {
 	}
 }
 
+/**
+ * 点餐二维码模块
+ * @type {{qrcodeImgName: undefined, refreshQRCode: QRCodeModule.refreshQRCode, currentRoomId: undefined, printCode: QRCodeModule.printCode, loadData: QRCodeModule.loadData, requestRoomCodeImgName: QRCodeModule.requestRoomCodeImgName, refreshFlag: boolean}}
+ */
 var QRCodeModule = {
 	currentRoomId : undefined,
 	refreshFlag : false,
@@ -1425,6 +1435,26 @@ var QRCodeModule = {
 		//temp = temp.replace(reg, "\\");
 		$('#saveImgInLocal').attr('href', temp);
 		$('#saveImgInLocal').attr('download', data);
+	}
+}
+
+/**
+ * 订单打印模块
+ * @type {{loadOrderByIndex: PrintOrderModule.loadOrderByIndex}}
+ */
+var PrintOrderModule = {
+	orderListBuffer : [],
+	getOrderByIndex : function(index) {
+		var list = PrintOrderModule.orderListBuffer;
+		for (var i=0; i<list.length; i++) {
+			if (i == index) {
+				return list[i];
+			}
+		}
+		return undefined;
+	},
+	loadOrderByIndex : function(index) {
+		console.log(index);
 	}
 }
 

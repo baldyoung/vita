@@ -766,7 +766,7 @@
 							<span aria-hidden="true">&times;</span>
 							<span class="sr-only">关闭</span>
                         </button>
-						<span class="pull-left" style="font-size:17px; font-weight: bold;"> &nbsp;-&nbsp;点餐二维码</span>
+						<span class="pull-left" style="font-size:17px; font-weight: bold;"> 点餐二维码</span>
 					</div>
 					<div id="diningRoomQRCodeArea" class="modal-body" style="padding: 20px 0 20px 0; text-align: center;" >
 						<img id="positionCodeImg" style="width:500px; height:500px; " src="../../resource/otherImg/testQRCode.png" />
@@ -811,7 +811,28 @@
 				</div>
 			</div>
 		</div>
+		<!-- 订单打印预览模块 -->
+		<div class="modal inmodal" id="orderPrintPanel" tabindex="-1" role="dialog" aria-hidden="true" >
+			<div class="modal-dialog" >
+				<div class="modal-content animated bounceInDown">
+					<div class="modal-header" style="padding-bottom: 15px; padding-top:10px; ">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span>
+							<span class="sr-only">关闭</span>
+						</button>
+						<span class="pull-left" style="font-size:17px; font-weight: bold;">订单打印预览</span>
+					</div>
+					<div  class="modal-body" style="padding: 20px 0 20px 0; text-align: center;" >
+					</div>
+					<div class="modal-footer">
+						<a data-toggle="modal" class="btn btn-primary" onclick="">打印</a>
+						<a download="qrcode" href="" data-toggle="modal" class="btn btn-primary" onclick="">保存到本地</a>
+						<button type="button" class="btn btn-white" data-dismiss="modal" onclick="">关闭</button>
 
+					</div>
+				</div>
+			</div>
+		</div>
 
 	</body>
 
