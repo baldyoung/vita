@@ -197,9 +197,10 @@ var BillModule = {
 		var target = $('#tab-orderList');
 		target.html('');
 		var orderList = data.orderList;
-		for (var i=0; i<orderList.length; i++) {
+		var k = orderList.length;
+		for (var i=0; i<orderList.length; i++, k--) {
 			var order = orderList[i];
-			var html = BillModule.createOrderUnitHTML(order, i+1);
+			var html = BillModule.createOrderUnitHTML(order, i+1, k);
 			target.append(html);
 		}
 		// 加载账单统览
@@ -207,10 +208,11 @@ var BillModule = {
 		target.html(BillModule.createBillTopTitleHTML());
 		var orderList = data.orderList;
 		var t=1;
-		for (var i=0; i<orderList.length; i++) {
+		k=orderList.length;
+		for (var i=0; i<orderList.length; i++, k--) {
 			var order = orderList[i];
 			amount += order.amount;
-			var html = BillModule.createBillOrderTitleHTML(order, i+1);
+			var html = BillModule.createBillOrderTitleHTML(order, i+1, k);
 			var itemList = order.itemList;
 			for (var j=0; j<itemList.length; j++) {
 				var orderItem = itemList[j];
@@ -227,10 +229,10 @@ var BillModule = {
 		$('#billAmount').text(amount);
 		$('#orderNumberText').text(orderList.length);
 	},
-	createBillOrderTitleHTML : function(order, index) {
+	createBillOrderTitleHTML : function(order, index, orderIndex) {
 		var html = '<div class="feed-element" style="margin-top:0px; padding-bottom: 0px; background:#D0E9C6; border-bottom: 1px solid;">' +
-			'<i class="orderItemUnit" style="">#&nbsp;订单'+index+'&nbsp;('+order.diningTypeName+'&nbsp;'+order.orderPresetTime+')</i>' +
-			'<i onclick="PrintOrderModule.loadOrderByIndex('+index+')" data-toggle="modal" data-target="#orderPrintPanel"  class="orderItemUnit" style="float:right; margin-right:10px; font-weight:bold; color:#ff706b; font-style:normal; cursor:pointer;">打印</i>' +
+			'<i class="orderItemUnit" style="">#&nbsp;订单'+orderIndex+'&nbsp;('+order.diningTypeName+'&nbsp;'+order.orderPresetTime+')</i>' +
+			'<i onclick="PrintOrderModule.loadOrderByIndex('+index+')" class="orderItemUnit" style="float:right; margin-right:10px; font-weight:bold; color:#ff706b; font-style:normal; cursor:pointer;">打印</i>' +
 			'<i class="orderItemUnit" style="float:right; margin-right:5px;">总额:'+order.amount+'</i>' +
 			'<i class="orderItemUnit" style="float:right; margin-right:10px;">'+GlobalMethod.toDateString(order.orderCreateDateTime)+'</i>' +
 			'</div>';
@@ -256,7 +258,7 @@ var BillModule = {
 			'</div>'
 		return html;
 	},
-	createOrderUnitHTML : function (order, index) {
+	createOrderUnitHTML : function (order, index, orderIndex) {
 		order.diningTypeName = (order.orderTypeFlag == 0 ? '堂食' : '打包');
 		order.fromTypeName = (order.orderInitiatorFlag == 0 ? '商家' : '顾客');
 		var itemHtml = '';
@@ -269,7 +271,7 @@ var BillModule = {
 		order.amount = amount;
 		var html = '<div style="border:1px solid; border-radius:10px; margin-bottom: 5px;">' +
 			'<div>' +
-			'<i class="orderItemUnit2" style="">订单'+index+'</i>' +
+			'<i class="orderItemUnit2" style="">订单'+orderIndex+'</i>' +
 			'<i class="orderItemUnit2" style="">'+order.diningTypeName+' &nbsp; '+order.orderPresetTime+'</i>' +
 			'<i class="orderItemUnit2" style="float:right; margin-right:15px;">总额:'+amount+'</i>' +
 			'<i class="orderItemUnit2" style="float:right; margin-right:10px;">（'+order.fromTypeName+'）'+GlobalMethod.toDateString(order.orderCreateDateTime)+'</i>' +
@@ -1453,8 +1455,41 @@ var PrintOrderModule = {
 		}
 		return undefined;
 	},
+	closePanel : function() {
+		$('#orderPrintPanel').hide();
+	},
 	loadOrderByIndex : function(index) {
-		console.log(index);
+		$('#orderPrintPanel').show();
+		var cell = PrintOrderModule.getOrderByIndex(index - 1);
+		if (undefined == cell) {
+			return ;
+		}
+		console.log(cell);
+		$('#printOrderDiningTypeNameText').text(cell.diningTypeName);
+		$('#printOrderDiningRoomInfoText').text(BillModule.billOwnerName + " - 订单" + (PrintOrderModule.orderListBuffer.length - index + 1));
+		$('#printOrderDiningTimeText').text(cell.orderPresetTime);
+		$('#printOrderDateTimeText').text(GlobalMethod.toDateString(cell.orderCreateDateTime));
+		var target = $('#printOrderItemList');
+		target.html('');
+		var html = '<tr  class="printOrderTitle">\n' +
+			'\t\t\t\t\t\t<td>商品名称</td>\n' +
+			'\t\t\t\t\t\t<td>备注</td>\n' +
+			'\t\t\t\t\t\t<td>数量</td>\n' +
+			'\t\t\t\t\t</tr>';
+		var list = cell.itemList;
+		for (var i=0; i<list.length; i++) {
+			var item = list[i];
+			html += '<tr class="printOrderLine">\n' +
+				'\t\t\t\t\t\t<td>'+item.orderProductName+'</td>\n' +
+				'\t\t\t\t\t\t<td>'+item.orderProductRemarks+'</td>\n' +
+				'\t\t\t\t\t\t<td>'+item.orderProductQuantity+'</td>\n' +
+				'\t\t\t\t\t</tr>';
+		}
+		target.html(html);
+		htmlToImgModule.toImg('printOrderDisplayArea');
+	},
+	downloadLocal : function() {
+		htmlToImgModule.downloadImg('htmlImgModuleTempImg');
 	}
 }
 

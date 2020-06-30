@@ -127,14 +127,22 @@ var GlobalMethod = {
 var htmlToImgModule = {
     toImg : function(cellId) {
         var targetCell = document.getElementById(cellId);
+        // targetCell = $('#'+cellId)[0];
+        // targetCell = targetCell.clone();
+        console.log("targetCell:");
+        console.log(targetCell);
+        // targetCell = targetCell.innerHTML;
+
         html2canvas(targetCell, {
             useCORS: true, // 【重要】开启跨域配置
             scale: 1, // canvas放大倍数，增加图片的清晰度
-            logging: false // 是否开启日志
+			allowTaint: true,
+            logging: true // 是否开启日志
         }).then(function(canvas) {
             var temp = canvas.toDataURL("image/png");
+            console.log(temp);
             var tempImgId = "htmlImgModuleTempImg";
-            targetCell.innerHTML = '<img id="htmlImgModuleTempImg" onclick="htmlToImgModule.downloadImg(\''+tempImgId+'\')" src="" style="width:100%; height:100%;"  />';
+            targetCell.innerHTML = '<img id="htmlImgModuleTempImg" src="" style="width:100%; "  />';
             var resultImgCell = document.getElementById("htmlImgModuleTempImg");
             resultImgCell.src = temp;
         });
