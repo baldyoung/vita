@@ -1,8 +1,13 @@
 $(function() {
 	var t = GlobalMethod.getArgsFromLocationHref("t");
-	t = "../../resource/qrcodeImg/" + t;
-	console.warn(t);
+	t = "/resource/qrcodeImg/" + t;
 	$('#printUnit').attr('src', t);
+	t = GlobalMethod.getArgsFromLocationHref("diningRoomName");
+	t = unescape(t);
+	console.log(t);
+	$('#diningRoomNameArea').text('当前就餐位：'+t);
+	// htmlToImgModule.toImg('printArea' );
+	// htmlToImgModule.toImgWithHeight('printArea', 150);
 	setTimeout("readyToPrint()", 1000);
 });
 

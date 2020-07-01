@@ -91,7 +91,7 @@ var RoomModule = {
 			'<div class="ibox roomPanel" style=" ">' +
 			'<div class="ibox-title roomPanelTop" style="height:50px;">' +
 			'<span  class="pull-left" style="cursor:pointer; font-size:10px;">' +
-			'<span onclick="QRCodeModule.requestRoomCodeImgName('+item.diningRoomId+')" class="glyphicon glyphicon-qrcode" aria-hidden="true" data-toggle="modal" data-target="#qrCodePanel"></span>' +
+			'<span onclick="QRCodeModule.requestRoomCodeImgName('+item.diningRoomId+', \''+item.diningRoomName+'\')" class="glyphicon glyphicon-qrcode" aria-hidden="true" data-toggle="modal" data-target="#qrCodePanel"></span>' +
 			'</span>' +
 			'<span  data-toggle="modal" data-target="#roomStatusPanel"  onclick="DiningRoomStatusModule.readyToSelect('+item.diningRoomId+')" id="roomStatusStyleArea'+item.diningRoomId+'" class=" pull-right roomStatusLabel">'+DiningRoomStatusModule.toDiningRoomStatusNameStyle(item.diningRoomStatus)+'</span>' +
 			'<h5>' +
@@ -1376,13 +1376,15 @@ var NewsModule = {
  */
 var QRCodeModule = {
 	currentRoomId : undefined,
+	currentRoomName : undefined,
 	refreshFlag : false,
 	qrcodeImgName : undefined,
 	printCode : function() {
-		GlobalMethod.redirectURL("../PrintPage/qrcodePrintPage.html?t="+QRCodeModule.qrcodeImgName);
+		GlobalMethod.redirectURL("../PrintPage/qrcodePrintPage.html?t="+QRCodeModule.qrcodeImgName+"&diningRoomName="+escape(QRCodeModule.currentRoomName));
 	},
-	requestRoomCodeImgName : function(roomId) {
+	requestRoomCodeImgName : function(roomId, roomName) {
 		QRCodeModule.currentRoomId = roomId;
+		QRCodeModule.currentRoomName = roomName;
 		$.ajax({
 			url: GlobalConfig.serverAddress + "/mSystem/positionQRcode",
 			type: 'GET',

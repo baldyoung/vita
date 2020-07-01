@@ -125,22 +125,39 @@ var GlobalMethod = {
  * @type {{downloadImg: htmlToImgModule.downloadImg, toImg: htmlToImgModule.toImg}}
  */
 var htmlToImgModule = {
+    toImgWithHeight : function(cellId, tHeight) {
+        var targetCell = document.getElementById(cellId);
+        html2canvas(targetCell, {
+            useCORS: true, // 【重要】开启跨域配置
+            scale: 1, // canvas放大倍数，增加图片的清晰度
+            allowTaint: true,
+            height: tHeight,
+            logging: false // 是否开启日志
+        }).then(function(canvas) {
+            var temp = canvas.toDataURL("image/png");
+            // console.log(temp);
+            var tempImgId = "htmlImgModuleTempImg";
+            targetCell.innerHTML = '<img id="htmlImgModuleTempImg" src="" style="width:100%; height:100%;"  />';
+            var resultImgCell = document.getElementById("htmlImgModuleTempImg");
+            resultImgCell.src = temp;
+        });
+    },
     toImg : function(cellId) {
         var targetCell = document.getElementById(cellId);
         // targetCell = $('#'+cellId)[0];
         // targetCell = targetCell.clone();
-        console.log("targetCell:");
-        console.log(targetCell);
+        // console.log("targetCell:");
+        // console.log(targetCell);
         // targetCell = targetCell.innerHTML;
 
         html2canvas(targetCell, {
             useCORS: true, // 【重要】开启跨域配置
             scale: 1, // canvas放大倍数，增加图片的清晰度
 			allowTaint: true,
-            logging: true // 是否开启日志
+            logging: false // 是否开启日志
         }).then(function(canvas) {
             var temp = canvas.toDataURL("image/png");
-            console.log(temp);
+            // console.log(temp);
             var tempImgId = "htmlImgModuleTempImg";
             targetCell.innerHTML = '<img id="htmlImgModuleTempImg" src="" style="width:100%; "  />';
             var resultImgCell = document.getElementById("htmlImgModuleTempImg");
