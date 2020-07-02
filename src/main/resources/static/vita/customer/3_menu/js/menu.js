@@ -100,6 +100,8 @@ var ProductModule = {
 				} else {
 					var temp = data.data;
 					if (undefined == temp || temp.length ==0 ) {
+						var target = $(ProductModule.displayAreaId);
+						target.html('');
 						return;
 					}
 					temp = sortProductList(temp);
