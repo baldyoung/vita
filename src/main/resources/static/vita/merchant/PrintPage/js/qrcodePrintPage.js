@@ -5,7 +5,7 @@ $(function() {
 	t = GlobalMethod.getArgsFromLocationHref("diningRoomName");
 	t = unescape(t);
 	console.log(t);
-	$('#diningRoomNameArea').text('当前就餐位：'+t);
+	$('#diningRoomNameArea').text('>>> '+t);
 	// htmlToImgModule.toImg('printArea' );
 	// htmlToImgModule.toImgWithHeight('printArea', 150);
 	setTimeout("readyToPrint()", 1000);

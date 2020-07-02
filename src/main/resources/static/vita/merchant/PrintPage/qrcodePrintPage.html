@@ -1,72 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 
-	<head>
-		<meta charset="UTF-8">
-		<title>打印预览</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <meta charset="UTF-8">
+    <title>打印预览</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<link href="../../res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
-		<link href="../../res/css/font-awesome.css?v=4.4.0" rel="stylesheet">
-		<link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
-		<link href="../../res/css/animate.css" rel="stylesheet">
-		<link href="../../res/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="../../res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../res/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="../../res/css/animate.css" rel="stylesheet">
+    <link href="../../res/css/style.css?v=4.1.0" rel="stylesheet">
 
-		<script src="../../res/js/jquery.min.js?v=2.1.4"></script>
-		<script src="../../res/js/bootstrap.min.js?v=3.3.6"></script>
-		<script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
-		<!-- html2canvas -->
-		<script src="../Common/js/html2canvas.min.js"></script>
-		<!-- 全局js -->
-		<script src="../../resource/configFile/globalConfig.js"></script>
-		<!-- 自定义js -->
-		<script src="js/qrcodePrintPage.js"></script>
+    <script src="../../res/js/jquery.min.js?v=2.1.4"></script>
+    <script src="../../res/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- html2canvas -->
+    <script src="../Common/js/html2canvas.min.js"></script>
+    <!-- 全局js -->
+    <script src="../../resource/configFile/globalConfig.js"></script>
+    <!-- 自定义js -->
+    <script src="js/qrcodePrintPage.js"></script>
 
-		<style>
-			.A4Size {
-				width: 525px;
-				height: 743px;
-			}
-		</style>
-	</head>
+    <style>
+        .A4Size {
+            width: 525px;
+            height: 743px;
+        }
+    </style>
+</head>
 
-	<body class="gray-bg ">
-		<div id="printArea" style="width:663px; margin: 0 auto; border-left:1px solid; border-right: 1px solid;" ondblclick="GlobalMethod.goBack()">
-			<table style='width:610px; height:170px; margin:0 auto; ' border="0xp">
-				<tr style='width:100%;'>
-					<td style='width:25%; text-align:center;'>
-						<img id="printUnit" src="" style="width:80%; margin-top:3px; " />
-					</td>
-					<td style='width:50%;'>
-						<div style='width:100%; height:130px;'>
-							<div style="color:black; width:100%; text-align: left; font-size:18px; font-weight: bolder; ">
-								用心做餐饮，健康美味选天天！
-							</div>
-							<div id="diningRoomNameArea" style="color:black; width:100%; text-align: left;">
-								当前就餐位：
-							</div>
-							<div style="color:black; width:100%; text-align: left;">
-								WIFI名称：天天农庄
-							</div>
-							<div style="color:black; width:100%; text-align: left;">
-								密码：88888888
-							</div>
-							<div style="color:black; width:100%; text-align: left;">
-								天天农庄 <span>祝您用餐愉快</span>
-							</div>
-							<div style="width:100%; text-align: left; font-size:15px; font-family: '楷体'; font-weight: bold; color:black;">
-								订餐热线：183 7977 7776（冯）
-							</div>
-						</div>
-					</td>
-					<td style="width:20%;">
-						<img src="/resource/qrcodeImg/print-1.jpg" style="width:100%; "  />
-					</td>
-				</tr>
-			</table>
+<body class="gray-bg ">
+<div id="printArea" style="width:663px; margin: 0 auto; border-left:0px solid; border-right: 0px solid;" ondblclick="GlobalMethod.goBack()">
+    <table style='width:610px; height:170px; margin:0 auto; ' border="0xp">
+        <tr style='width:100%;'>
+            <div id="diningRoomNameArea" style="color:black; width:30%; font-size:25px; text-align:left; ">
 
-		</div>
+            </div>
+        </tr>
+        <tr style='width:100%;'>
+            <td style='width:100%; '>
+                <img id="printUnit" src="" style="width:35%; margin-top:3px; " />
+            </td>
+        </tr>
+        <tr >
+            <td style='width:100%;'>
+                <div style='width:100%; height:130px;'>
+                    <div style="color:black; width:100%; text-align: left;  font-weight: bolder; ">
+                        用心做餐饮，健康美味选天天！
+                    </div>
+                    <div style="color:black; width:100%; text-align: left;">
+                        WIFI名称：天天农庄
+                    </div>
+                    <div style="color:black; width:100%; text-align: left;">
+                        密码：88888888
+                    </div>
+                    <div style="color:black; width:100%; text-align: left;">
+                        天天农庄 <span>祝您用餐愉快</span>
+                    </div>
+                    <div style="width:100%; text-align: left; font-size:15px; font-family: '楷体'; font-weight: bold; color:black;">
+                        订餐热线：183 7977 7776（冯）
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr >
+            <td style="width:100%;">
+                <img src="/resource/qrcodeImg/print-1.jpg" style="width:35%; "  />
+            </td>
+        </tr>
+    </table>
 
-	</body>
+</div>
+
+</body>
 
 </html>
