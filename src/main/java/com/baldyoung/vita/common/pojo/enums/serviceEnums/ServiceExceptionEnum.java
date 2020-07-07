@@ -18,6 +18,7 @@ public enum ServiceExceptionEnum implements EnumBase {
     // 订单相关100300***
     ORDER_IS_EMPTY("订单为空", 100300100),
     NO_ORDER("无订单数据", 100300101),
+    ORDER_NOT_EXISTS("订单不存在", 100300102),
 
 
     // 购物车相关100400***

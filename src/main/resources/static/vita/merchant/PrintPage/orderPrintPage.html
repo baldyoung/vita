@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>打印预览</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 全局js -->
+    <script src="../../res/js/jquery.min.js?v=2.1.4"></script>
+    <script src="../../resource/configFile/globalConfig.js"></script>
+    <!-- sweetalert -->
+    <link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- 自定义js -->
+    <script src="js/orderPrintPage.js"></script>
+
+    <style>
+    </style>
+</head>
+
+<body class="gray-bg " onclick="GlobalMethod.goBack()">
+    <div style="width:300px; margin:0 auto;">
+        <textarea id='orderPrintWordView' readonly="true"
+                  style="font-family:'宋体'; font-size:20px; font-weight:bold; height:100%; width:300px; resize:none;  border:0px solid;"></textarea>
+    </div>
+
+</body>
+
+</html>

@@ -231,7 +231,7 @@ var BillModule = {
     createBillOrderTitleHTML: function (order, index, orderIndex) {
         var html = '<div class="feed-element" style="margin-top:0px; padding-bottom: 0px; background:#D0E9C6; border-bottom: 1px solid;">' +
             '<i class="orderItemUnit" style="">#&nbsp;订单' + orderIndex + '&nbsp;(' + order.diningTypeName + '&nbsp;' + order.orderPresetTime + ')</i>' +
-            '<i onclick="PrintOrderModule.loadOrderByIndex(' + index + ')" class="orderItemUnit" style="float:right; margin-right:10px; font-weight:bold; color:#ff706b; font-style:normal; cursor:pointer;">打印</i>' +
+            '<i onclick="PrintOrderModule.readyToPrint(' + index + ')" class="orderItemUnit" style="float:right; margin-right:10px; font-weight:bold; color:#ff706b; font-style:normal; cursor:pointer;">打印</i>' +
             '<i class="orderItemUnit" style="float:right; margin-right:5px;">总额:' + order.amount + '</i>' +
             '<i class="orderItemUnit" style="float:right; margin-right:10px;">' + GlobalMethod.toDateString(order.orderCreateDateTime) + '</i>' +
             '</div>';
@@ -1466,11 +1466,47 @@ var PrintOrderModule = {
         }
         return undefined;
     },
+    readyToPrint: function (index) {
+        var order = PrintOrderModule.getOrderByIndex(index - 1);
+        if (undefined == order) {
+            return;
+        }
+        var itemList = order.itemList;
+        if (undefined == itemList || 0 == itemList.length) {
+            swal('不能打印空订单', '该订单下无有效数据', 'error');
+            return;
+        }
+        index = (PrintOrderModule.orderListBuffer.length - index + 1);
+        swal({
+                title: "请确定是否打印 订单" + index +" ?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            },
+            function (isConfirm) {
+                if (isConfirm) {
+                    GlobalMethod.redirectURL('../PrintPage/orderPrintPage.html?oi=' + order.orderId + '&drn=' + escape(BillModule.billOwnerName) + '&on=' + index);
+                    /// PrintOrderModule.loadOrderToWord(order, index);
+                } else {
+                    /// PrintOrderModule.loadOrderToImg(order, index);
+                }
+            });
+    },
+
+
+
+
     closePanel: function () {
-        $('#orderPrintWordPanel').modal('hide');
+        $('#orderPrintWordPanelB').hide();
         $('#orderPrintPanel').hide();
     },
     loadOrderByIndex: function (index) {
+
         var order = PrintOrderModule.getOrderByIndex(index - 1);
         if (undefined == order) {
             return;
@@ -1526,7 +1562,7 @@ var PrintOrderModule = {
 
 
     loadOrderToWord: function (order, index) {
-        $('#orderPrintWordPanel').modal('show');
+        $('#orderPrintWordPanelB').show();
         var word = '';
         var orderNumber = '订单' + (PrintOrderModule.orderListBuffer.length - index + 1) + '';
         var temp = PrintOrderModule.createPrintOrderWord(order, orderNumber);
@@ -1539,7 +1575,10 @@ var PrintOrderModule = {
         word += '^^^^^^^^^^^^^^^^^^^^^^\n';
         word += '       厨师用票\n';
         word += temp;
-        $('#printOrderWordArea').text(word);
+        $('#orderPrintWordView').text(word);
+        var target = document.getElementById('orderPrintWordView');
+        console.log(target.scrollHeight);
+        target.style.height = 20 + target.scrollHeight + 'px';
     },
     createPrintOrderWord: function (order, orderNumber) {
         var temp = '----------------------\n';
@@ -1551,13 +1590,13 @@ var PrintOrderModule = {
             var cell = list[i];
             var str = k + '.' + cell.orderProductName;
             var len = PrintOrderModule.theLengthOfString(str) + PrintOrderModule.theLengthOfInteger(cell.orderProductQuantity);
-            console.log("test->"+cell.orderProductName+"(总长："+len+")");
+            console.log("test->" + cell.orderProductName + "(总长：" + len + ")");
             if (len > 22) {
                 len = 22 - (len % 22);
             } else {
                 len = 22 - len;
             }
-            console.log("test->"+cell.orderProductName+"(补位："+len+")");
+            console.log("test->" + cell.orderProductName + "(补位：" + len + ")");
             temp += str + PrintOrderModule.createBlank(len) + cell.orderProductQuantity + '\n';
             if (!GlobalMethod.isEmpty(cell.orderProductRemarks)) {
                 temp += '注：' + cell.orderProductRemarks + '\n';
@@ -1597,7 +1636,7 @@ var PrintOrderModule = {
         }
         return temp;
     },
-    copyPrintOrderWord : function() {
+    copyPrintOrderWord: function () {
         document.getElementById("printOrderWordArea").select();
         document.execCommand('copy');
         swal('已复制到粘贴板', '', 'success');

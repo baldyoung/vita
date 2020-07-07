@@ -31,6 +31,14 @@
         order by orderId desc
     </select>
 
+    <select id="selectOrderByOrderId" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from v_order
+        where orderId = #{orderId}
+    </select>
+
+
 
 
 

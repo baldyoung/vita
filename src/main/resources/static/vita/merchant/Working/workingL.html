@@ -901,7 +901,7 @@
         </div>
     </div>
 </div>
-<!-- 订单打印 - 文字 预览模块 -->
+<!-- 订单打印 - 文字（弹窗） 预览模块 -->
 <div class="modal inmodal in" id="orderPrintWordPanel" tabindex="-1" role="dialog" aria-hidden="true" style="">
     <div class="modal-dialog">
         <div class="modal-content animated bounceInDown">
@@ -914,7 +914,7 @@
             </div>
             <div id="printOrderWordDisplayArea"
                  style="  padding: 20px 10px 20px 10px; text-align: center;">
-                <textarea id="printOrderWordArea" style="width:100%; height:600px; resize:none; z-index:2555;"></textarea>
+                <textarea id="printOrderWordArea" style="font-family:'黑体'; width:100%; height:600px; resize:none; z-index:2555;"></textarea>
             </div>
             <div class="modal-footer">
                 <a data-toggle="modal" class="btn btn-primary" onclick="PrintOrderModule.copyPrintOrderWord()">复制内容</a>
@@ -925,6 +925,14 @@
         </div>
     </div>
 </div>
+<!-- 订单打印 - 文字（覆盖）预览模块 -->
+<div id="orderPrintWordPanelB"
+     style="display:none; width:100%; height:100%; background:#999c9e; z-index:2888; position:fixed; top:0px; left:0px; overflow:auto; ">
+    <div style="width:300px; margin:0 auto;">
+        <textarea id='orderPrintWordView' style="font-family:'黑体'; height:100%; width:300px; resize:none; font-weight: bold; border:0px solid;"></textarea>
+    </div>
+</div>
+
 <!-- 订单打印 - 图片 预览模块 -->
 <div id="orderPrintPanel"
      style="display:none; width:100%; height:100%; background:#999c9e; z-index:2888; position:fixed; top:0px; left:0px;  ">

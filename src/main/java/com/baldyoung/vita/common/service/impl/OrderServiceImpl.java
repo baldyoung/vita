@@ -59,21 +59,22 @@ public class OrderServiceImpl {
         String billNumber = billService.getRoomBillNumber(roomId);
         Integer orderId = createNewOrder(billNumber, orderTypeFlag, orderPresetTime, orderInitiatorFlag);
         for (OrderItemEntity entity : itemList) {
+            entity.setOrderId(orderId);
+            entity.setOwnerId(roomId);
             if (null == entity.getOrderProductId()) {
+                // 商家临时新增商品，无需走库存
+                entity.setOrderProductImg("default.gif");
+                entity.setOrderProductItemStatusFlag(0);
                 continue;
             }
             // 进行下单校验，校验成功的标记下单成功
             // ------------------------------------------------------------------------
             if (!productStockService.pruneStock(entity.getOrderProductId(), entity.getOrderProductQuantity())) {
+                // 下单失败，库存不足
                 entity.setOrderProductItemStatusFlag(1);
                 entity.setOrderProductQuantity(0);
             } else {
                 entity.setOrderProductItemStatusFlag(0);
-            }
-            entity.setOrderId(orderId);
-            entity.setOwnerId(roomId);
-            if (null == entity.getOrderProductImg()) {
-                entity.setOrderProductImg("default.gif");
             }
         }
         orderItemDao.insertOrderItemList(itemList);

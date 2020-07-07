@@ -5,10 +5,7 @@ import com.baldyoung.vita.common.pojo.entity.OrderItemEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.merchant.service.MOrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
@@ -168,6 +165,18 @@ public class MOrderController {
         entity.setOrderProductRemarks(productRemarks);
         mOrderService.addOrderItem(roomId, diningType, entity);
         return success();
+    }
+
+    /**
+     * 获取指定订单的信息
+     * @param orderId
+     * @return
+     * @throws ServiceException
+     */
+    @GetMapping("orderInfo")
+    public ResponseResult getOrderInfo(@RequestParam("orderId")Integer orderId) throws ServiceException {
+
+        return success(mOrderService.getOrderInfo(orderId));
     }
 
 }

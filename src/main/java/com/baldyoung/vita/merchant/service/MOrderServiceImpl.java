@@ -19,8 +19,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.PRODUCT_NOT_FOUND;
-import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.PRODUCT_UNDERSTOCK;
+import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.*;
 import static com.baldyoung.vita.common.utility.CommonMethod.isEmpty;
 import static com.baldyoung.vita.common.utility.CommonMethod.isEmptyCollection;
 
@@ -151,6 +150,43 @@ public class MOrderServiceImpl {
      */
     public void setOrderProductItemToFinish(List<Integer> itemIdList) {
         orderItemDao.updateOrderItemListStatus(itemIdList, 3);
+    }
+
+    /**
+     * 获取指定订单的数据
+     * 订单信息 + 相应商品项
+     * @param orderId
+     * @return
+     * @throws ServiceException
+     */
+    public MOrderDto getOrderInfo(Integer orderId) throws ServiceException {
+        OrderEntity orderEntity = orderDao.selectOrderByOrderId(orderId);
+        if (null == orderEntity || null == orderEntity.getOrderId()) {
+            throw new ServiceException(ORDER_NOT_EXISTS);
+        }
+        MOrderDto mOrderDto = new MOrderDto();
+        mOrderDto.setOrderTypeFlag(orderEntity.getOrderTypeFlag());
+        mOrderDto.setOrderPresetTime(orderEntity.getOrderPresetTime());
+        mOrderDto.setOrderInitiatorFlag(orderEntity.getOrderInitiatorFlag());
+        mOrderDto.setOrderCreateDateTime(orderEntity.getOrderCreateDateTime());
+        List<OrderItemEntity> orderItemEntityList = orderItemDao.selectOrderItemList(orderId);
+        if (isEmptyCollection(orderItemEntityList)) {
+            return mOrderDto;
+        }
+        List<MOrderItemDto> orderItemList = new ArrayList(orderItemEntityList.size());
+        for (OrderItemEntity item : orderItemEntityList) {
+            MOrderItemDto mItem = new MOrderItemDto();
+            mItem.setOrderProductName(item.getOrderProductName());
+            mItem.setOrderProductImg(item.getOrderProductImg());
+            mItem.setOrderProductPrice(item.getOrderProductPrice());
+            mItem.setOrderProductQuantity(item.getOrderProductQuantity());
+            mItem.setOrderProductItemStatusFlag(item.getOrderProductItemStatusFlag());
+            mItem.setOrderProductItemStatusDesc(item.getOrderProductItemStatusDesc());
+            mItem.setOrderProductRemarks(item.getOrderProductRemarks());
+            orderItemList.add(mItem);
+        }
+        mOrderDto.setItemList(orderItemList);
+        return mOrderDto;
     }
 
 }
