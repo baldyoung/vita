@@ -21,4 +21,12 @@ public interface OrderItemDao {
 
     void updateOrderItemListStatus(@Param("itemIdList")List<Integer> itemIdList, @Param("newStatus")Integer newStatus);
 
+    /**
+     * 修改指定订单下商品项的状态
+     * @param orderId
+     * @param refuseStatus 如果是该状态下的商品项则不进行状态变更
+     * @param newStatus 需要变成的新状态
+     */
+    void setOrderItemStatusWithCondition(@Param("orderId")Integer orderId, @Param("refuseStatus")List<Integer> refuseStatus, @Param("newStatus")Integer newStatus);
+
 }

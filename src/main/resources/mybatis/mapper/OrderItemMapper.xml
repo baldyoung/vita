@@ -100,6 +100,20 @@
         </foreach>
     </update>
 
+    <update id="setOrderItemStatusWithCondition" >
+        update V_OrderProductItem
+        set
+            orderProductItemStatusFlag = #{newStatus}
+        where
+            orderId = #{orderId}
+            <if test="null != refuseStatus" >
+                and orderProductItemStatusFlag not in
+                <foreach collection="refuseStatus" index="index" item="item" open="(" separator=", " close=")">
+                    #{item}
+                </foreach>
+            </if>
+    </update>
+
 
 
 

@@ -179,4 +179,15 @@ public class MOrderController {
         return success(mOrderService.getOrderInfo(orderId));
     }
 
+    /**
+     * 订单一次性已读操作
+     * @param orderId
+     * @return
+     */
+    @PostMapping("orderRead")
+    public ResponseResult setOrderWithFlag(@RequestParam("orderId")Integer orderId) {
+        mOrderService.setOrderWithReadFlag(orderId);
+        return success();
+    }
+
 }

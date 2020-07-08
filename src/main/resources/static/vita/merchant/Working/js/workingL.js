@@ -148,6 +148,16 @@ var BillModule = {
     billNumber: undefined,
     billOwnerId: undefined,
     billOwnerName: undefined,
+    validOrderList : [],
+    getValidOrder : function(orderId) {
+        var list = BillModule.validOrderList;
+        for (var i=0; i<list.length; i++) {
+            if (list[i].orderId == orderId) {
+                return list[i];
+            }
+        }
+        return undefined;
+    },
     reloadCurrentRoomBill: function () {
         if (undefined != BillModule.currentLoadRoomId) {
             BillModule.requestAndLoadData(BillModule.currentLoadRoomId);
@@ -208,6 +218,8 @@ var BillModule = {
         var orderList = data.orderList;
         var t = 1;
         k = orderList.length;
+        PrintOrderModule.orderListBuffer = orderList;
+        BillModule.validOrderList = orderList;
         for (var i = 0; i < orderList.length; i++, k--) {
             var order = orderList[i];
             amount += order.amount;
@@ -222,15 +234,15 @@ var BillModule = {
             }
             target.append(html);
         }
-        PrintOrderModule.orderListBuffer = orderList;
         // 账单总价
         BillModule.billAmount = amount;
         $('#billAmount').text(amount);
         $('#orderNumberText').text(orderList.length);
     },
     createBillOrderTitleHTML: function (order, index, orderIndex) {
-        var html = '<div class="feed-element" style="margin-top:0px; padding-bottom: 0px; background:#D0E9C6; border-bottom: 1px solid;">' +
+        var html = '<div id="billOrderTitleA' + order.orderId + '" class="feed-element isOrderTitle" style="margin-top:0px; padding-bottom: 0px; background:#D0E9C6; border-bottom: 1px solid;">' +
             '<i class="orderItemUnit" style="">#&nbsp;订单' + orderIndex + '&nbsp;(' + order.diningTypeName + '&nbsp;' + order.orderPresetTime + ')</i>' +
+            '<i onclick="ItemStatusModule.setOrderWithReadFlag('+order.orderId+')" class="orderItemUnit" style="float:right; margin-right:10px; font-weight:bold; color:#1f81ff; font-style:normal; cursor:pointer;">'+(ItemStatusModule.isOrderStatusNotRead(order.orderId) ? "未读" : "已读")+'</i>' +
             '<i onclick="PrintOrderModule.readyToPrint(' + index + ')" class="orderItemUnit" style="float:right; margin-right:10px; font-weight:bold; color:#ff706b; font-style:normal; cursor:pointer;">打印</i>' +
             '<i class="orderItemUnit" style="float:right; margin-right:5px;">总额:' + order.amount + '</i>' +
             '<i class="orderItemUnit" style="float:right; margin-right:10px;">' + GlobalMethod.toDateString(order.orderCreateDateTime) + '</i>' +
@@ -241,7 +253,7 @@ var BillModule = {
         var temp = (GlobalMethod.isEmpty(item.orderProductRemarks) ? '' : ('(' + item.orderProductRemarks + ')'));
         item.itemStatusName = toOrderItemStatusName(item.orderProductItemStatusFlag);
         item.itemStatusStyle = toOrderItemStatusNameStyle(item.orderProductItemStatusFlag);
-        var html = '<div class="feed-element">' +
+        var html = '<div class="feed-element isOrderItem">' +
             '<i class="orderItemUnit" style="width:5%;">' + index + '</i>' +
             '<i class="orderItemUnit" style="width:7%;font-style: normal;">' + item.itemStatusStyle + '</i>' +
             '<i class="orderItemUnit" style="width:20%; font-weight:bolder; color:black; font-style: normal;">' + item.orderProductName + '&nbsp;' + temp + '</i>' +
@@ -804,12 +816,59 @@ var ItemStatusModule = {
                     ShowTipModule.success("状态已重置");
                     // swal("操作成功", '', 'success');
                 } else {
-                    swal("获取数据失败", data.desc, "error");
+                    swal("修改状态失败", data.desc, "error");
                 }
             }
         });
+    },
+    setOrderWithReadFlag : function (orderId) {
+        var order = BillModule.getValidOrder(orderId);
+        if (!ItemStatusModule.isOrderStatusNotRead(orderId)) {
+            ShowTipModule.warning("订单当前为已读");
+            return;
+        }
+        ItemStatusModule.sendData(orderId);
+    },
+    isOrderStatusNotRead : function(orderId) {
+        var target = $('#billOrderTitleA' + orderId);
+        var unReadNumber = 0;
+        var order = BillModule.getValidOrder(orderId);
+        if (undefined == order || undefined == order.itemList) {
+            return false;
+        }
+        var list= order.itemList;
+        for (var i=0; i<list.length; i++) {
+            var item = list[i];
+            if (item.orderProductItemStatusFlag != 2 && item.orderProductItemStatusFlag != 3) {
+                return true;
+            }
+        }
+        return false;
+    },
+    sendData : function(orderId) {
+        $.ajax({
+            url: GlobalConfig.serverAddress + "/mOrder/orderRead",
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            //async: false, //设置同步
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            data: {
+                orderId : orderId
+            },
+            success: function(data) {
+                if (data.code != 0) {
+                    swal('批量修改状态失败', data.desc, 'error');
+                } else {
+                    BillModule.reloadCurrentRoomBill();
+                    ShowTipModule.success("状态已重置");
+                }
+            },
+            error: function() {
+                swal('服务器连接失败', '请检查网络是否通畅', 'warning');
+            }
+        });
     }
-
 }
 
 /**

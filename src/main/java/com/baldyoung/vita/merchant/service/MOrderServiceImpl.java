@@ -14,6 +14,7 @@ import com.baldyoung.vita.common.service.impl.OrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -40,6 +41,20 @@ public class MOrderServiceImpl {
 
     @Autowired
     private OrderServiceImpl orderService;
+
+    /**
+     * 一次性订单已读时，不能变更为已读状态的商品项状态
+     */
+    private static List<Integer> refuseOrderItemStatusWhenSetOrderRead;
+
+    @PostConstruct
+    public void init() {
+        Integer[] refuseStatus = {1, 4};
+        refuseOrderItemStatusWhenSetOrderRead = new ArrayList(refuseStatus.length);
+        for (Integer status : refuseStatus) {
+            refuseOrderItemStatusWhenSetOrderRead.add(status);
+        }
+    }
 
     /**
      * 获取指定就餐位的所有订单
@@ -187,6 +202,14 @@ public class MOrderServiceImpl {
         }
         mOrderDto.setItemList(orderItemList);
         return mOrderDto;
+    }
+
+    /**
+     * 对指定订单进行一次性已读操作
+     * @param orderId
+     */
+    public void setOrderWithReadFlag(Integer orderId) {
+        orderItemDao.setOrderItemStatusWithCondition(orderId, refuseOrderItemStatusWhenSetOrderRead, 2);
     }
 
 }
