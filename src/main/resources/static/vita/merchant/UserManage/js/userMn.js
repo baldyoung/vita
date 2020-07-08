@@ -114,7 +114,6 @@ var updateOrAddMerchantUserModule = {
         if (GlobalMethod.isEmpty(data.userName)) {
             data.userName = '';
         }
-        console.log(data);
         return data;
     },
     sendAction : function() {

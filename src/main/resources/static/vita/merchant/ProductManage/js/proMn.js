@@ -395,7 +395,7 @@ var ProductEditModule = {
 			$('#newProductAttributeTypeId').val(productInfo.productAttributeTypeId);
 			$('#newProductPrice').val(productInfo.productPrice);
 			// $('#newProductPriceUnit').val(t.priceUnit);
-			$('#newProductRemark').val(productInfo.productInfo); console.log('kkk');
+			$('#newProductRemark').val(productInfo.productInfo);
 			if (productInfo.productStockFlag == 0) { // 不需要库存限制
 				$('#needStock').prop('checked', true);
 				$('#newProductStock').val('');
@@ -416,7 +416,6 @@ var ProductEditModule = {
 				return;
 			}
 			if (0 == $('.imgWrap').length) { //未选择图片
-				// console.log('未上传图片,将调用自定义ajax调用')
 				if(DataModule.createOrUpdateProduct(targetData)) {
 					OptionModule.initProductList();
 					$('#btnCloseProductInfWin').click();
@@ -577,7 +576,6 @@ function onNeedStockChange() {
 //**************************************************************************************************************************页面逻辑处理调用
 //修改商品信息时，替换图片按钮对应的函数调用
 function readyUpdatePicture() {
-	//console.log('readyUpdatePicture...')
 	var temp = $('#updateProPicWindow');
 	if (temp.css('display') == 'none') { //打开图片上传模块
 		$('#updateProPicWindow').show();
@@ -762,7 +760,6 @@ function readyForWebUploader() {
 
 			// 成功
 			if (cur === 'error' || cur === 'invalid') {
-				console.log(file.statusText);
 				showError(file.statusText);
 				percentages[file.id][1] = 1;
 			} else if (cur === 'interrupt') {
@@ -1017,8 +1014,6 @@ function readyForWebUploader() {
 	});
 	//上传成功后调用
 	uploader.on('uploadSuccess', function(file, response) {
-		console.log("上传成功后，后台返回")
-		console.log(response)
 		if (response.code == 0) { //添加商品信息提交成功
 			if (undefined == response.desc) {
 				response.desc = "";
@@ -1062,8 +1057,6 @@ function readyForWebUploader() {
 	});
 	//上传前调用
 	uploader.on('uploadBeforeSend', function(obj, data) {
-		//console.log('uploader befor ')
-		//console.log(newProductInf)
 		//传入表单参数
 		var newProductInf = ProductEditModule.packageData();
 		data = $.extend(data, {

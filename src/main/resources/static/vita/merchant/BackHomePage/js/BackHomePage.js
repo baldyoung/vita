@@ -18,7 +18,6 @@ function changeAudioState(){
 }
 //改变全屏状态
 function changeFullScreenState(){
-	console.log("changeFullScreenState:");
 	isFullScreen = isFullScreen == false ? true : false;
 	if(true == isFullScreen) openFullScreen();
 	else closeFullScreen();
@@ -64,7 +63,6 @@ function logoutUser(){
         },
         error: function(data){
 
-            console.log("登录失败\n浏览器异常")
         }
 
     });
@@ -106,7 +104,6 @@ function changePWD(){
             }
         },
         error: function(data){
-            console.log("登录失败\n浏览器异常")
         }
     });
     $('#oldPWD').val(''),

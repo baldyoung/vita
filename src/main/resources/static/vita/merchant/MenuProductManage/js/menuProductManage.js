@@ -91,7 +91,6 @@ var DataModule = {
         }
         data[data.length] = cell;
         DataModule.productData = data;
-        console.log(data);
     },
     requestProductTypeList : function () {
         var targetData = [];
@@ -385,8 +384,6 @@ var ProductEditModule = {
     },
     saveData : function() {
         var data = ProductEditModule.packageData();
-        console.log("修改后的商品属性：");
-        console.log(data);
         if (undefined != data) {
             ProductEditModule.sendData(data);
         }

@@ -196,7 +196,6 @@ function postProTypeInf(t){
 
 //准备添加新商品类型
 function readForAddProType(){
-    console.log("read");
     currentProTypeId=undefined;
     $('#myModal_title1').text('商品类型信息-新增');
 	

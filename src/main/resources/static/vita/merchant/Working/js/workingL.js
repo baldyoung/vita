@@ -1636,7 +1636,6 @@ var PrintOrderModule = {
         word += temp;
         $('#orderPrintWordView').text(word);
         var target = document.getElementById('orderPrintWordView');
-        console.log(target.scrollHeight);
         target.style.height = 20 + target.scrollHeight + 'px';
     },
     createPrintOrderWord: function (order, orderNumber) {
@@ -1649,13 +1648,13 @@ var PrintOrderModule = {
             var cell = list[i];
             var str = k + '.' + cell.orderProductName;
             var len = PrintOrderModule.theLengthOfString(str) + PrintOrderModule.theLengthOfInteger(cell.orderProductQuantity);
-            console.log("test->" + cell.orderProductName + "(总长：" + len + ")");
+            // console.log("test->" + cell.orderProductName + "(总长：" + len + ")");
             if (len > 22) {
                 len = 22 - (len % 22);
             } else {
                 len = 22 - len;
             }
-            console.log("test->" + cell.orderProductName + "(补位：" + len + ")");
+            // console.log("test->" + cell.orderProductName + "(补位：" + len + ")");
             temp += str + PrintOrderModule.createBlank(len) + cell.orderProductQuantity + '\n';
             if (!GlobalMethod.isEmpty(cell.orderProductRemarks)) {
                 temp += '注：' + cell.orderProductRemarks + '\n';

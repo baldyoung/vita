@@ -215,7 +215,6 @@ function requestorderList() {
 }
 //加载订单详细数据 数据表格
 function loadorderDTable(t) {
-	console.log(t);
 	var dataTable = $('#orderDataDTable');
 	if ($.fn.dataTable.isDataTable(dataTable)) {
 		dataTable.DataTable().destroy();

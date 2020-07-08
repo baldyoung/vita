@@ -43,19 +43,15 @@ var AudioModel = {
 	},
 	//***************** 
 	loopPlay : function(t){ //循环播放的处理逻辑
-		console.log("\nloopPlay...")
-		console.log("Times:"+t.Times);
-		console.log("Timeouter:"+t.Timeouter+"");
 		
 		if(t.Times==-1 || t.Times>0){
 			if(t.Times!=-1) t.Times--;
 			t.Timeouter = setTimeout(t.loopPlay, t.TimeLength);
 			t.playAudio();
-			console.log("playing music...")
 		}
 	},
 	startLoopPlay : function(times, timeLength){ //循环播放的次数，-1代表无限循环, timeLength代表间隔时长（单位毫秒）
-		console.log(times+", "+timeLength);
+
 		if(!showMsgIfNull(this.MyAudio, "MyAudio is null !")){
 			this.Timeouter = setInterval(this.playAudio, timeLength);
 			//this.Times = times;
@@ -90,7 +86,6 @@ var AudioModel = {
 //如果target不存在则打印指定的错误信息并返回true，否则返回false
 function showMsgIfNull(target, msg){
 	if(undefined == target || null == target){
-		console.log(msg);
 		return true;
 	} 
 	return false;

@@ -830,19 +830,7 @@
 
   var defaults = $.actions.prototype.defaults = {
     onClose: undefined,
-    /*actions: [{
-      text: "菜单",
-      className: "color-danger",
-      onClick: function() {
-        console.log(1);
-      }
-    },{
-      text: "菜单2",
-      className: "color-success",
-      onClick: function() {
-        console.log(2);
-      }
-    }]*/
+
   }
 
 }($);

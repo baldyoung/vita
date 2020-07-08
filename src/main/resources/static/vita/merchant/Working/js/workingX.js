@@ -758,8 +758,6 @@ function deleteOF(m, t){
             break;
         }
     }
-    console.log("删除后的结果集")
-    console.log(OrderFormList)
 }
 
 

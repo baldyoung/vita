@@ -83,13 +83,13 @@ var ServiceModule = {
 				});
 			}
 		});
-		console.log("发送给商家" + serviceId + "服务信息");
+		// console.log("发送给商家" + serviceId + "服务信息");
 	},
 	cancelServiceRequest: function() {
 		// 取消当前桌的服务请求
 		// 同步请求
 
-		console.log("已取消当前的服务请求");
+		// console.log("已取消当前的服务请求");
 	},
 	requestServiceResult: function() { // 请求当前服务的结果
 		if (testTimes-- > 0) {
