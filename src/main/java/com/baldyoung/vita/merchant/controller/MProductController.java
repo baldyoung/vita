@@ -90,7 +90,7 @@ public class MProductController {
         }
         MultipartFile multipartFile = newProductDto.getFile();
         if (null == newProductDto.getProductId() && null == multipartFile && null == newProductDto.getProductImgName()) {
-            return defeat("图片为空");
+            newProductDto.setProductImgName("default.gif");
         }
         if (null != multipartFile) {
             // 判读图片的长宽

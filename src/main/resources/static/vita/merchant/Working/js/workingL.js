@@ -82,7 +82,7 @@ var RoomModule = {
     },
     createDisplayUnitHtml: function (item) {
         if (!GlobalMethod.isEmpty(item.reservationData)) {
-            item.reservationData = '预约: ' + item.reservationData;
+            item.reservationData = '<span style="color:red;">' + '预约: ' + item.reservationData + '</span>';
         } else {
             item.reservationData = '无预约';
         }

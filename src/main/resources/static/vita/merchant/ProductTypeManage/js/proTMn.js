@@ -28,7 +28,7 @@ var PTModule = {
             },{
                 data:'productTypeName'
             },{
-                data:'isShow'
+                data:'isShowText'
             }
             ],
             "columnDefs": [{
@@ -59,7 +59,7 @@ var PTModule = {
                     data = data.data;
                     for(var i=0; i<data.length; i++) {
                         var item = data[i];
-                        item.isShowText = item.isShow == 1 ? '已上架': '未上架';
+                        item.isShowText = item.isShow == 1 ? '上架': '下架';
                     }
                     PTModule.loadData(data);
                 } else {

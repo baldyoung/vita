@@ -6,6 +6,7 @@ import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException
 import com.baldyoung.vita.customer.controller.CShoppingCartController;
 
 import javax.servlet.http.HttpSession;
+import java.io.*;
 import java.util.Collection;
 
 import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceExceptionEnum.MERCHANT_GRADE_FORBIDDEN;
@@ -102,5 +103,46 @@ public class CommonMethod {
         dto.setOrderProductQuantity(entity.getOrderProductQuantity());
         dto.setOrderProductRemarks(entity.getOrderProductRemarks());
         return dto;
+    }
+
+
+    public static void readFileAndSendData(OutputStream outputStream, String filePathName) {
+        File file = new File(filePathName);
+        if (!file.exists() || file.isDirectory()) {
+            return ;
+        }
+        // 创建文件读取流
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            return ;
+        }
+        byte[] bytes = new byte[2048];
+        int k;
+        String logHead = "<html><head></head><body><textarea style='width:100%; height:100%; resize:none; background:black; color:#2BF100; padding: 10px; font-size:18px;'>";
+        String logEnd = "</textarea></body></html>";
+        try {
+            outputStream.write(logHead.getBytes());
+            while(true) {
+                k = fileInputStream.read(bytes);
+                if (k == -1) {
+                    break;
+                }
+                outputStream.write(bytes, 0, k);
+            }
+            outputStream.write(logEnd.getBytes());
+        } catch (IOException e) {
+            System.out.println("readFileAndSendData error: filePathName = "+filePathName + "\n" + e.getMessage());
+        } finally {
+            if (null != fileInputStream) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    System.out.println("readFileAndSendData error: filePathName = "+filePathName + "\n" + e.getMessage());
+                }
+            }
+        }
+
     }
 }

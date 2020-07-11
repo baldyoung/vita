@@ -32,6 +32,9 @@ public class CommonConfig {
     @Value("${customerInvoiceSessionTime}")
     public Integer customerInvoiceSessionTime;
 
+    @Value("${debugLogFilePathName}")
+    public String debugLogFilePathName;
+
     public static int customerHeartBeatMaxTimes = 300;
 
 }

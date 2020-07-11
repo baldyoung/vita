@@ -1,16 +1,23 @@
 package com.baldyoung.vita.merchant.controller;
 
+import com.baldyoung.vita.common.CommonConfig;
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.entity.DiningRoomReservationEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.service.impl.DiningRoomRequestPositionServiceImpl;
+import com.baldyoung.vita.common.utility.CommonMethod;
 import com.baldyoung.vita.merchant.service.MProductStockServiceImpl;
 import com.baldyoung.vita.merchant.service.MSystemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import static com.baldyoung.vita.common.pojo.dto.ResponseResult.defeat;
-import static com.baldyoung.vita.common.pojo.dto.ResponseResult.success;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.io.OutputStream;
+
+import static com.baldyoung.vita.common.pojo.dto.ResponseResult.*;
 import static com.baldyoung.vita.common.utility.CommonMethod.isAnyEmpty;
 
 @RestController
@@ -24,6 +31,9 @@ public class MSystemController {
 
     @Autowired
     private MProductStockServiceImpl mProductStockService;
+
+    @Autowired
+    private CommonConfig commonConfig;
 
     @GetMapping("resetAllProductStock")
     public ResponseResult resetAllProductStock() throws ServiceException {
@@ -179,6 +189,20 @@ public class MSystemController {
     public ResponseResult refreshPositionQRcode(@RequestParam("roomId")Integer roomId) throws Exception {
         diningRoomRequestPositionService.createNewPosition(roomId);
         return success();
+    }
+
+    @GetMapping("log")
+    public ResponseResult getDebugLogData(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) throws IOException {
+        httpServletResponse.setContentType("text/html;charset=UTF-8");
+        httpServletResponse.setCharacterEncoding("UTF-8");
+        OutputStream outputStream = httpServletResponse.getOutputStream();
+
+        if (null == outputStream) {
+            return defeat("something wrong");
+        }
+        CommonMethod.readFileAndSendData(outputStream, commonConfig.debugLogFilePathName);
+        outputStream.close();
+        return null;
     }
 
 
