@@ -54,7 +54,7 @@ var OptionModule = {
 				pageOptionalAreaId: 'pagingBtnDisplayArea',
 				totalAmountOfData: DataModule.productCountInfoBuffer.total,
 				maxNumberOfDisplayPageButton: 6, //
-				maxAmountOfOnePage: 15,
+				maxAmountOfOnePage: 5,
 				loadPageIndex : 1,
 				run : OptionModule.refreshProductList
 			});
@@ -67,6 +67,33 @@ var OptionModule = {
 			targetData.maxSize = pagingInfo.maxAmountOfData;
 			targetData = DataModule.requestProductList(targetData);
 			ProductModule.loadData(targetData);
+		},
+		reloadCurrentPageProductList : function() {
+			// 重新加载当前页的商品集数据
+			// 获取商品筛选条件
+			var targetData = FilterModule.packageData();
+			if (undefined == targetData) {
+				return;
+			}
+			// 获取并加载商品统计信息
+			targetData = DataModule.requestCountInfo(targetData);
+			if (undefined == targetData) {
+				return;
+			}
+			CountInfoModule.loadData(targetData);
+			// 创建一个分页条，并请求第当前页
+			$('#pagingBtnDisplayArea').html('');
+			ProductModule.loadData([]);
+			var currentPageNumber = PagingBarModule.currentPageIndex;
+			PagingBarModule.currentPageIndex = undefined;
+			PagingBarModule.build({
+				pageOptionalAreaId: 'pagingBtnDisplayArea',
+				totalAmountOfData: DataModule.productCountInfoBuffer.total,
+				maxNumberOfDisplayPageButton: 6, //
+				maxAmountOfOnePage: 5,
+				loadPageIndex : currentPageNumber,
+				run : OptionModule.refreshProductList
+			});
 		},
 		deleteProduct : function(productId, productName) {
 			swal({
@@ -417,8 +444,13 @@ var ProductEditModule = {
 			}
 			if (0 == $('.imgWrap').length) { //未选择图片
 				if(DataModule.createOrUpdateProduct(targetData)) {
-					OptionModule.initProductList();
-					$('#btnCloseProductInfWin').click();
+					if (undefined != targetData.productId) {
+						// 修改商品信息，从当前也重新加载商品集
+						OptionModule.reloadCurrentPageProductList();
+					} else {
+						OptionModule.initProductList();
+					}
+					$('#btnCloseProductInfWin').trigger('click');
 				}
 			} else { //选择了图片
 				uploaderX.upload();
@@ -1018,10 +1050,15 @@ function readyForWebUploader() {
 			if (undefined == response.desc) {
 				response.desc = "";
 			}
-			OptionModule.initProductList();
-			$('#btnCloseProductInfWin').trigger('click');
+			var targetData = ProductEditModule.packageData();
 			swal('保存成功', response.desc, 'success');
-			// swal("保存成功", "商品集已变更", "success");
+			if (undefined != targetData.productId) {
+				// 修改商品信息，从当前也重新加载商品集
+				OptionModule.reloadCurrentPageProductList();
+			} else {
+				OptionModule.initProductList();
+			}
+			$('#btnCloseProductInfWin').trigger('click');
 		} else {
 			swal(response.desc, '', 'error');
 		}
