@@ -12,6 +12,8 @@ public interface CustomerMessageTypeDao {
 
     CustomerMessageTypeEntity selectByCustomerMessageTypeId(@Param("id")Integer id);
 
+    CustomerMessageTypeEntity selectByCustomerMessageTypeName(@Param("name")String name);
+
     void insertCustomerMessageType(@Param("entity")CustomerMessageTypeEntity entity);
 
     void delete(@Param("id")Integer id);

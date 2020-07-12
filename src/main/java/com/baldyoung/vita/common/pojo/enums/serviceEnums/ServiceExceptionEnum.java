@@ -47,6 +47,10 @@ public enum ServiceExceptionEnum implements EnumBase {
     // 通用100900***
     ILLEGAL_OPERATION("非法操作", 100900100),
 
+    // 顾客消息类型 100010***
+    CUSTOMER_MESSAGE_TYPE_NAME_EXISTS("顾客消息类型名称已存在", 100010100),
+
+
 
 
     ;

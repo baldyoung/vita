@@ -43,6 +43,13 @@
         where customerMessageTypeId = #{entity.customerMessageTypeId}
     </update>
 
+    <select id="selectByCustomerMessageTypeName" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from v_customerMessageType
+        where customerMessageTypeName = #{name}
+    </select>
+
 
 
 

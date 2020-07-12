@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title> - 通知 &amp; 提示</title>
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+
+		<script src="../../res/js/jquery.min.js?v=2.1.4"></script>
+		<script src="../../res/js/bootstrap.min.js?v=3.3.6"></script>
+		<link href="../../res/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="../../res/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="../../res/css/animate.css" rel="stylesheet">
+		<link href="../../res/css/style.css?v=4.1.0" rel="stylesheet">
+		<!-- sweetalert弹窗组件 -->
+		<link href="../../res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+		<script src="../../res/js/plugins/sweetalert/sweetalert.min.js"></script>
+		<!-- 自定义js -->
+		<script src="../../resource/configFile/globalConfig.js"></script>
+		<script src="js/customerMessageTypeManage.js"></script>
+		<style > 
+			.red-font {
+				color : red;
+				}
+			.black-font {
+				color : black;
+				}
+			.option-unit {
+				margin-left : 10px;
+				}
+		</style>
+	</head>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content animated fadeIn">
+			<div class="row " style='padding-top:50px;'>
+				<!-- 顾客消息类型展示 -->
+				<div class="col-sm-6" style="width:500px; margin:0 auto; float:none;">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>当前的顾客消息类型</h5>
+							<div class="ibox-tools">
+								<button type="button" class="btn btn-primary" onclick="CustomerMessageModule.readyToAdd()">
+                                	新增
+                            	</button>
+							</div>
+						</div>
+						<div id='messageDisplayArea' class="ibox-content" style="text-align: center;">
+							<div class="alert alert-success alert-dismissable">
+								<button class="close option-unit" type="button">
+									<i class="fa fa-times red-font"></i>
+								</button>
+								<button class="close" type="button">
+									<i class="fa fa-edit red-font"></i>
+								</button> 
+								hAdmin是一个很棒的后台UI框架 
+							</div>
+							<div class="alert alert-info alert-dismissable">
+								<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button> hAdmin是一个很棒的后台UI框架 <a class="alert-link" href="notifications.html#">了解更多</a>.
+							</div>
+							<div class="alert alert-warning alert-dismissable">
+								<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button> hAdmin是一个很棒的后台UI框架 <a class="alert-link" href="notifications.html#">了解更多</a>.
+							</div>
+							<div class="alert alert-danger alert-dismissable">
+								<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button> hAdmin是一个很棒的后台UI框架 <a class="alert-link" href="notifications.html#">了解更多</a>.
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 新增或修改数据单元的窗口 -->
+		<div class="modal inmodal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content animated bounceInDown">
+					<div class="modal-header">
+						<span >顾客消息类型-</span>
+						<span id="myModal_title"></span>
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span>
+							<span class="sr-only">关闭</span>
+                		</button>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label>名称</label> 
+							<input id='nameText' type="text" placeholder="请输入类型名" class="form-control" style="width:70%; height:45px;"/>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="CustomerMessageModule.commitEditData()">保存</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>
