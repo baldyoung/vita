@@ -54,7 +54,7 @@ var OptionModule = {
 				pageOptionalAreaId: 'pagingBtnDisplayArea',
 				totalAmountOfData: DataModule.productCountInfoBuffer.total,
 				maxNumberOfDisplayPageButton: 6, //
-				maxAmountOfOnePage: 5,
+				maxAmountOfOnePage: 15,
 				loadPageIndex : 1,
 				run : OptionModule.refreshProductList
 			});
@@ -90,7 +90,7 @@ var OptionModule = {
 				pageOptionalAreaId: 'pagingBtnDisplayArea',
 				totalAmountOfData: DataModule.productCountInfoBuffer.total,
 				maxNumberOfDisplayPageButton: 6, //
-				maxAmountOfOnePage: 5,
+				maxAmountOfOnePage: 15,
 				loadPageIndex : currentPageNumber,
 				run : OptionModule.refreshProductList
 			});
@@ -712,8 +712,8 @@ function readyForWebUploader() {
 		server: GlobalConfig.serverAddress + "/mProduct/addOrUpdate",
 		//限制，一次只能上传一个文件
 		fileNumLimit: 1,
-		fileSizeLimit: 50 * 1024 * 1024, // 50 M
-		fileSingleSizeLimit: 10 * 1024 * 1024, // 10 M
+		fileSizeLimit: 1 * 1024 * 1024, // 50 M
+		fileSingleSizeLimit: 1 * 1024 * 1024, // 10 M
 		compress: false,
 		formData: {
 			// inf: 'testMsg'
@@ -1068,7 +1068,12 @@ function readyForWebUploader() {
 	uploader.on('uploadE')
 
 	uploader.onError = function(code) {
-		alert('Eroor: ' + code);
+		if ('Q_EXCEED_SIZE_LIMIT' == code) {
+			swal('图片大小不能超过1MB', '', 'error');
+		} else {
+			swal('图片操作有误:' + code, '', 'error');
+		}
+		// alert('Eroor: ' + code);
 	};
 
 	$upload.on('click', function() {
