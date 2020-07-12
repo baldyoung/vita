@@ -1300,7 +1300,7 @@ var DiningRoomReservationModule = {
             },
             success: function (data) {
                 if (data.code == 0) {
-                    $('#reservationTip' + DiningRoomReservationModule.currentRoomId).text('预约: ' + diningDate + '【' + diningTime + '】 ' + customerName);
+                    $('#reservationTip' + DiningRoomReservationModule.currentRoomId).html('<span style="color:red;">预约: ' + diningDate + '【' + diningTime + '】 ' + customerName + '</span>');
                     swal('标记成功', '', 'success');
                 } else {
                     swal("操作失败", data.desc, "error");
