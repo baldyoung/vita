@@ -101,7 +101,7 @@ var RoomModule = {
             '<div class="col-sm-12 roomOptionalArea2">' +
             '<div class="col-sm-5" style="padding: 0 0 0 0;">' +
             '<div class="team-members roomOptionalArea">' +
-            '<button onclick="BillModule.requestAndLoadData(' + item.diningRoomId + ')" class="btn btn-info " type="button" data-toggle="modal" data-target="#OrderFormWindow" style="margin-bottom:5px; " >' +
+            '<button onclick="BillModule.requestAndLoadData(' + item.diningRoomId + ')" class="btn btn-info " type="button" style="margin-bottom:5px; " >' +
             '<i class="fa fa-paste"></i> 订单详情' +
             '<span id="orderItemNewsTip' + item.diningRoomId + '" class="badge badge-danger newsTip" style="background:#ED5565; color:black;  display:none;    "></span>' +
             '</button>' +
@@ -175,6 +175,7 @@ var BillModule = {
             },
             success: function (data) {
                 if (data.code == 0) {
+                    $('#OrderFormWindow').modal('show');
                     data = data.data;
                     BillModule.currentLoadRoomId = roomId;
                     BillModule.customerName = (undefined == data.billCustomerName ? '未知' : data.billCustomerName);
@@ -187,7 +188,7 @@ var BillModule = {
                 } else {
                     ShowTipModule.error(data.desc);
                     // swal("获取数据失败", data.desc, "error");
-                    $("#closeOrderFormWindowBtn").trigger("click"); //模拟点击关闭按钮
+                    // $("#closeOrderFormWindowBtn").trigger("click"); //模拟点击关闭按钮
                 }
             }
         });
