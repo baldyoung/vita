@@ -572,7 +572,7 @@ var CountInfoModule = {
     loadData: function (countInfo) {
         $('#infProAmount').text(countInfo.total);
         $('#infProAmount_isShow').text(countInfo.productIsShow);
-        $('#infProAmount_stock').text(countInfo.productStock);
+        // $('#infProAmount_stock').text(countInfo.productStock);
         $('#infProAmount_picture').text(countInfo.productImgName);
         // $('#infProAmount_type').text(countInfo.productTypeId);
     }
