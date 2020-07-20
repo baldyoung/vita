@@ -198,6 +198,9 @@ var ProductModule = {
 	createDisplayCellHTML : function(t) { // 每个商品的展示效果生成
 		var forbidColor = '#F0E0E0';
 		var forbidOption = (1 == t.productStockFlag && t.productStock <= 0);
+		if (undefined == t.productInfo) {
+			t.productInfo = '';
+		}
 		var str = '<div class="classify-box1" ' + (forbidOption ? ' style="background:#F0E0E0;" ' : '') + ' >';
             str += '<span class="classify-box1-img1"><img src="' + GlobalConfig.productImgRelativePath + t.productImgName + '" alt=""></span>';
             str += '<div class="classify-box2">';
