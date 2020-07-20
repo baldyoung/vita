@@ -152,13 +152,14 @@
 							<thead>
 								<tr>
 									<td width="5%" style='text-align:center; font-size:10px; '>编号</td>
-									<td width="9%" style='text-align:center; font-size:10px; '>图片</td>
-									<td width="19%" style='text-align:center; font-size:10px; '>名称</td>
+									<td width="8%" style='text-align:center; font-size:10px; '>图片</td>
+									<td width="18%" style='text-align:center; font-size:10px; '>名称</td>
 									<td width="8%" style='text-align:center; font-size:10px; '>类型</td>
-									<td width="9%" style='text-align:center; font-size:10px; '>属性</td>
+									<td width="8%" style='text-align:center; font-size:10px; '>属性</td>
 									<td width="8%" style='text-align:center; font-size:10px; '>单价</td>
-									<td width="8%" style='text-align:center; font-size:10px; '>状态</td>
-									<td width="25%" style='text-align:center; font-size:10px; '>操作</td>
+                                    <td width="7%" style='text-align:center; font-size:10px; '>状态</td>
+                                    <td width="14%" style='text-align:center; font-size:10px; '>备注</td>
+									<td width="15%" style='text-align:center; font-size:10px; '>操作</td>
 								</tr>
 							</thead>
 						</table>
@@ -204,7 +205,7 @@
                         		</select>
 							</div>
 						</div>
-						<div style="margin-top:3px;">
+						<div style="margin-top:3px; display:none;">
 							<span id="stockLabel">商品库存：</span>
 							<div class="btn-group open"><input id='newProductStock' type="text" readonly="true" placeholder="默认无库存限制" class="form-control" style="width:70%; "></div>
 							<span class="">不需要库存：</span>
@@ -216,9 +217,9 @@
 							<!--<span>显示在菜单：</span>
 							<input type='checkbox' id='showInMenu' class="i-checks" checked />-->
 						</div>
-						<div style="margin-top:3px;">
+						<div style="margin-top:3px; margin-bottom:5px;">
 							<span>商品备注：</span></br>
-							<textarea id='newProductRemark' style='resize:none; height:80px; width:80%; border-color: #cfdadd;' placeholder="请输入商品备注"></textarea>
+							<textarea id='newProductRemark' style='margin-top:3px; resize:none; height:120px; width:99%; border-color: #cfdadd;' placeholder="请输入商品备注"></textarea>
 						</div>
 
 						<div class="page-container">
