@@ -35,7 +35,7 @@ var ProductTypeModule = {
 					if (undefined == data.code) {
 						GlobalMethod.replaceURL("../3_system/invalidPage.html")
 					}
-					swal('获取品类数据失败', data.desc, 'error');
+					// swal('获取品类数据失败', data.desc, 'error');
 				}
 			},
 			error: function() {
@@ -78,6 +78,7 @@ var ProductTypeModule = {
  */
 var ProductModule = {
 	displayAreaId : '#productDisplayArea',
+	allProductListBuffer : [], // 所有的商品缓存
 	productListBuffer : [], // 第一个数组存储的是可以下单的商品，第二个商品存储的是无法下单的商品
 	sortType : 'productGrade',
 	sortRule : 'desc', // 默认从大到下, 从小到大为asc
@@ -105,6 +106,7 @@ var ProductModule = {
 						return;
 					}
 					temp = sortProductList(temp);
+					ProductModule.allProductListBuffer = temp;
 					var i, j=0, k=0;
 					ProductModule.productListBuffer[0] = [];
 					ProductModule.productListBuffer[1] = [];
@@ -170,9 +172,28 @@ var ProductModule = {
 		};
 		t = ProductModule.productListBuffer[1];
 		for (i=0; i<t.length; i++) {
+			// t[i].currentQuantity = 0; // 这里将已经加入购物车的无效商品的数量设置为0
 			target.append(ProductModule.createDisplayCellHTML(t[i]));
 		};
 		target.append('<div style="width:100%; margin-bottom:30px; text-align:center; font-size:10px; ">&nbsp;</div>');
+	},
+	showProductInfo : function(productId) {
+		var list = ProductModule.allProductListBuffer;
+		console.log("kkk");
+		console.log(list);
+		for (var i=0; i<list.length; i++) {
+			var cell = list[i];
+			if (cell.productId == productId) {
+				if (GlobalMethod.isEmpty(cell.productInfo)) {
+					break;
+				}
+				layer.open({
+					content: '<span style="color:red;">' + cell.productInfo + '</span>'
+					,btn: '朕知道了'
+				});
+				break;
+			}
+		}
 	},
 	createDisplayCellHTML : function(t) { // 每个商品的展示效果生成
 		var forbidColor = '#F0E0E0';
@@ -180,7 +201,8 @@ var ProductModule = {
 		var str = '<div class="classify-box1" ' + (forbidOption ? ' style="background:#F0E0E0;" ' : '') + ' >';
             str += '<span class="classify-box1-img1"><img src="' + GlobalConfig.productImgRelativePath + t.productImgName + '" alt=""></span>';
             str += '<div class="classify-box2">';
-            str += '<span class="classify-box2-text1">' + t.productName + (forbidOption ? '[已售罄]' : '') + '</span>';
+            str += '<span class="classify-box2-text1">' + (forbidOption ? '[已售罄]' : '') + t.productName + '</span>';
+			str += '<span onclick="ProductModule.showProductInfo('+t.productId+')"  class="classify-box2-text3">' + t.productInfo + '</span>';
             str += '<span class="classify-box2-text2">' + t.productPrice + '</span>';
             str += '<div class="shop-cart-box3">';
             if (forbidOption) {

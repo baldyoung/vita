@@ -38,7 +38,8 @@ margin-bottom: 10px;border-radius: 3px;float: left;margin-left: 2%;}
 .classify-box1-img1{width: 80px;height: 80px;float: left;text-align: center;}
 .classify-box1-img1 img{width: 60px;height: 60px;display: inline-block;margin-top: 10px;}
 .classify-box2{display: block;margin-left: 80px;height: 75px;margin-top: 5px;}
-.classify-box2-text1{width: 100%;float: left;height: 40px;line-height: 20px;font-size: 14px;overflow: hidden;}
+.classify-box2-text1{width: 100%;float: left;height: 23px;line-height: 20px;font-size: 14px;overflow: hidden;}
+.classify-box2-text3{width: 100%;float: left;height: 17px;line-height: 20px;font-size: 11px;overflow: hidden;}
 .classify-box2-text2{float: left;font-size: 14px;color: #FF9201;line-height: 30px;margin-top: 5px;}
 .shop-cart-box3{float: right;margin-top: 10px;margin-right: 5px;}
 .shop-cart-add{width: 20px;height: 20px;float: left;background: url(/vita/customer/0_common/img/add.png) no-repeat center center;background-size: 100%;}

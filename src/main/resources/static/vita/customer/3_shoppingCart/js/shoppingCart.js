@@ -196,7 +196,9 @@ var ShopingCartModule = {
 			var list = type.productList;
 			for (j=0; j<productList.length; j++) {
 				var product = productList[j];
-				if (product.valid == undefined) {
+				if (product.productStockFlag == 1 && product.productStock == 0) {
+					product.valid = false;;
+				} else {
 					product.valid = true;
 				}
 				if (product.productTypeId == type.productTypeId) {
@@ -244,12 +246,15 @@ var ShopingCartModule = {
 		}
 	},
 	createItemDisplayUnitHTML: function(itemInfo) {
-		var str = '<div class="shop-cart-listbox1">';
+		var str = '<div class="shop-cart-listbox1" ' + (itemInfo.invalid == true ? 'id="invalidItemArea" ' : '') + '>';
 		str += '<div class="shop-cart-box2" style="border-bottom: 0px solid #DCDCDC;" >';
 		if (itemInfo.invalid != true) {
 			str += '<input type="checkbox" name="sub2" class="btn1 ckAllA typeId' + itemInfo.productTypeId + '" onclick="ShopingCartModule.updateItemCheckBox(' + itemInfo.productTypeId + ', 2)">';
 		}
 		str += '<span class="shop-cart-ltext1">&nbsp;' + itemInfo.productTypeName + '</span>';
+		if (itemInfo.invalid == true) {
+			str += '<span onclick="ShopingCartModule.deleteInvalidProduct()" class="shop-cart-ltext1" style="float:right;">&nbsp;&times;</span>';
+		}
 		str += '</div>';
 		var i, productList = itemInfo.productList;
 		for (i = 0; i < productList.length; i++) {
@@ -497,6 +502,49 @@ var ShopingCartModule = {
 								ShopingCartModule.deleteProduct(deleteProductIds[t]);
 								ShopingCartModule.updateItemCheckBox(productInfo.productTypeId, 1);
 							}
+						}
+						layer.closeAll();
+					},
+					error: function() {
+						layer.closeAll();
+					}
+				});
+			},
+			no: function() {
+			}
+		});
+	},
+	deleteInvalidProduct : function() {
+		layer.open({
+			content: '确定清除无效商品吗？',
+			btn: ['确定', '取消'],
+			yes: function() {
+				var list = ShopingCartModule.invalidProductListBuffer;
+				var targetIds = [];
+				for (var i=0; i<list.length; i++) {
+					var cell = list[i];
+					targetIds[targetIds.length] = cell.productId;
+				}
+				$.ajax({
+					url: GlobalConfig.serverAddress + "/shoppingCart/itemDelete",
+					type: 'POST',
+					cache: false,
+					dataType : 'json',
+					async: false, //设置同步
+					contentType: "application/x-www-form-urlencoded;charset=utf-8",
+					// contentType : 'application/json; charset=utf-8',
+					data: {
+						productIdList : targetIds
+					},
+					success: function(data) {
+						if (data.code != 0) {
+							layer.open({
+								content: ''+data.desc,
+								skin: 'msg',
+								time: 2
+							});
+						} else {
+							$('#invalidItemArea').remove();
 						}
 						layer.closeAll();
 					},

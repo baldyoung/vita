@@ -243,14 +243,13 @@ var DataModule = {
 						if (item.productStockFlag == 0) {
 							item.productStock = undefined;
 						}
-						if (item.productImgName.length > 6) {
-							item.productImgName = item.productImgName.substring(item.productImgName.length - 6);
+						if (item.productImgName.length == 'default.gif') {
+							item.productPicture = '无';
 						}
 						item.productTypeName = DataModule.getProductTypeNameByTypeId(item.productTypeId);
 						item.productAttributeTypeName = DataModule.getProductAttributeTypeNameByAttributeTypeId(item.productAttributeTypeId);
 						item.productStockStatus = item.productStock != undefined ? item.productStock : '';
 						item.productIsShowStatus = item.productIsShow != 0 ? '上架' : '下架';
-						item.productPicture = item.productImgName;
 					}
 				} else {
 					swal('商品数据获取失败', data.desc, 'error');
@@ -485,6 +484,8 @@ var ProductModule = {
 					data: 'productId'
 				}, {
 					data: 'productName'
+				},{
+					data: 'productName'
 				}, {
 					data: 'productTypeName'
 				}, {
@@ -492,11 +493,7 @@ var ProductModule = {
 				}, {
 					data: 'productPrice'
 				}, {
-					data: 'productStockStatus'
-				}, {
 					data: 'productIsShowStatus'
-				}, {
-					data: 'productPicture'
 				}],
 				"columnDefs": [{
 					"render": function(data, type, row) {
@@ -507,7 +504,14 @@ var ProductModule = {
 						a += "</button>"
 						return a;
 					},
-					"targets": 8
+					"targets": 7
+				},{
+					"render": function(data, type, row) {
+						var a = "";
+						a += '<img style="width:80px; height:80px;" src="' + GlobalConfig.productImgRelativePath + row.productImgName + '" />'
+						return a;
+					},
+					"targets": 1
 				}]
 			});
 		}
