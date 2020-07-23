@@ -185,10 +185,14 @@ var ProductModule = {
 			var cell = list[i];
 			if (cell.productId == productId) {
 				if (GlobalMethod.isEmpty(cell.productInfo)) {
-					break;
+					cell.productInfo = '';
 				}
+				var html = '<div style="width:100%; ">';
+				html += '<img src="' + GlobalConfig.productImgRelativePath + cell.productImgName + '" style="width:100%; height:100%;" />';
+				html += '<p style="color:red;">' + cell.productInfo + '</p>'
+				html += '</div>';
 				layer.open({
-					content: '<span style="color:red;">' + cell.productInfo + '</span>'
+					content: html
 					,btn: '朕知道了'
 				});
 				break;
@@ -202,10 +206,10 @@ var ProductModule = {
 			t.productInfo = '';
 		}
 		var str = '<div class="classify-box1" ' + (forbidOption ? ' style="background:#F0E0E0;" ' : '') + ' >';
-            str += '<span class="classify-box1-img1"><img src="' + GlobalConfig.productImgRelativePath + t.productImgName + '" alt=""></span>';
+            str += '<span onclick="ProductModule.showProductInfo('+t.productId+')" class="classify-box1-img1"><img src="' + GlobalConfig.productImgRelativePath + t.productImgName + '" alt=""></span>';
             str += '<div class="classify-box2">';
             str += '<span class="classify-box2-text1">' + (forbidOption ? '[已售罄]' : '') + t.productName + '</span>';
-			str += '<span onclick="ProductModule.showProductInfo('+t.productId+')"  class="classify-box2-text3">' + t.productInfo + '</span>';
+			str += '<span class="classify-box2-text3">' + t.productInfo + '</span>';
             str += '<span class="classify-box2-text2">' + t.productPrice + '</span>';
             str += '<div class="shop-cart-box3">';
             if (forbidOption) {

@@ -517,7 +517,7 @@ var ProductModule = {
             }, {
                 "render": function (data, type, row) {
                     if (GlobalMethod.isEmpty(row.productInfo)) {
-                        row.productInfo = '无';
+                        row.productInfo = ' ';
                     }
                     return row.productInfo;
                 },
