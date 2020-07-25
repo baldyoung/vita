@@ -9,7 +9,9 @@ import com.baldyoung.vita.common.pojo.entity.DiningRoomReservationEntity;
 import com.baldyoung.vita.common.pojo.entity.OrderItemEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.service.impl.CustomerMessageServiceImpl;
+import com.baldyoung.vita.merchant.serverEndpoint.MerchantSystemMessageServerPoint;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -166,6 +168,11 @@ public class MSystemServiceImpl {
             newsMap.put(entry.getKey(), dto);
         }
         return new LinkedList(newsMap.values());
+    }
+
+    @Scheduled(fixedRate=2000)
+    public void newsOption() {
+        MerchantSystemMessageServerPoint.newsOption(getCurrentDiningRoomNews());
     }
 
 }
