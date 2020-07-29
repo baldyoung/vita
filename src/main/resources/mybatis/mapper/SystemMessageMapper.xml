@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baldyoung.vita.common.dao.SystemMessageDao">
+
+    <resultMap id="baseMap" type="com.baldyoung.vita.common.pojo.entity.SystemMessageEntity">
+        <id property="id" column="id"></id>
+        <!--非主键字段的对应-->
+        <result property="statusFlag" column="statusFlag"></result>
+        <result property="typeFlag" column="typeFlag"></result>
+        <result property="senderId" column="senderId"></result>
+        <result property="sendDate" column="sendDate"></result>
+        <result property="receiverId" column="receiverId"></result>
+        <result property="receiverDate" column="receiverDate"></result>
+        <result property="messageTitle" column="messageTitle"></result>
+        <result property="messageContent" column="messageContent"></result>
+    </resultMap>
+
+
+    <sql id="allFiled">
+        id, statusFlag, typeFlag, senderId, sendDate, receiverId,
+        receiverDate, messageTitle, messageContent
+    </sql>
+
+
+
+
+
+
+</mapper>
