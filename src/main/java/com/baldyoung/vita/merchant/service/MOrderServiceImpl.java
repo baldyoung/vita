@@ -11,6 +11,7 @@ import com.baldyoung.vita.common.pojo.entity.ProductEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.service.impl.BillServiceImpl;
 import com.baldyoung.vita.common.service.impl.OrderServiceImpl;
+import com.baldyoung.vita.common.service.impl.SystemMessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,9 @@ public class MOrderServiceImpl {
 
     @Autowired
     private OrderServiceImpl orderService;
+
+    @Autowired
+    private SystemMessageServiceImpl systemMessageService;
 
     /**
      * 一次性订单已读时，不能变更为已读状态的商品项状态
@@ -122,6 +126,7 @@ public class MOrderServiceImpl {
      */
     public void updateOrderItem(OrderItemEntity entity) {
         orderItemDao.updateOrderItem(entity);
+        systemMessageService.pullMerchantUnreadMessage();
     }
 
 

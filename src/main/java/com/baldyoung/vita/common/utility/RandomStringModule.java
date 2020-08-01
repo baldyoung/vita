@@ -6,7 +6,7 @@ import java.util.Random;
  * 随机字符串生成模块
  */
 public class RandomStringModule {
-    private static String defaultDictionary = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String defaultDictionary = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static int defaultLength = 3;
 
     public static String getRandomString(String dictionary, int length) {

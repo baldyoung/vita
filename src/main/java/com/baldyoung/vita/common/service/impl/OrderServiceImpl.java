@@ -28,6 +28,9 @@ public class OrderServiceImpl {
     @Autowired
     private ProductStockServiceImpl productStockService;
 
+    @Autowired
+    private SystemMessageServiceImpl systemMessageService;
+
 
     private Integer createNewOrder(String billNumber, Integer orderTypeFlag, String orderPresetTime, Integer orderInitiatorFlag) {
         OrderEntity orderEntity = new OrderEntity();
@@ -58,6 +61,7 @@ public class OrderServiceImpl {
     public List<OrderItemEntity> doOrder(Integer roomId, Integer orderTypeFlag, String orderPresetTime, Integer orderInitiatorFlag, List<OrderItemEntity> itemList) throws ServiceException {
         String billNumber = billService.getRoomBillNumber(roomId);
         Integer orderId = createNewOrder(billNumber, orderTypeFlag, orderPresetTime, orderInitiatorFlag);
+        boolean validOrder = false;
         for (OrderItemEntity entity : itemList) {
             entity.setOrderId(orderId);
             entity.setOwnerId(roomId);
@@ -75,9 +79,11 @@ public class OrderServiceImpl {
                 entity.setOrderProductQuantity(0);
             } else {
                 entity.setOrderProductItemStatusFlag(0);
+                validOrder = true;
             }
         }
         orderItemDao.insertOrderItemList(itemList);
+        systemMessageService.pullMerchantUnreadMessage();
         return itemList;
     }
 

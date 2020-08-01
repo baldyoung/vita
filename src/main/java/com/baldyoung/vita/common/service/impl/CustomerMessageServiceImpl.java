@@ -20,6 +20,9 @@ public class CustomerMessageServiceImpl {
     @Autowired
     private CustomerMessageTypeDao customerMessageTypeDao;
 
+    @Autowired
+    private SystemMessageServiceImpl systemMessageService;
+
     /**
      * 获取所有的消息类型
      * @return
@@ -55,6 +58,7 @@ public class CustomerMessageServiceImpl {
         entity.setCustomerMessageTypeName(typeEntity.getCustomerMessageTypeName());
         entity.setCustomerMessageValue(messageData);
         customerMessageDao.insert(entity);
+        systemMessageService.pullMerchantUnreadMessage();
     }
 
     /**
@@ -70,6 +74,7 @@ public class CustomerMessageServiceImpl {
         }
         entity.setCustomerMessageStatus(newStatus);
         customerMessageDao.update(entity);
+        systemMessageService.pullMerchantUnreadMessage();
     }
 
     /**
@@ -78,6 +83,7 @@ public class CustomerMessageServiceImpl {
      */
     public void deleteRoomMessage(Integer roomId) {
         customerMessageDao.deleteRecordForRoomId(roomId);
+        systemMessageService.pullMerchantUnreadMessage();
     }
 
 
