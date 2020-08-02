@@ -136,6 +136,7 @@ public class MerchantSystemMessageServerPoint {
             return;
         }
         System.out.println("key:"+key+"连接成功("+value+")");
+        websocketSession.getUserProperties().put("userId", value);
         sessionPools.put(value, websocketSession);
         addUserNumber(1);
         systemMessageService.pullMerchantUnreadMessage();
@@ -146,13 +147,23 @@ public class MerchantSystemMessageServerPoint {
     public void onClose(Session websocketSession) throws UtilityException {
         System.out.println("关闭");
         // sessionPools.remove(userId);
+        Object object = websocketSession.getUserProperties().get("userId");
+        if (null == object) {
+            return;
+        }
+        Integer userId = Integer.valueOf(String.valueOf(object));
+        sessionPools.remove(userId);
         addUserNumber(-1);
     }
 
     // 接收到客户端的消息后调用
     @OnMessage
-    public void onMessage(String message) throws IOException {
-        System.out.println(message);
+    public void onMessage(Session websocketSession, String message) throws IOException {
+        System.out.println("接收到客户端消息："+message);
+        if (message.contains("close")) {
+            System.out.println("尝试关闭websocket连接");
+            websocketSession.close();
+        }
         // newsOption();
     }
 
