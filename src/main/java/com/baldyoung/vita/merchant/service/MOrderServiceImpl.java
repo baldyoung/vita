@@ -215,6 +215,7 @@ public class MOrderServiceImpl {
      */
     public void setOrderWithReadFlag(Integer orderId) {
         orderItemDao.setOrderItemStatusWithCondition(orderId, refuseOrderItemStatusWhenSetOrderRead, 2);
+        systemMessageService.pullMerchantUnreadMessage();
     }
 
 }

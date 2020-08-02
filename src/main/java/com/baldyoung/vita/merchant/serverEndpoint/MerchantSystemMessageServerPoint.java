@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.baldyoung.vita.common.utility.CommonMethod.isEmpty;
-import static com.baldyoung.vita.common.utility.CommonMethod.isEmptyCollection;
 
 @ServerEndpoint(value = "/mSystemMessage/{key}")
 @Component
@@ -95,7 +94,7 @@ public class MerchantSystemMessageServerPoint {
         if (null == entries || 0 == entries.size()) {
             return;
         }
-        if (isEmptyCollection(news)) {
+        if (null == news) {
             return;
         }
         String newsString = JSON.toJSONString(news);

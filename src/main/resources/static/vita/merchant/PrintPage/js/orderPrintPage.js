@@ -77,15 +77,18 @@ var OrderPrintModule = {
         var list = order.itemList;
         for (var i = 0, k = 1; i < list.length; i++, k++) {
             var cell = list[i];
+            if (cell.orderProductItemStatusFlag == 1 || cell.orderProductItemStatusFlag == 4) {
+                continue;
+            }
             var str = k + '.' + cell.orderProductName;
             var len = OrderPrintModule.theLengthOfString(str) + OrderPrintModule.theLengthOfInteger(cell.orderProductQuantity);
-            console.log("test->"+cell.orderProductName+"(总长："+len+")");
+            // console.log("test->"+cell.orderProductName+"(总长："+len+")");
             if (len > 22) {
                 len = 22 - (len % 22);
             } else {
                 len = 22 - len;
             }
-            console.log("test->"+cell.orderProductName+"(补位："+len+")");
+            // console.log("test->"+cell.orderProductName+"(补位："+len+")");
             temp += str + OrderPrintModule.createBlank(len) + cell.orderProductQuantity + '\n';
             if (!GlobalMethod.isEmpty(cell.orderProductRemarks)) {
                 temp += '注：' + cell.orderProductRemarks + '\n';
