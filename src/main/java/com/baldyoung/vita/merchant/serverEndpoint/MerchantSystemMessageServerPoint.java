@@ -46,6 +46,18 @@ public class MerchantSystemMessageServerPoint {
         systemMessageService = applicationContext.getBean(SystemMessageServiceImpl.class);
     }
 
+    /**
+     * 关闭指定用户的websocket连接
+     * @param userId
+     * @throws IOException
+     */
+    public static void closeSocket(Integer userId) throws IOException {
+        Session session = sessionPools.get(userId);
+        if (null != session) {
+            session.close();
+        }
+    }
+
     @PostConstruct
     private void init() {
         // 测试
@@ -125,14 +137,14 @@ public class MerchantSystemMessageServerPoint {
 
     // 成功建立连接后的调用
     @OnOpen
-    public void onOpen(Session websocketSession, @PathParam(value = "key")String key) throws UtilityException {
+    public void onOpen(Session websocketSession, @PathParam(value = "key")String key) throws UtilityException, IOException {
         if (isEmpty(key)) {
-            this.onClose(websocketSession);
+            websocketSession.close();
             return;
         }
         Integer value = removeLinkKey(key);
         if (null == value) {
-            this.onClose(websocketSession);
+            websocketSession.close();
             return;
         }
         System.out.println("key:"+key+"连接成功("+value+")");

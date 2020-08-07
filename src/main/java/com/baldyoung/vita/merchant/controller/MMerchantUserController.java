@@ -5,11 +5,14 @@ import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.entity.MerchantUserEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
+import com.baldyoung.vita.merchant.serverEndpoint.MerchantSystemMessageServerPoint;
 import com.baldyoung.vita.merchant.service.MMerchantUserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+
+import java.io.IOException;
 
 import static com.baldyoung.vita.common.pojo.dto.ResponseResult.*;
 import static com.baldyoung.vita.common.utility.CommonMethod.*;
@@ -44,9 +47,13 @@ public class MMerchantUserController {
     }
 
     @PostMapping("logout")
-    public ResponseResult loginOut(HttpSession session) {
+    public ResponseResult loginOut(HttpSession session) throws UtilityException, IOException {
         session.removeAttribute("merchantUserId");
         session.removeAttribute("grade");
+        Integer userId = getMerchantUserIdFromSession(session);
+        if (null != userId) {
+            MerchantSystemMessageServerPoint.closeSocket(userId);
+        }
         return success();
     }
 
