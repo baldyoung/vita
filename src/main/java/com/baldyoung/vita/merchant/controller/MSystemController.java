@@ -4,8 +4,10 @@ import com.baldyoung.vita.common.CommonConfig;
 import com.baldyoung.vita.common.pojo.dto.ResponseResult;
 import com.baldyoung.vita.common.pojo.entity.DiningRoomReservationEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
+import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException;
 import com.baldyoung.vita.common.service.impl.DiningRoomRequestPositionServiceImpl;
 import com.baldyoung.vita.common.utility.CommonMethod;
+import com.baldyoung.vita.merchant.serverEndpoint.MerchantSystemMessageServerPoint;
 import com.baldyoung.vita.merchant.service.MProductStockServiceImpl;
 import com.baldyoung.vita.merchant.service.MSystemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +15,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 import static com.baldyoung.vita.common.pojo.dto.ResponseResult.*;
+import static com.baldyoung.vita.common.utility.CommonMethod.getMerchantUserIdFromSession;
 import static com.baldyoung.vita.common.utility.CommonMethod.isAnyEmpty;
 
 @RestController
@@ -203,6 +207,19 @@ public class MSystemController {
         CommonMethod.readFileAndSendData(outputStream, commonConfig.debugLogFilePathName);
         outputStream.close();
         return null;
+    }
+
+    /**
+     * 获取建立websocket所需要的安全密钥
+     * @param session
+     * @return
+     * @throws UtilityException
+     */
+    @GetMapping("mSystemMessageKey")
+    public ResponseResult getMSystemMessageKey(HttpSession session) throws UtilityException {
+        Integer userId = getMerchantUserIdFromSession(session);
+        String key = MerchantSystemMessageServerPoint.createLinkKey(userId);
+        return success(key);
     }
 
 

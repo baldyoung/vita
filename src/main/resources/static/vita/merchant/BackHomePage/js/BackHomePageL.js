@@ -2,7 +2,7 @@
 $(function() {
     AudioModule.init();
     NewsModule.init();
-    swal('欢迎使用vita', '', 'success');
+    swal('欢迎使用vita', '', '');
 });
 
 /**
@@ -65,7 +65,26 @@ var AudioModule = {
  */
 var NewsModule = {
     subIframe : null,
+    socket : undefined,
     init : function() {
+        // 获取websocket连接的密钥
+        var key = NewsModule.requestSocketLinkKey();
+        if (SocketModule.init()) {
+            var tSocket = SocketModule.createSocket("/mSystemMessage/"+key);
+            if (undefined != tSocket) {
+                tSocket.onmessage = function(data) {
+                    data = JSON.parse(data);
+                    var list = data;
+                    if (list.length > 0) {
+                        AudioModule.play();
+                    } else {
+                        AudioModule.closeAudioLoop();
+                    }
+                    NewsModule.loadData(list);
+                }
+                return;
+            }
+        }
         NewsModule.startRequestLoop();
     },
     startRequestLoop : function() {
@@ -77,6 +96,30 @@ var NewsModule = {
         if (target == '../Working/workingL.html') {
             temp.contentWindow.NewsModule.loadData(data);
         }
+    },
+    requestSocketLinkKey : function() {
+        var targetData = undefined;
+        $.ajax({
+            url: GlobalConfig.serverAddress + "/mSystem/mSystemMessageKey",
+            type: 'GET',
+            cache: false,
+            dataType:'json',
+            async : false,
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            data: null,
+            success: function (data) {
+                if (data.code == 0) {
+                    targetData = data.data;
+                } else {
+                    swal("操作失败", data.desc, "error");
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                location.reload();
+                //console.log(XMLHttpRequest);
+            }
+        });
+        return targetData;
     },
     requestAndLoadCurrentNews : function () {
         $.ajax({
@@ -96,7 +139,7 @@ var NewsModule = {
                     }
                     NewsModule.loadData(list);
                 } else {
-                    swal("操作失败", data.desc, "error");
+                    swal("获取系统消息失败", data.desc, "error");
                 }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -251,7 +294,10 @@ var UserModule = {
 
 }
 
-
+/**
+ * 功能操作模块
+ * @type {{optionAreaUp: OptionModule.optionAreaUp, optionAreaDown: OptionModule.optionAreaDown, changeOptionArea: OptionModule.changeOptionArea, optionAreaStation: string}}
+ */
 var OptionModule = {
     optionAreaStation : 'down',
     changeOptionArea : function() {

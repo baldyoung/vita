@@ -49,7 +49,7 @@ public class MerchantSystemMessageServerPoint {
     @PostConstruct
     private void init() {
         // 测试
-        linkKeyMap.put("123", 1);
+        // linkKeyMap.put("123", 1);
     }
 
     // 生成一个随机字符串，并将其映射到一个值上
