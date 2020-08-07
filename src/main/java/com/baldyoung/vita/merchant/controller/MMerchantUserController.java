@@ -48,12 +48,12 @@ public class MMerchantUserController {
 
     @PostMapping("logout")
     public ResponseResult loginOut(HttpSession session) throws UtilityException, IOException {
-        session.removeAttribute("merchantUserId");
-        session.removeAttribute("grade");
         Integer userId = getMerchantUserIdFromSession(session);
         if (null != userId) {
             MerchantSystemMessageServerPoint.closeSocket(userId);
         }
+        session.removeAttribute("merchantUserId");
+        session.removeAttribute("grade");
         return success();
     }
 

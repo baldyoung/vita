@@ -147,18 +147,16 @@ public class MerchantSystemMessageServerPoint {
             websocketSession.close();
             return;
         }
-        // System.out.println("key:"+key+"连接成功("+value+")");
         websocketSession.getUserProperties().put("userId", value);
         sessionPools.put(value, websocketSession);
         addUserNumber(1);
         systemMessageService.pullMerchantUnreadMessage();
+        logger.warn("{title:'新增用户连接', mUserId:"+value+", currentLinkNumber:"+getUserNumber()+"}");
     }
 
     // 连接关闭后的调用
     @OnClose
     public void onClose(Session websocketSession) throws UtilityException {
-        // System.out.println("关闭");
-        // sessionPools.remove(userId);
         Object object = websocketSession.getUserProperties().get("userId");
         if (null == object) {
             return;
@@ -166,23 +164,28 @@ public class MerchantSystemMessageServerPoint {
         Integer userId = Integer.valueOf(String.valueOf(object));
         sessionPools.remove(userId);
         addUserNumber(-1);
+        logger.warn("{title:'清除用户连接', mUserId:"+userId+", currentLinkNumber:"+getUserNumber()+"}");
     }
 
     // 接收到客户端的消息后调用
     @OnMessage
     public void onMessage(Session websocketSession, String message) throws IOException {
         // System.out.println("接收到客户端消息："+message);
-        if (message.contains("close")) {
-            // System.out.println("尝试关闭websocket连接");
+        /*if (message.contains("close")) {
             websocketSession.close();
-        }
+        }*/
         // newsOption();
     }
 
     // 出现异常后被调用
     @OnError
     public void onError(Session session, Throwable throwable) {
-        // System.out.println(throwable.getMessage());
+        Object object = session.getUserProperties().get("userId");
+        Integer userId = null;
+        if (null != object) {
+            userId = Integer.valueOf(String.valueOf(object));
+        }
+        logger.error("{title:'用户连接异常', mUserId:"+userId+", errorContent:"+throwable.getMessage()+"}");
     }
 
 }

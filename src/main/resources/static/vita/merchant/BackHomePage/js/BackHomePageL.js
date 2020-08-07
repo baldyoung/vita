@@ -68,9 +68,12 @@ var NewsModule = {
     socket : undefined,
     newsData : [],
     init : function() {
-        // 获取websocket连接的密钥
-        var key = NewsModule.requestSocketLinkKey();
         if (SocketModule.init()) {
+            // 获取websocket连接的密钥
+            var key = NewsModule.requestSocketLinkKey();
+            if (undefined == key) {
+                location.reload();
+            }
             var tSocket = SocketModule.createSocket("/mSystemMessage/"+key);
             if (undefined != tSocket) {
                 tSocket.onmessage = function(data) {
@@ -86,10 +89,14 @@ var NewsModule = {
                     NewsModule.newsData = list;
                     NewsModule.loadData(list);
                 }
+                tSocket.onclose = function() {
+                    location.reload();
+                };
                 setInterval("NewsModule.loadCurrentNewsData()", 1000);
                 return;
             }
         }
+        // websocket不可用，改用ajax轮询
         NewsModule.startRequestLoop();
     },
     startRequestLoop : function() {
@@ -122,7 +129,7 @@ var NewsModule = {
                 if (data.code == 0) {
                     targetData = data.data;
                 } else {
-                    swal("操作失败", data.desc, "error");
+                    // swal("操作失败", data.desc, "error");
                 }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -249,6 +256,7 @@ var UserModule = {
                 if (data.code != 0) {
                     swal('操作异常', data.desc, 'error');
                 } else {
+                    console.log("登出成功！");
                     location.reload();
                 }
             },
