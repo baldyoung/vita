@@ -66,6 +66,7 @@ var AudioModule = {
 var NewsModule = {
     subIframe : null,
     socket : undefined,
+    newsData : [],
     init : function() {
         // 获取websocket连接的密钥
         var key = NewsModule.requestSocketLinkKey();
@@ -73,15 +74,19 @@ var NewsModule = {
             var tSocket = SocketModule.createSocket("/mSystemMessage/"+key);
             if (undefined != tSocket) {
                 tSocket.onmessage = function(data) {
+                    data = data.data;
                     data = JSON.parse(data);
                     var list = data;
+                    console.log(list);
                     if (list.length > 0) {
                         AudioModule.play();
                     } else {
                         AudioModule.closeAudioLoop();
                     }
+                    NewsModule.newsData = list;
                     NewsModule.loadData(list);
                 }
+                setInterval("NewsModule.loadCurrentNewsData()", 1000);
                 return;
             }
         }
@@ -90,10 +95,16 @@ var NewsModule = {
     startRequestLoop : function() {
         setInterval("NewsModule.requestAndLoadCurrentNews()", 5000);
     },
+    loadCurrentNewsData : function() {
+        // 折中的方法，因为websocket的onmessage中无法调用iframe中的函数！
+        // 通过一个中间变量存储最新的消息数据，然后客户端启用一个函数轮询，时刻监视中间变量的消息数据！
+        //
+        NewsModule.loadData(NewsModule.newsData);
+    },
     loadData : function(data) {
         var temp = window.document.getElementById("J_iframe");
         var target = $(window.parent.document).find("#J_iframe").attr("src");
-        if (target == '../Working/workingL.html') {
+        if (target == '../Working/workingL.html' ) {
             temp.contentWindow.NewsModule.loadData(data);
         }
     },

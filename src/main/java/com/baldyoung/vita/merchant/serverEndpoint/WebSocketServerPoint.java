@@ -39,7 +39,7 @@ public class WebSocketServerPoint {
     public void onOpen(Session session, @PathParam(value = "sid") String userName){
         sessionPools.put(userName, session);
         addOnlineCount();
-        System.out.println(userName + "加入webSocket！当前人数为" + onlineNum);
+        // System.out.println(userName + "加入webSocket！当前人数为" + onlineNum);
         try {
             sendMessage(session, "欢迎" + userName + "加入连接！");
         } catch (IOException e) {
@@ -52,14 +52,14 @@ public class WebSocketServerPoint {
     public void onClose(@PathParam(value = "sid") String userName){
         sessionPools.remove(userName);
         subOnlineCount();
-        System.out.println(userName + "断开webSocket连接！当前人数为" + onlineNum);
+        // System.out.println(userName + "断开webSocket连接！当前人数为" + onlineNum);
     }
 
     //收到客户端信息
     @OnMessage
     public void onMessage(String message) throws IOException{
         message = "客户端：" + message + ",已收到";
-        System.out.println(message);
+        // System.out.println(message);
         for (Session session: sessionPools.values()) {
             try {
                 sendMessage(session, message);
@@ -73,7 +73,7 @@ public class WebSocketServerPoint {
     //错误时调用
     @OnError
     public void onError(Session session, Throwable throwable){
-        System.out.println("发生错误");
+        // System.out.println("发生错误");
         throwable.printStackTrace();
     }
 

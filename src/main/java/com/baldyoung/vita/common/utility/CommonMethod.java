@@ -133,13 +133,13 @@ public class CommonMethod {
             }
             outputStream.write(logEnd.getBytes());
         } catch (IOException e) {
-            System.out.println("readFileAndSendData error: filePathName = "+filePathName + "\n" + e.getMessage());
+            // System.out.println("readFileAndSendData error: filePathName = "+filePathName + "\n" + e.getMessage());
         } finally {
             if (null != fileInputStream) {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
-                    System.out.println("readFileAndSendData error: filePathName = "+filePathName + "\n" + e.getMessage());
+                    // System.out.println("readFileAndSendData error: filePathName = "+filePathName + "\n" + e.getMessage());
                 }
             }
         }

@@ -118,7 +118,7 @@ public class DiningRoomRequestPositionServiceImpl {
         // 生成点餐二维码
         FileInputStream fileInputStream = new FileInputStream(systemInfoService.getQRcodeImgPath()+"default.jpg");
         String url = commonConfig.serveAddress + commonConfig.positionAddress + key;
-        System.out.println("###:"+url);
+        // System.out.println("###:"+url);
         BufferedImage bufferedImage = QRcodeModule.createWithLogoAndText(url, fileInputStream, diningRoomEntity.getDiningRoomName());
         QRcodeModule.saveBufferedImageAsFile(bufferedImage, systemInfoService.getQRcodeImgPath()+key+".jpg");
         // 将新增二维码的映射数据同步到数据库和缓存中

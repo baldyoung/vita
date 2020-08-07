@@ -36,7 +36,7 @@ public class MerchantRequestFilter implements Filter {
      */
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        System.out.println("商家端拦截器初始化");
+        // System.out.println("商家端拦截器初始化");
         // this.url = filterConfig.getInitParameter("URL");
         // System.out.println("我是过滤器的初始化方法！URL=" + this.url +  "，生活开始.........");
     }

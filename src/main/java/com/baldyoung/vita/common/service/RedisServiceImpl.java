@@ -41,10 +41,10 @@ public class RedisServiceImpl {
         Set resultMapSet=stringRedisTemplate.opsForHash().keys("map1");
         String value=(String)stringRedisTemplate.opsForHash().get("map1","key1");
 
-        System.out.println("value:"+value);
-        System.out.println("resultMapSet:"+resultMapSet);
-        System.out.println("resultMap:"+resultMap);
-        System.out.println("resulreslutMapListtMap:"+reslutMapList);
+        // System.out.println("value:"+value);
+        // System.out.println("resultMapSet:"+resultMapSet);
+        // System.out.println("resultMap:"+resultMap);
+        // System.out.println("resulreslutMapListtMap:"+reslutMapList);
     }
     //@Autowired
     //private StringRedisTemplate<String,String>redisTemplate;

@@ -121,7 +121,7 @@ public class MerchantSystemMessageServerPoint {
 
     // 给指定session发送消息
     public static void sendMessage(Session session, String message) throws IOException {
-        System.out.println("发送消息到客户端");
+        // System.out.println("发送消息到客户端");
         if (session != null) {
             synchronized (session) {
                 session.getBasicRemote().sendText(message);
@@ -147,7 +147,7 @@ public class MerchantSystemMessageServerPoint {
             websocketSession.close();
             return;
         }
-        System.out.println("key:"+key+"连接成功("+value+")");
+        // System.out.println("key:"+key+"连接成功("+value+")");
         websocketSession.getUserProperties().put("userId", value);
         sessionPools.put(value, websocketSession);
         addUserNumber(1);
@@ -157,7 +157,7 @@ public class MerchantSystemMessageServerPoint {
     // 连接关闭后的调用
     @OnClose
     public void onClose(Session websocketSession) throws UtilityException {
-        System.out.println("关闭");
+        // System.out.println("关闭");
         // sessionPools.remove(userId);
         Object object = websocketSession.getUserProperties().get("userId");
         if (null == object) {
@@ -171,9 +171,9 @@ public class MerchantSystemMessageServerPoint {
     // 接收到客户端的消息后调用
     @OnMessage
     public void onMessage(Session websocketSession, String message) throws IOException {
-        System.out.println("接收到客户端消息："+message);
+        // System.out.println("接收到客户端消息："+message);
         if (message.contains("close")) {
-            System.out.println("尝试关闭websocket连接");
+            // System.out.println("尝试关闭websocket连接");
             websocketSession.close();
         }
         // newsOption();
@@ -182,7 +182,7 @@ public class MerchantSystemMessageServerPoint {
     // 出现异常后被调用
     @OnError
     public void onError(Session session, Throwable throwable) {
-        System.out.println(throwable.getMessage());
+        // System.out.println(throwable.getMessage());
     }
 
 }
