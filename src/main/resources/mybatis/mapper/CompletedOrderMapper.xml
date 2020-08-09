@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baldyoung.vita.common.dao.CompletedOrderDao">
+
+    <resultMap id="baseMap" type="com.baldyoung.vita.common.pojo.entity.OrderEntity">
+        <id property="orderId" column="orderId"></id>
+        <!--非主键字段的对应-->
+        <result property="billNumber" column="billNumber"></result>
+        <result property="orderProductItemQuantity" column="orderProductItemQuantity"></result>
+        <result property="orderTypeFlag" column="orderTypeFlag"></result>
+        <result property="orderPresetTime" column="orderPresetTime"></result>
+        <result property="orderInitiatorFlag" column="orderInitiatorFlag"></result>
+        <result property="orderCreateDateTime" column="orderCreateDateTime"></result>
+    </resultMap>
+
+    <sql id="allFiled">
+        orderId, billNumber, orderProductItemQuantity, orderTypeFlag, orderPresetTime, orderInitiatorFlag, orderCreateDateTime
+    </sql>
+
+    <insert id="insertOrderEntity" parameterType="com.baldyoung.vita.common.pojo.entity.OrderEntity" useGeneratedKeys="true" keyProperty="orderId">
+        INSERT INTO V_CompletedOrder(
+        <include refid="allFiled" />
+        )
+        VALUES (
+        #{orderId},
+        #{billNumber},
+        #{orderProductItemQuantity},
+        #{orderTypeFlag},
+        #{orderPresetTime},
+        #{orderInitiatorFlag},
+        #{orderCreateDateTime}
+        )
+    </insert>
+
+    <select id="selectOrderByBillNumber" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from V_CompletedOrder
+        where billNumber = #{billNumber}
+        order by orderId desc
+    </select>
+
+    <select id="selectOrderByOrderId" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from V_CompletedOrder
+        where orderId = #{orderId}
+    </select>
+
+
+
+
+
+
+
+
+</mapper>

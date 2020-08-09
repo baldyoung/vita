@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baldyoung.vita.common.dao.CompletedOrderItemDao">
+
+    <resultMap id="baseMap" type="com.baldyoung.vita.common.pojo.entity.OrderItemEntity">
+        <id property="orderProductItemId" column="orderProductItemId"></id>
+        <!--非主键字段的对应-->
+        <result property="orderId" column="orderId"></result>
+        <result property="orderProductId" column="orderProductId"></result>
+        <result property="orderProductName" column="orderProductName"></result>
+        <result property="orderProductImg" column="orderProductImg"></result>
+        <result property="orderProductQuantity" column="orderProductQuantity"></result>
+        <result property="orderProductPrice" column="orderProductPrice"></result>
+        <result property="orderProductRemarks" column="orderProductRemarks"></result>
+        <result property="orderProductItemStatusFlag" column="orderProductItemStatusFlag"></result>
+        <result property="orderProductItemStatusDesc" column="orderProductItemStatusDesc"></result>
+        <result property="ownerId" column="ownerId"></result>
+    </resultMap>
+
+    <sql id="allFiled">
+        orderId, orderProductItemId, orderProductId, orderProductName, orderProductImg, orderProductQuantity,
+        orderProductPrice, orderProductRemarks, orderProductItemStatusFlag, orderProductItemStatusDesc, ownerId
+    </sql>
+
+    <insert id="insertOrderItemList" parameterType="com.baldyoung.vita.common.pojo.entity.OrderItemEntity" >
+        INSERT INTO V_CompletedOrderProductItem
+        (
+        <include refid="allFiled" />
+        )
+        VALUES
+        <foreach collection="itemList" item="item" index="index" open="" separator=", " close="">
+            (
+            #{item.orderId},
+            #{item.orderProductItemId},
+            #{item.orderProductId},
+            #{item.orderProductName},
+            #{item.orderProductImg},
+            #{item.orderProductQuantity},
+            #{item.orderProductPrice},
+            #{item.orderProductRemarks},
+            #{item.orderProductItemStatusFlag},
+            #{item.orderProductItemStatusDesc},
+            #{item.ownerId}
+            )
+        </foreach>
+    </insert>
+
+    <select id="selectOrderItemList" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from V_CompletedOrderProductItem
+        where orderId = #{orderId}
+    </select>
+
+    <select id="selectOrderItemListWithOrderIdList" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from V_CompletedOrderProductItem
+        where orderId in
+        <foreach collection="orderIdList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <update id="updateOrderItem" >
+        update V_CompletedOrderProductItem
+        set orderProductItemId = #{item.orderProductItemId}
+        <if test="item.orderProductId != null">
+            , orderProductId = #{item.orderProductId}
+        </if>
+        <if test="item.orderProductName != null">
+            , orderProductName = #{item.orderProductName}
+        </if>
+        <if test="item.orderProductImg != null">
+            , orderProductImg = #{item.orderProductImg}
+        </if>
+        <if test="item.orderProductQuantity != null">
+            , orderProductQuantity = #{item.orderProductQuantity}
+        </if>
+        <if test="item.orderProductPrice != null" >
+            , orderProductPrice = #{item.orderProductPrice}
+        </if>
+        <if test="item.orderProductItemStatusFlag != null">
+            , orderProductItemStatusFlag = #{item.orderProductItemStatusFlag}
+        </if>
+        <if test="item.orderProductItemStatusDesc != null">
+            , orderProductItemStatusDesc = #{item.orderProductItemStatusDesc}
+        </if>
+        <if test="item.orderProductRemarks != null">
+            , orderProductRemarks = #{item.orderProductRemarks}
+        </if>
+        where orderProductItemId = #{item.orderProductItemId}
+    </update>
+
+
+
+    <select id="selectOrderItemListWithCondition" resultMap="baseMap">
+        select
+        ownerId
+        from V_CompletedOrderProductItem
+        where orderProductItemStatusFlag = #{item.orderProductItemStatusFlag}
+    </select>
+
+    <update id="updateOrderItemListStatus" >
+        update V_CompletedOrderProductItem
+        set
+        orderProductItemStatusFlag = #{newStatus}
+        where
+        orderProductItemId in
+        <foreach collection="itemIdList" item="item" index="index" open="(" separator=", " close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="setOrderItemStatusWithCondition" >
+        update V_CompletedOrderProductItem
+        set
+        orderProductItemStatusFlag = #{newStatus}
+        where
+        orderId = #{orderId}
+        <if test="null != refuseStatus" >
+            and orderProductItemStatusFlag not in
+            <foreach collection="refuseStatus" index="index" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+    </update>
+
+
+
+
+
+
+</mapper>

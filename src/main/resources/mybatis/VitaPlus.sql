@@ -25,6 +25,7 @@ CREATE DATABASE IF NOT EXISTS Vita_OnlineRestaurant
 	DEFAULT COLLATE utf8_general_ci;
 -- 跳转到指定数据库下
 USE Vita_OnlineRestaurant;
+
 -- 商品表
 DROP TABLE IF EXISTS V_Product;
 CREATE TABLE V_Product (
@@ -47,6 +48,7 @@ CREATE TABLE V_Product (
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'商品表';
 INSERT V_Product(productName, productTypeId, productPrice, productStockFlag, productIsShow, productImgName, productGrade)
 VALUES ('牛腩面', 1, 25.5, 0, 0, 'default.gif', 50), ('牛肉面', 1, 15.5, 0, 0, 'default.gif', 50), ('鸡蛋炒面', 1, 15.5, 0, 0, 'default.gif', 50);
+
 -- 商品类型表
 DROP TABLE IF EXISTS V_ProductType;
 CREATE TABLE V_ProductType (
@@ -57,6 +59,7 @@ CREATE TABLE V_ProductType (
 	PRIMARY KEY (productTypeId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'商品类型表';
 INSERT V_ProductType(productTypeName, productTypeGrade) VALUES('主食', 50), ('炒菜', 50), ('小吃', 50), ('汤类', 50);
+
 -- 商品属性类型表
 DROP TABLE IF EXISTS V_ProductAttributeType;
 CREATE TABLE V_ProductAttributeType (
@@ -65,6 +68,7 @@ CREATE TABLE V_ProductAttributeType (
 	PRIMARY KEY (productAttributeTypeId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'商品属性类型表';
 INSERT V_ProductAttributeType(productAttributeTypeName) VALUES('菜品'),('酒水温度');
+
 -- 商品属性值表
 DROP TABLE IF EXISTS V_ProductAttributeValue;
 CREATE TABLE V_ProductAttributeValue (
@@ -74,6 +78,7 @@ CREATE TABLE V_ProductAttributeValue (
 	PRIMARY KEY (productAttributeValueId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'商品属性类型值表';
 INSERT INTO V_ProductAttributeValue(productAttributeTypeId, productAttributeValueName) VALUES(1, '清淡'), (1, '正常'), (1, '咸辣'), (2, '常温'), (2, '冰冻');
+
 -- 商品图片表
 DROP TABLE IF EXISTS V_ProductImg;
 CREATE TABLE V_ProductImg (
@@ -81,6 +86,7 @@ CREATE TABLE V_ProductImg (
 	productImgName VARCHAR(100) NOT NULL COMMENT'商品图片的名称：非空',
 	PRIMARY KEY (productImgId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'商品图片表';
+
 -- 商品排序表
 DROP TABLE IF EXISTS V_ProductSort;
 CREATE TABLE V_ProductSort (
@@ -88,6 +94,7 @@ CREATE TABLE V_ProductSort (
 	productId INT UNSIGNED NOT NULL COMMENT'商品编号',
 	productGrade SMALLINT UNSIGNED NOT NULL COMMENT'排序值'
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'商品排序表';
+
 -- 品类排序表
 DROP TABLE IF EXISTS V_ProductTypeSort;
 CREATE TABLE V_ProductTypeSort (
@@ -95,6 +102,7 @@ CREATE TABLE V_ProductTypeSort (
 	productTypeId INT UNSIGNED NOT NULL COMMENT'品类编号',
 	productTypeGrade SMALLINT UNSIGNED NOT NULL COMMENT'排序值'
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'品类排序表';
+
 -- 餐桌表
 DROP TABLE IF EXISTS V_DiningRoom;
 CREATE TABLE V_DiningRoom (
@@ -108,6 +116,7 @@ CREATE TABLE V_DiningRoom (
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'餐桌表';
 INSERT INTO V_DiningRoom(diningRoomName, diningRoomGrade, diningRoomStatus, diningRoomInfo)
 VALUES ('一号桌', 0, 0, '标配20人、空调、卫生间');
+
 -- 购物车表（每个餐桌只能有一个购物车）
 DROP TABLE IF EXISTS V_ShoppingCart;
 CREATE TABLE V_ShoppingCart (
@@ -117,6 +126,7 @@ CREATE TABLE V_ShoppingCart (
 	shoppingCartPresetMinute SMALLINT UNSIGNED DEFAULT 0 NOT NULL COMMENT'购物车的预定时间：非空，其代表顾客希望几分钟后上菜',
 	PRIMARY KEY (shoppingCartId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'购物车表';
+
 -- 购物车商品条目表
 DROP TABLE IF EXISTS V_ShoppingCartItem;
 CREATE TABLE V_ShoppingCartItem (
@@ -128,7 +138,8 @@ CREATE TABLE V_ShoppingCartItem (
 	productRemarks VARCHAR(40) COMMENT'商品项备注',
 	PRIMARY KEY (shoppingCartItemId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'购物车商品条目表';
--- 账单表
+
+-- （未完结）账单表
 DROP TABLE IF EXISTS V_Bill;
 CREATE TABLE V_Bill (
 	billId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]账单ID：唯一、非空',
@@ -150,7 +161,8 @@ CREATE TABLE V_Bill (
 	updateDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT'修改时间：非空',
 	PRIMARY KEY (billId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'账单表';
--- 订单表
+
+-- （未完结）订单表
 DROP TABLE IF EXISTS V_Order;
 CREATE TABLE V_Order (
 	orderId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]订单编号：唯一、非空',
@@ -162,7 +174,8 @@ CREATE TABLE V_Order (
 	orderCreateDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT'[默认]订单创建时间：非空',
 	PRIMARY KEY (orderId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'订单表';
--- 订单详情表/商品条目表
+
+-- （未完结）订单详情表/商品条目表
 DROP TABLE IF EXISTS V_OrderProductItem;
 CREATE TABLE V_OrderProductItem (
 	orderProductItemId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]商品条目编号：唯一、非空',
@@ -178,6 +191,7 @@ CREATE TABLE V_OrderProductItem (
 	orderProductRemarks VARCHAR(40) COMMENT'商品项备注',
 	PRIMARY KEY (orderProductItemId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'订单详情表';
+
 -- 客户就餐时间类型
 DROP TABLE IF EXISTS V_PresetTime;
 CREATE TABLE V_PresetTime (
@@ -186,6 +200,7 @@ CREATE TABLE V_PresetTime (
 	presetTimeMinute SMALLINT UNIQUE NOT NULL COMMENT'该类型所代表的分钟值',
 	PRIMARY KEY (presetTimeId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'客户就餐时间类型';
+
 -- 客户消息类型表
 DROP TABLE IF EXISTS V_CustomerMessageType;
 CREATE TABLE V_CustomerMessageType (
@@ -194,6 +209,7 @@ CREATE TABLE V_CustomerMessageType (
 	PRIMARY KEY (customerMessageTypeId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'客户消息类型表';
 INSERT INTO V_CustomerMessageType(customerMessageTypeName) VALUES('呼叫商家'), ('预开发票'), ('催促上菜');
+
 -- 客户消息表
 DROP TABLE IF EXISTS V_CustomerMessage;
 CREATE TABLE V_CustomerMessage (
@@ -206,6 +222,7 @@ CREATE TABLE V_CustomerMessage (
 	createDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT'创建时间',
 	PRIMARY KEY (customerMessageId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'客户消息表';
+
 -- 商家账号表
 DROP TABLE IF EXISTS V_MerchantUser;
 CREATE TABLE V_MerchantUser (
@@ -220,6 +237,7 @@ CREATE TABLE V_MerchantUser (
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'商家账号表';
 INSERT INTO V_MerchantUser(merchantUserGrade, merchantUserName, merchantUserAccount, merchantUserPassword)
 VALUES (333, '系统管理员', 'admin', '123');
+
 -- 就餐位预定表
 DROP TABLE IF EXISTS V_DiningRoomReservation;
 CREATE TABLE V_DiningRoomReservation (
@@ -234,6 +252,7 @@ CREATE TABLE V_DiningRoomReservation (
 	updateDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT'修改时间',
 	PRIMARY KEY (reservationId)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'就餐位预定表';
+
 -- 就餐位与访问Key的映射表
 DROP TABLE IF EXISTS V_DiningRoomPosition;
 CREATE TABLE V_DiningRoomPosition (
@@ -260,3 +279,62 @@ CREATE TABLE V_SystemMessage (
 	receiverId VARCHAR(20) NOT NULL COMMENT'接收方编号',
 	PRIMARY KEY(id)
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'系统消息表';
+
+-- ---------------------
+-- ---------------------
+-- ---------------------
+
+# 已完结的账单数据
+-- （已完结）账单表
+DROP TABLE IF EXISTS V_CompletedBill;
+CREATE TABLE V_CompletedBill (
+	billId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]账单ID：唯一、非空',
+	billNumber VARCHAR(30) UNIQUE NOT NULL COMMENT'账单编号：唯一、非空',
+	billOwnerTypeFlag TINYINT NOT NULL DEFAULT 0 COMMENT'[默认]归属者类型（0/餐桌、1/其它）：非空',
+	billOwnerId INT UNSIGNED NOT NULL COMMENT'账单归属者编号：非空',
+	billOwnerName VARCHAR(100) COMMENT'账单所属就餐位的名称',
+	billCustomerName VARCHAR(50) COMMENT'账单归属的客户名称',
+	billCustomerNumber SMALLINT UNSIGNED COMMENT'顾客人数',
+	billOrderQuantity SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT'订单总数：非空',
+	billTotalAmount DECIMAL(11,1) DEFAULT 0 NOT NULL COMMENT'账单总金额：非空',
+	billReceivedAmount DECIMAL(11,1) COMMENT'账单实收金额（null/未结账, 0/零收入账单, 其它/已结账的非零收入账单）',
+	billReceivedDateTime DATETIME COMMENT'账单结账时间',
+	billRecentHandlerName VARCHAR(20) COMMENT'账单最新的处理人名称：非空',
+	billRecentHandlerId INT UNSIGNED COMMENT'账单最新的处理人编号：非空',
+	billStartDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT'账单开始时间：非空',
+	billEndDateTime DATETIME COMMENT'账单结束时间',
+	billRemarks VARCHAR(100) COMMENT'账单备注',
+	updateDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT'修改时间：非空',
+	PRIMARY KEY (billId)
+)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'账单表';
+
+-- （已完结）订单表
+DROP TABLE IF EXISTS V_CompletedOrder;
+CREATE TABLE V_CompletedOrder (
+	orderId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]订单编号：唯一、非空',
+	billNumber VARCHAR(30) NOT NULL COMMENT'所属账单编号：唯一、非空',
+	orderProductItemQuantity SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT'商品项总数：非空',
+	orderTypeFlag TINYINT NOT NULL COMMENT'订单类别标识（0/堂食, 1/打包, 2/外卖）：非空',
+	orderPresetTime VARCHAR(30) NOT NULL COMMENT'订单预定时间：非空',
+	orderInitiatorFlag TINYINT NOT NULL COMMENT'订单发起人标识（0/商家, 1/顾客）：非空',
+	orderCreateDateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT'[默认]订单创建时间：非空',
+	PRIMARY KEY (orderId)
+)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'订单表';
+
+-- （已完结）订单详情表/商品条目表
+DROP TABLE IF EXISTS V_CompletedOrderProductItem;
+CREATE TABLE V_CompletedOrderProductItem (
+	orderProductItemId INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT COMMENT'[默认]商品条目编号：唯一、非空',
+	orderId INT UNSIGNED NOT NULL COMMENT'所属订单编号',
+	ownerId INT UNSIGNED NULL COMMENT'餐桌编号',
+	orderProductId INT UNSIGNED COMMENT'商品编号',
+	orderProductName VARCHAR(60) NOT NULL COMMENT'商品名称：非空',
+	orderProductImg VARCHAR(100) NOT NULL COMMENT'商品图片：非空',
+	orderProductQuantity SMALLINT UNSIGNED NOT NULL COMMENT'商品数量：非空',
+	orderProductPrice DECIMAL(10,1) NOT NULL COMMENT'商品单价：非空',
+	orderProductItemStatusFlag TINYINT NOT NULL DEFAULT 0 COMMENT'商品无效标识（0/下单修改, 1/库存不足, 2/备货中, 3/已完成）：非空',
+	orderProductItemStatusDesc VARCHAR(100) COMMENT'商品无效说明',
+	orderProductRemarks VARCHAR(40) COMMENT'商品项备注',
+	PRIMARY KEY (orderProductItemId)
+)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT'订单详情表';
+

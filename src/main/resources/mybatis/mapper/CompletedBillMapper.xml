@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baldyoung.vita.common.dao.CompletedBillDao">
+
+    <resultMap id="baseMap" type="com.baldyoung.vita.common.pojo.entity.BillEntity">
+        <id property="billId" column="billId"></id>
+        <!--非主键字段的对应-->
+        <result property="billNumber" column="billNumber"></result>
+        <result property="billOwnerTypeFlag" column="billOwnerTypeFlag"></result>
+        <result property="billOwnerId" column="billOwnerId"></result>
+        <result property="billOwnerName" column="billOwnerName"></result>
+        <result property="billCustomerNumber" column="billCustomerNumber"></result>
+        <result property="billCustomerName" column="billCustomerName"></result>
+        <result property="billOrderQuantity" column="billOrderQuantity"></result>
+        <result property="billTotalAmount" column="billTotalAmount"></result>
+        <result property="billReceivedAmount" column="billReceivedAmount"></result>
+        <result property="billReceivedDateTime" column="billReceivedDateTime"></result>
+        <result property="billRecentHandlerName" column="billRecentHandlerName"></result>
+        <result property="billRecentHandlerId" column="billRecentHandlerId"></result>
+        <result property="billStartDateTime" column="billStartDateTime"></result>
+        <result property="billEndDateTime" column="billEndDateTime"></result>
+        <result property="billRemarks" column="billRemarks"></result>
+        <result property="updateDateTime" column="updateDateTime"></result>
+    </resultMap>
+
+    <resultMap id="countInfoMap" type="com.baldyoung.vita.common.pojo.entity.BillCountInfoEntity">
+        <result property="billTotalNumber" column="billTotalNumber"></result>
+        <result property="zeroBillNumber" column="zeroBillNumber"></result>
+        <result property="unPayBillNumber" column="unPayBillNumber"></result>
+        <result property="totalSales" column="totalSales"></result>
+        <result property="totalUnReceive" column="totalUnReceive"></result>
+    </resultMap>
+
+    <sql id="allFiled">
+        billId, billNumber, billOwnerTypeFlag, billOwnerId, billOwnerName, billCustomerNumber, billOrderQuantity,
+        billTotalAmount, billReceivedAmount, billReceivedDateTime, billRecentHandlerName, billCustomerName,
+        billRecentHandlerId, billStartDateTime, billEndDateTime, updateDateTime, billRemarks
+    </sql>
+
+
+
+    <insert id="insertBillEntity" parameterType="com.baldyoung.vita.common.pojo.entity.BillEntity" >
+        INSERT INTO V_CompletedBill(
+        <include refid="allFiled" />
+        )
+        VALUES (
+        #{bill.billId},
+        #{bill.billNumber},
+        #{bill.billOwnerTypeFlag},
+        #{bill.billOwnerId},
+        #{bill.billOwnerName},
+        #{bill.billCustomerNumber},
+        #{bill.billOrderQuantity},
+        #{bill.billTotalAmount},
+        #{bill.billReceivedAmount}
+        #{bill.billReceivedDateTime},
+        #{bill.billRecentHandlerName},
+        #{bill.billCustomerName},
+        #{bill.billRecentHandlerId},
+        #{bill.billStartDateTime},
+        #{bill.billEndDateTime},
+        #{bill.updateDateTime},
+        #{bill.billRemarks}
+        );
+    </insert>
+
+    <select id="selectBill" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from V_CompletedBill
+        where billNumber = #{billNumber}
+    </select>
+
+    <update id="updateBillEntity" >
+        update V_CompletedBill
+        set billId = billId
+        <if test="bill.billCustomerName != null">
+            , billCustomerName = #{bill.billCustomerName}
+        </if>
+        <if test="bill.billCustomerNumber != null">
+            , billCustomerNumber = #{bill.billCustomerNumber}
+        </if>
+        <if test="bill.billTotalAmount != null">
+            , billTotalAmount = #{bill.billTotalAmount}
+        </if>
+        <if test="bill.billReceivedAmount != null">
+            , billReceivedAmount = #{bill.billReceivedAmount}
+        </if>
+        <if test="bill.billEndDateTime != null">
+            , billEndDateTime = #{bill.billEndDateTime}
+        </if>
+        <if test="bill.billReceivedDateTime != null">
+            , billReceivedDateTime = #{bill.billReceivedDateTime}
+        </if>
+        <if test="bill.billRemarks != null">
+            , billRemarks = #{bill.billRemarks}
+        </if>
+        <choose>
+            <when test="bill.billId != null">
+                where billId = #{bill.billId}
+            </when>
+            <when test="bill.billNumber != null">
+                where billNumber = #{bill.billNumber}
+            </when>
+            <otherwise>
+                where 1 = 2
+            </otherwise>
+        </choose>
+    </update>
+
+    <select id="countWithCondition" resultType="int">
+        select
+        count(*)
+        from V_CompletedBill
+        <where>
+            (
+            1 = 2
+            <if test="zeroFlag != null">
+                or billReceivedAmount = 0
+            </if>
+            <if test="unPay != null">
+                or billReceivedAmount is null
+            </if>
+            <if test="finishFlag != null">
+                or billReceivedAmount > 0
+            </if>
+            )
+            <if test="diningRoomName != null" >
+                and billOwnerName like concat('%', #{diningRoomName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWithCondition" resultMap="baseMap">
+        select
+        <include refid="allFiled"/>
+        from V_CompletedBill
+        <where>
+            (
+            1 = 2
+            <if test="zeroFlag != null">
+                or billReceivedAmount = 0
+            </if>
+            <if test="unPay != null">
+                or billReceivedAmount is null
+            </if>
+            <if test="finishFlag != null">
+                or billReceivedAmount > 0
+            </if>
+            )
+            <if test="diningRoomName != null" >
+                and billOwnerName like concat('%', #{diningRoomName}, '%')
+            </if>
+        </where>
+        order by billId desc
+        limit #{startIndex}, #{maxSize}
+    </select>
+
+
+    <select id="countAllBillCountInfo" resultMap="countInfoMap">
+        select
+        count(*) billTotalNumber,
+        sum(billReceivedAmount) totalSales
+        from V_CompletedBill
+    </select>
+
+    <select id="countZeroBillNumber" resultMap="countInfoMap">
+        select
+        count(*) zeroBillNumber
+        from V_CompletedBill
+        where billReceivedAmount = 0
+    </select>
+
+    <select id="countUnPayBillCountInfo" resultMap="countInfoMap">
+        select
+        count(*) unPayBillNumber,
+        sum(billTotalAmount) totalUnReceive
+        from V_CompletedBill
+        where billReceivedAmount is null
+    </select>
+
+
+
+
+
+</mapper>
