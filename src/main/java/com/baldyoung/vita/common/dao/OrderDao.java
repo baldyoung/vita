@@ -19,4 +19,6 @@ public interface OrderDao {
 
     OrderEntity selectOrderByOrderId(@Param("orderId")Integer orderId);
 
+    List<OrderEntity> selectOrderByBillNumberList(@Param("billNumberList")List<String> billNumberList);
+
 }

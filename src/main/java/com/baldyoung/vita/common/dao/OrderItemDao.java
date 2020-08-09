@@ -28,5 +28,4 @@ public interface OrderItemDao {
      * @param newStatus 需要变成的新状态
      */
     void setOrderItemStatusWithCondition(@Param("orderId")Integer orderId, @Param("refuseStatus")List<Integer> refuseStatus, @Param("newStatus")Integer newStatus);
-
 }

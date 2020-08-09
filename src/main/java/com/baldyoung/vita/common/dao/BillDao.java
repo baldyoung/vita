@@ -47,6 +47,8 @@ public interface BillDao {
      */
     BillCountInfoEntity countUnPayBillCountInfo();
 
+
+
     /**
      * 获取已完结的账单
      * @return

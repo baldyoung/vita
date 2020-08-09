@@ -159,6 +159,22 @@
     </select>
 
 
+    <select id="selectCompletedBill" resultMap="baseMap">
+        select
+        <include refid="allFiled"/>
+        from V_Bill
+        where billEndDateTime != null
+    </select>
+
+    <delete id="deleteBillList" >
+        delete from V_Bill
+        where billId in
+        <foreach collection="billIdList" item="item" index="index" open="(" separator=", " close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
 
 
 

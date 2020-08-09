@@ -39,6 +39,17 @@
     </select>
 
 
+    <select id="billNumberList" resultMap="baseMap">
+        select
+        <include refid="allFiled"></include>
+        from v_order
+        where billNumber in
+        <foreach collection="billNumberList" item="item" index="index" open="(" separator=", " close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
 
 
 
