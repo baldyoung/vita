@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface CompletedBillDao {
 
-    //  void insertBillList(@Param("billList")List<BillEntity> billEntityList);
+    void insertBillList(@Param("billList")List<BillEntity> billEntityList);
 
 
     void insertBillEntity(@Param("bill")BillEntity billEntity);

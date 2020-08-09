@@ -38,7 +38,33 @@
         billRecentHandlerId, billStartDateTime, billEndDateTime, updateDateTime, billRemarks
     </sql>
 
-
+    <insert id="insertBillList" >
+        INSERT INTO V_CompletedBill(
+        <include refid="allFiled" />
+        )
+        values
+        <foreach collection="billList" item="item" index="index" open="" separator="," close="">
+            (
+            #{bill.billId},
+            #{bill.billNumber},
+            #{bill.billOwnerTypeFlag},
+            #{bill.billOwnerId},
+            #{bill.billOwnerName},
+            #{bill.billCustomerNumber},
+            #{bill.billOrderQuantity},
+            #{bill.billTotalAmount},
+            #{bill.billReceivedAmount}
+            #{bill.billReceivedDateTime},
+            #{bill.billRecentHandlerName},
+            #{bill.billCustomerName},
+            #{bill.billRecentHandlerId},
+            #{bill.billStartDateTime},
+            #{bill.billEndDateTime},
+            #{bill.updateDateTime},
+            #{bill.billRemarks}
+            )
+        </foreach>
+    </insert>
 
     <insert id="insertBillEntity" parameterType="com.baldyoung.vita.common.pojo.entity.BillEntity" >
         INSERT INTO V_CompletedBill(

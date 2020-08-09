@@ -47,5 +47,20 @@ public interface BillDao {
      */
     BillCountInfoEntity countUnPayBillCountInfo();
 
+    /**
+     * 获取已完结的账单
+     * @return
+     */
+    List<BillEntity> selectCompletedBill();
+
+    /**
+     * 删除指定编号的账单
+     * @param billIdList
+     */
+    void deleteBillList(@Param("billIdList")List<Integer> billIdList);
+
+
+
+
 
 }
