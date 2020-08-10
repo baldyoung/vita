@@ -26,7 +26,8 @@ import static com.baldyoung.vita.common.utility.CommonMethod.isEmpty;
 import static com.baldyoung.vita.common.utility.CommonMethod.isEmptyCollection;
 
 @Service
-public class MOrderServiceImpl {
+public class MCompletedOrderServiceImpl {
+
 
     @Autowired
     private OrderDao orderDao;
@@ -218,5 +219,4 @@ public class MOrderServiceImpl {
         orderItemDao.setOrderItemStatusWithCondition(orderId, refuseOrderItemStatusWhenSetOrderRead, 2);
         systemMessageService.pullMerchantUnreadMessage();
     }
-
 }

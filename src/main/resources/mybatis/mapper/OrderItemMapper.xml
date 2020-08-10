@@ -114,6 +114,14 @@
             </if>
     </update>
 
+    <delete id="deleteByOrderIds" >
+        delete from v_orderProductItem
+        where orderId in
+        <foreach collection="orderIds" item="item" index="index" open="(" separator=", " close=")" >
+            #{item}
+        </foreach>
+    </delete>
+
 
 
 

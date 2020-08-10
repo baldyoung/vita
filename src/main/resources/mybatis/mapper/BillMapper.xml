@@ -163,7 +163,7 @@
         select
         <include refid="allFiled"/>
         from V_Bill
-        where billEndDateTime != null
+        where billEndDateTime is not null
     </select>
 
     <delete id="deleteBillList" >

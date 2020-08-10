@@ -39,7 +39,7 @@
     </select>
 
 
-    <select id="billNumberList" resultMap="baseMap">
+    <select id="selectOrderByBillNumberList" resultMap="baseMap">
         select
         <include refid="allFiled"></include>
         from v_order
@@ -48,6 +48,14 @@
             #{item}
         </foreach>
     </select>
+
+    <delete id="deleteByOrderIds" >
+        delete from v_order
+        where orderId in
+        <foreach collection="orderIds" item="item" index="index" open="(" separator=", " close=")">
+            #{item}
+        </foreach>
+    </delete>
 
 
 

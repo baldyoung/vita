@@ -48,6 +48,24 @@
         where orderId = #{orderId}
     </select>
 
+    <insert id="insertOrderEntityList" >
+        INSERT INTO V_CompletedOrder(
+        <include refid="allFiled" />
+        )
+        VALUES
+        <foreach collection="orderList" item="item" index="index" open="" separator=", " close="" >
+            (
+            #{item.orderId},
+            #{item.billNumber},
+            #{item.orderProductItemQuantity},
+            #{item.orderTypeFlag},
+            #{item.orderPresetTime},
+            #{item.orderInitiatorFlag},
+            #{item.orderCreateDateTime}
+            )
+        </foreach>
+    </insert>
+
 
 
 

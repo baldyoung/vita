@@ -21,4 +21,6 @@ public interface CompletedOrderDao {
     List<OrderEntity> selectOrderByBillNumber(@Param("billNumber")String billNumber);
 
     OrderEntity selectOrderByOrderId(@Param("orderId")Integer orderId);
+
+    void insertOrderEntityList(@Param("orderList")List<OrderEntity> orderEntityList);
 }

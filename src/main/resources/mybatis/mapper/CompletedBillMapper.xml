@@ -43,25 +43,60 @@
         <include refid="allFiled" />
         )
         values
-        <foreach collection="billList" item="item" index="index" open="" separator="," close="">
+        <foreach collection="billList" item="bill" index="index" open="" separator="," close="">
             (
-            #{bill.billId},
-            #{bill.billNumber},
-            #{bill.billOwnerTypeFlag},
-            #{bill.billOwnerId},
-            #{bill.billOwnerName},
-            #{bill.billCustomerNumber},
-            #{bill.billOrderQuantity},
-            #{bill.billTotalAmount},
-            #{bill.billReceivedAmount}
-            #{bill.billReceivedDateTime},
-            #{bill.billRecentHandlerName},
-            #{bill.billCustomerName},
-            #{bill.billRecentHandlerId},
-            #{bill.billStartDateTime},
-            #{bill.billEndDateTime},
-            #{bill.updateDateTime},
-            #{bill.billRemarks}
+            #{bill.billId, jdbcType=INTEGER},
+            #{bill.billNumber, jdbcType=VARCHAR},
+            #{bill.billOwnerTypeFlag, jdbcType=INTEGER},
+            #{bill.billOwnerId, jdbcType=INTEGER},
+            #{bill.billOwnerName, jdbcType=VARCHAR},
+            <if test="null == bill.billCustomerNumber">
+                null,
+            </if>
+            <if test="null != bill.billCustomerNumber">
+                #{bill.billCustomerNumber, jdbcType=VARCHAR},
+            </if>
+            #{bill.billOrderQuantity, jdbcType=INTEGER},
+            #{bill.billTotalAmount, jdbcType=DECIMAL},
+            <if test="null == bill.billReceivedAmount">
+                null,
+            </if>
+            <if test="null != bill.billReceivedAmount">
+                #{bill.billReceivedAmount, jdbcType=DECIMAL},
+            </if>
+            <if test="null == bill.billReceivedDateTime">
+                null,
+            </if>
+            <if test="null != bill.billReceivedDateTime">
+                #{bill.billReceivedDateTime, jdbcType=TIMESTAMP},
+            </if>
+            <if test="null == bill.billRecentHandlerName">
+                null,
+            </if>
+            <if test="null != bill.billRecentHandlerName">
+                #{bill.billRecentHandlerName, jdbcType=VARCHAR},
+            </if>
+            <if test="null == bill.billCustomerName">
+                null,
+            </if>
+            <if test="null != bill.billCustomerName">
+                #{bill.billCustomerName, jdbcType=VARCHAR},
+            </if>
+            <if test="null == bill.billRecentHandlerId">
+                null,
+            </if>
+            <if test="null != bill.billRecentHandlerId">
+                #{bill.billRecentHandlerId, jdbcType=INTEGER},
+            </if>
+            #{bill.billStartDateTime, jdbcType=TIMESTAMP},
+            #{bill.billEndDateTime, jdbcType=TIMESTAMP},
+            #{bill.updateDateTime, jdbcType=TIMESTAMP},
+            <if test="null == bill.billRemarks">
+                null
+            </if>
+            <if test="null != bill.billRemarks">
+                #{bill.billRemarks, jdbcType=VARCHAR}
+            </if>
             )
         </foreach>
     </insert>

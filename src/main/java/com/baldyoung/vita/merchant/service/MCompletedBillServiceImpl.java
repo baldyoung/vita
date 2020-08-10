@@ -1,6 +1,6 @@
 package com.baldyoung.vita.merchant.service;
 
-import com.baldyoung.vita.common.dao.BillDao;
+import com.baldyoung.vita.common.dao.CompletedBillDao;
 import com.baldyoung.vita.common.dao.DiningRoomDao;
 import com.baldyoung.vita.common.pojo.dto.bill.MBillDto;
 import com.baldyoung.vita.common.pojo.dto.order.MOrderDto;
@@ -24,10 +24,10 @@ import static com.baldyoung.vita.common.utility.CommonMethod.isEmpty;
 import static com.baldyoung.vita.common.utility.CommonMethod.isEmptyCollection;
 
 @Service
-public class MBillServiceImpl {
+public class MCompletedBillServiceImpl {
 
     @Autowired
-    private BillDao billDao;
+    private CompletedBillDao billDao;
 
     @Autowired
     private MOrderServiceImpl mOrderService;
@@ -228,5 +228,4 @@ public class MBillServiceImpl {
             mOrderService.setOrderProductItemToFinish(orderProductItemIdList);
         }
     }
-
 }

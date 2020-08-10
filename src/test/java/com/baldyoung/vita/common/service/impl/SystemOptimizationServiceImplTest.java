@@ -14,7 +14,7 @@ public class SystemOptimizationServiceImplTest {
     private SystemOptimizationServiceImpl systemOptimizationService;
 
     @Test
-    public void test() {
+    public void test() throws Exception {
         systemOptimizationService.OptimizeBillData();
     }
 

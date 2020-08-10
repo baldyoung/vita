@@ -21,4 +21,6 @@ public interface OrderDao {
 
     List<OrderEntity> selectOrderByBillNumberList(@Param("billNumberList")List<String> billNumberList);
 
+    void deleteByOrderIds(@Param("orderIds")List<Integer> orderIds);
+
 }

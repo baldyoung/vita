@@ -7,6 +7,7 @@ import com.baldyoung.vita.common.pojo.exception.systemException.UtilityException
 import com.baldyoung.vita.common.service.RedisServiceImpl;
 import com.baldyoung.vita.common.service.impl.DiningRoomRequestPositionServiceImpl;
 import com.baldyoung.vita.common.service.impl.InvoiceServiceImpl;
+import com.baldyoung.vita.common.service.impl.SystemOptimizationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,11 +40,17 @@ public class Z_DefaultController {
     @Autowired
     private InvoiceServiceImpl invoiceService;
 
+    //
+    @Autowired
+    private SystemOptimizationServiceImpl systemOptimizationService;
+
 
     @GetMapping
     public void index(HttpServletResponse response) throws IOException {
         response.sendRedirect("vita/index.html");
     }
+
+
 
     // @GetMapping("db-test")
     public String dbTest(HttpServletResponse response, HttpServletRequest request) throws IOException {
@@ -102,6 +109,14 @@ public class Z_DefaultController {
     @GetMapping("noLogin")
     public void loginFailed(HttpServletResponse response) throws IOException {
         response.sendRedirect("/vita/merchant/Login/login.html");
+    }
+
+
+    // ------------------------------- test
+
+    @GetMapping("test")
+    public void testRun() throws Exception {
+        systemOptimizationService.OptimizeBillData();
     }
 
 }

@@ -16,6 +16,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 @SpringBootApplication
 // 添加该注解后才能让拦截器生效
 @ServletComponentScan
+// @EnableTransactionManagement
 public class VitaApplication {
 
     public static void main(String[] args) {
