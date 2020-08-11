@@ -8,6 +8,8 @@ import com.baldyoung.vita.common.pojo.entity.DiningRoomPositionEntity;
 import com.baldyoung.vita.common.pojo.exception.serviceException.ServiceException;
 import com.baldyoung.vita.common.utility.QRcodeModule;
 import com.baldyoung.vita.common.utility.RandomStringModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,7 @@ import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceException
  */
 @Service
 public class DiningRoomRequestPositionServiceImpl {
+    private static Logger logger = LoggerFactory.getLogger(DiningRoomRequestPositionServiceImpl.class);
 
     @Autowired
     private DiningRoomDao diningRoomDao;
@@ -118,7 +121,7 @@ public class DiningRoomRequestPositionServiceImpl {
         // 生成点餐二维码
         FileInputStream fileInputStream = new FileInputStream(systemInfoService.getQRcodeImgPath()+"default.jpg");
         String url = commonConfig.serveAddress + commonConfig.positionAddress + key;
-        // System.out.println("###:"+url);
+        logger.info("new code:"+url);
         BufferedImage bufferedImage = QRcodeModule.createWithLogoAndText(url, fileInputStream, diningRoomEntity.getDiningRoomName());
         QRcodeModule.saveBufferedImageAsFile(bufferedImage, systemInfoService.getQRcodeImgPath()+key+".jpg");
         // 将新增二维码的映射数据同步到数据库和缓存中

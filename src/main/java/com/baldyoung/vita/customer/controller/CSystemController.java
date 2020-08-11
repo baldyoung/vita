@@ -47,7 +47,7 @@ public class CSystemController {
         if (null == object) {
             return defeat();
         }
-        return success(cSystemService.getBillInfo(String.valueOf(object)));
+        return success(cSystemService.getCompletedBillInfo(String.valueOf(object)));
     }
 
 

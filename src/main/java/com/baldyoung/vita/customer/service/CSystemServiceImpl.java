@@ -1,8 +1,6 @@
 package com.baldyoung.vita.customer.service;
 
-import com.baldyoung.vita.common.dao.DiningRoomDao;
-import com.baldyoung.vita.common.dao.OrderDao;
-import com.baldyoung.vita.common.dao.OrderItemDao;
+import com.baldyoung.vita.common.dao.*;
 import com.baldyoung.vita.common.pojo.dto.bill.CBillDto;
 import com.baldyoung.vita.common.pojo.dto.message.CMessageTypeDto;
 import com.baldyoung.vita.common.pojo.dto.order.COrderDto;
@@ -28,13 +26,13 @@ public class CSystemServiceImpl {
     private CustomerMessageServiceImpl customerMessageService;
 
     @Autowired
-    private BillServiceImpl billService;
+    private CompletedBillDao completedBillDao;
 
     @Autowired
-    private OrderDao orderDao;
+    private CompletedOrderDao completedOrderDao;
 
     @Autowired
-    private OrderItemDao orderItemDao;
+    private CompletedOrderItemDao completedOrderItemDao;
 
     @Autowired
     private DiningRoomDao diningRoomDao;
@@ -73,8 +71,8 @@ public class CSystemServiceImpl {
      * @return
      * @throws ServiceException
      */
-    public CBillDto getBillInfo(String  billNumber) throws ServiceException {
-        BillEntity billEntity = billService.getBill(billNumber);
+    public CBillDto getCompletedBillInfo(String  billNumber) throws ServiceException {
+        BillEntity billEntity = completedBillDao.selectBill(billNumber);
         CBillDto dto = new CBillDto();
         dto.setBillCustomerNumber(billEntity.getBillCustomerNumber());
         dto.setBillEndDateTime(billEntity.getBillEndDateTime());
@@ -92,13 +90,13 @@ public class CSystemServiceImpl {
         dto.setBillCustomerName(billEntity.getBillCustomerName());
 
         // 获取订单详情
-        List<OrderEntity> orderList = orderDao.selectOrderByBillNumber(billNumber);
+        List<OrderEntity> orderList = completedOrderDao.selectOrderByBillNumber(billNumber);
         if (isEmptyCollection(orderList)) {
             throw new ServiceException(NO_ORDER);
         }
         List<COrderDto> cOrderDtoList = new ArrayList(orderList.size());
         List<Integer> orderIds = orderList.stream().map(cell->cell.getOrderId()).collect(Collectors.toList());
-        List<OrderItemEntity>  orderItemList = orderItemDao.selectOrderItemListWithOrderIdList(orderIds);
+        List<OrderItemEntity>  orderItemList = completedOrderItemDao.selectOrderItemListWithOrderIdList(orderIds);
         DiningRoomEntity diningRoomEntity = diningRoomDao.selectByDiningRoomId(billEntity.getBillOwnerId());
         for (OrderEntity order : orderList) {
             COrderDto cOrderDto = new COrderDto();

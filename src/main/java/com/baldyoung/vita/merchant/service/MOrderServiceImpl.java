@@ -65,7 +65,7 @@ public class MOrderServiceImpl {
      * @param billNumber
      * @return
      */
-    public List<MOrderDto> getAllOrderInRoom(String billNumber) {
+    public List<MOrderDto> getAllOrderInBill(String billNumber) {
         List<OrderEntity> entityList = orderDao.selectOrderByBillNumber(billNumber);
         if (isEmptyCollection(entityList)) {
             return new ArrayList(0);
@@ -117,7 +117,7 @@ public class MOrderServiceImpl {
         if (isEmpty(billNumber)) {
             return new ArrayList(0);
         }
-        return getAllOrderInRoom(billNumber);
+        return getAllOrderInBill(billNumber);
     }
 
     /**

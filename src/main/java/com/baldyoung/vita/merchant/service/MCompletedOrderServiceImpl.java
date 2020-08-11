@@ -1,8 +1,6 @@
 package com.baldyoung.vita.merchant.service;
 
-import com.baldyoung.vita.common.dao.OrderDao;
-import com.baldyoung.vita.common.dao.OrderItemDao;
-import com.baldyoung.vita.common.dao.ProductDao;
+import com.baldyoung.vita.common.dao.*;
 import com.baldyoung.vita.common.pojo.dto.order.MOrderDto;
 import com.baldyoung.vita.common.pojo.dto.orderItem.MOrderItemDto;
 import com.baldyoung.vita.common.pojo.entity.OrderEntity;
@@ -30,44 +28,23 @@ public class MCompletedOrderServiceImpl {
 
 
     @Autowired
-    private OrderDao orderDao;
+    private CompletedOrderDao completedOrderDao;
 
     @Autowired
-    private OrderItemDao orderItemDao;
+    private CompletedOrderItemDao completedOrderItemDao;
 
-    @Autowired
-    private BillServiceImpl billService;
-
-    @Autowired
-    private ProductDao productDao;
-
-    @Autowired
-    private OrderServiceImpl orderService;
-
-    @Autowired
-    private SystemMessageServiceImpl systemMessageService;
-
-    /**
-     * 一次性订单已读时，不能变更为已读状态的商品项状态
-     */
-    private static List<Integer> refuseOrderItemStatusWhenSetOrderRead;
 
     @PostConstruct
     public void init() {
-        Integer[] refuseStatus = {1, 4};
-        refuseOrderItemStatusWhenSetOrderRead = new ArrayList(refuseStatus.length);
-        for (Integer status : refuseStatus) {
-            refuseOrderItemStatusWhenSetOrderRead.add(status);
-        }
     }
 
     /**
-     * 获取指定就餐位的所有订单
+     * 获取指定账单下的所有订单
      * @param billNumber
      * @return
      */
-    public List<MOrderDto> getAllOrderInRoom(String billNumber) {
-        List<OrderEntity> entityList = orderDao.selectOrderByBillNumber(billNumber);
+    public List<MOrderDto> getAllOrderInBill(String billNumber) {
+        List<OrderEntity> entityList = completedOrderDao.selectOrderByBillNumber(billNumber);
         if (isEmptyCollection(entityList)) {
             return new ArrayList(0);
         }
@@ -76,7 +53,7 @@ public class MCompletedOrderServiceImpl {
             orderIds.add(entity.getOrderId());
         }
         List<MOrderDto> result = new ArrayList(entityList.size());
-        List<OrderItemEntity> itemEntityList = orderItemDao.selectOrderItemListWithOrderIdList(orderIds);
+        List<OrderItemEntity> itemEntityList = completedOrderItemDao.selectOrderItemListWithOrderIdList(orderIds);
         for (OrderEntity entity : entityList) {
             MOrderDto dto = new MOrderDto();
             Integer orderId = entity.getOrderId();
@@ -108,71 +85,7 @@ public class MCompletedOrderServiceImpl {
         }
         return result;
     }
-    /**
-     * 获取指定就餐位的所有订单
-     * @param roomId
-     * @return
-     */
-    public List<MOrderDto> getAllOrderInRoom(Integer roomId) {
-        String billNumber = billService.getRoomBillNumberWithoutCreate(roomId);
-        if (isEmpty(billNumber)) {
-            return new ArrayList(0);
-        }
-        return getAllOrderInRoom(billNumber);
-    }
 
-    /**
-     * 修改指定订单项的内容
-     * @param entity
-     */
-    public void updateOrderItem(OrderItemEntity entity) {
-        orderItemDao.updateOrderItem(entity);
-        systemMessageService.pullMerchantUnreadMessage();
-    }
-
-
-    /**
-     * 替换订单商品
-     * @param itemId
-     * @param productId
-     * @throws ServiceException
-     */
-    public void changeOrderItemProduct(Integer itemId, Integer productId) throws ServiceException {
-        ProductEntity productEntity = productDao.findProductByProductId(productId);
-        if (null == productEntity || null == productEntity.getProductId()) {
-            throw new ServiceException(PRODUCT_NOT_FOUND);
-        }
-        OrderItemEntity entity = new OrderItemEntity();
-        entity.setOrderProductItemId(itemId);
-        entity.setOrderProductId(productId);
-        entity.setOrderProductName(productEntity.getProductName());
-        entity.setOrderProductImg(productEntity.getProductImgName());
-        entity.setOrderProductPrice(productEntity.getProductPrice());
-        orderItemDao.updateOrderItem(entity);
-    }
-
-    /**
-     * 新增订单项
-     * @param roomId
-     * @param diningTypeFlag
-     * @param item
-     */
-    public void addOrderItem(Integer roomId, Integer diningTypeFlag, OrderItemEntity item) throws ServiceException {
-        List<OrderItemEntity> resultList = orderService.doOrder(roomId, diningTypeFlag, "", 0, Arrays.asList(item));
-        OrderItemEntity result = resultList.get(0);
-        if (1 == result.getOrderProductItemStatusFlag().intValue()) {
-            throw new ServiceException(PRODUCT_UNDERSTOCK);
-        }
-    }
-
-    /**
-     * 批量将指定商品项变成已完成状态
-     * @param itemIdList
-     */
-    public void setOrderProductItemToFinish(List<Integer> itemIdList) {
-        orderItemDao.updateOrderItemListStatus(itemIdList, 3);
-        systemMessageService.pullMerchantUnreadMessage();
-    }
 
     /**
      * 获取指定订单的数据
@@ -182,7 +95,7 @@ public class MCompletedOrderServiceImpl {
      * @throws ServiceException
      */
     public MOrderDto getOrderInfo(Integer orderId) throws ServiceException {
-        OrderEntity orderEntity = orderDao.selectOrderByOrderId(orderId);
+        OrderEntity orderEntity = completedOrderDao.selectOrderByOrderId(orderId);
         if (null == orderEntity || null == orderEntity.getOrderId()) {
             throw new ServiceException(ORDER_NOT_EXISTS);
         }
@@ -191,7 +104,7 @@ public class MCompletedOrderServiceImpl {
         mOrderDto.setOrderPresetTime(orderEntity.getOrderPresetTime());
         mOrderDto.setOrderInitiatorFlag(orderEntity.getOrderInitiatorFlag());
         mOrderDto.setOrderCreateDateTime(orderEntity.getOrderCreateDateTime());
-        List<OrderItemEntity> orderItemEntityList = orderItemDao.selectOrderItemList(orderId);
+        List<OrderItemEntity> orderItemEntityList = completedOrderItemDao.selectOrderItemList(orderId);
         if (isEmptyCollection(orderItemEntityList)) {
             return mOrderDto;
         }
@@ -211,12 +124,4 @@ public class MCompletedOrderServiceImpl {
         return mOrderDto;
     }
 
-    /**
-     * 对指定订单进行一次性已读操作
-     * @param orderId
-     */
-    public void setOrderWithReadFlag(Integer orderId) {
-        orderItemDao.setOrderItemStatusWithCondition(orderId, refuseOrderItemStatusWhenSetOrderRead, 2);
-        systemMessageService.pullMerchantUnreadMessage();
-    }
 }

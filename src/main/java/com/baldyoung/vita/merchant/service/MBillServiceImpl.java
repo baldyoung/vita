@@ -50,9 +50,6 @@ public class MBillServiceImpl {
     @Autowired
     private SystemOptimizationServiceImpl systemOptimizationService;
 
-    @Autowired
-    private SystemMessageServiceImpl systemMessageService;
-
     /**
      * 获取指定就餐位的账单详情
      * @param roomId
@@ -90,7 +87,7 @@ public class MBillServiceImpl {
         dto.setBillStartDateTime(billEntity.getBillStartDateTime());
         dto.setBillTotalAmount(billEntity.getBillTotalAmount());
         dto.setBillCustomerName(billEntity.getBillCustomerName());
-        dto.setOrderList(mOrderService.getAllOrderInRoom(billNumber));
+        dto.setOrderList(mOrderService.getAllOrderInBill(billNumber));
         return dto;
     }
 
@@ -150,60 +147,11 @@ public class MBillServiceImpl {
     }
 
     /**
-     * 统计指定条件下的账单数量
-     * @param diningRoomName
-     * @param zeroFlag
-     * @param unPay
-     * @param finishFlag
-     * @return
-     */
-    public Integer getBillNumberWithCondition(String diningRoomName,
-                                              Boolean zeroFlag,
-                                              Boolean unPay,
-                                              Boolean finishFlag) {
-        return billDao.countWithCondition(diningRoomName, zeroFlag, unPay, finishFlag);
-    }
-
-    /**
-     * 筛选符合条件的账单
-     * @param diningRoomName
-     * @param zeroFlag
-     * @param unPay
-     * @param finishFlag
-     * @param startIndex
-     * @param maxSize
-     * @return
-     */
-    public List<BillEntity> getBillListWithCondition(String diningRoomName,
-                                                     Boolean zeroFlag,
-                                                     Boolean unPay,
-                                                     Boolean finishFlag,
-                                                     Integer startIndex,
-                                                     Integer maxSize) {
-        List<BillEntity> result = billDao.selectWithCondition(diningRoomName, zeroFlag, unPay, finishFlag, startIndex, maxSize);
-        return result;
-    }
-
-    /**
-     * 获取当前所有账单的统计情况
-     * @return
-     */
-    public BillCountInfoEntity getBillCountInfo() {
-        BillCountInfoEntity entity = billDao.countAllBillCountInfo();
-        BillCountInfoEntity temp = billDao.countZeroBillNumber();
-        entity.setZeroBillNumber(temp.getZeroBillNumber());
-        temp = billDao.countUnPayBillCountInfo();
-        entity.setUnPayBillNumber(temp.getUnPayBillNumber());
-        entity.setTotalUnReceive(temp.getTotalUnReceive());
-        return entity;
-    }
-
-    /**
      * 将指定账单下所有未完成的商品项设置为已完成
      * @param billNumber
      */
     public void setAllProductItemToFinish(String billNumber) {
-        List<MOrderDto> orderList = mOrderService.getAllOrderInRoom(billNumber);
+        List<MOrderDto> orderList = mOrderService.getAllOrderInBill(billNumber);
         if (isEmptyCollection(orderList)) {
             return;
         }

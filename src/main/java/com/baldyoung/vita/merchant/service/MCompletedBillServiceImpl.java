@@ -23,48 +23,21 @@ import static com.baldyoung.vita.common.pojo.enums.serviceEnums.ServiceException
 import static com.baldyoung.vita.common.utility.CommonMethod.isEmpty;
 import static com.baldyoung.vita.common.utility.CommonMethod.isEmptyCollection;
 
+/**
+ * 已完结的账单服务
+ */
 @Service
 public class MCompletedBillServiceImpl {
 
     @Autowired
-    private CompletedBillDao billDao;
+    private CompletedBillDao completedBillDao;
 
     @Autowired
-    private MOrderServiceImpl mOrderService;
-
-    @Autowired
-    private BillServiceImpl billService;
-
-    @Autowired
-    private DiningRoomDao diningRoomDao;
-
-    @Autowired
-    private InvoiceServiceImpl invoiceService;
-
-    @Autowired
-    private DiningRoomRequestPositionServiceImpl diningRoomRequestPositionService;
-
-    @Autowired
-    private MDiningRoomServiceImpl mDiningRoomService;
+    private MCompletedOrderServiceImpl mCompletedOrderService;
 
     @Autowired
     private SystemOptimizationServiceImpl systemOptimizationService;
 
-    @Autowired
-    private SystemMessageServiceImpl systemMessageService;
-
-    /**
-     * 获取指定就餐位的账单详情
-     * @param roomId
-     * @return
-     */
-    public MBillDto getBillInfo(Integer roomId) throws ServiceException {
-        String billNumber = billService.getRoomBillNumberWithoutCreate(roomId);
-        if (isEmpty(billNumber)) {
-            throw new ServiceException(BILL_NO_FOUND);
-        }
-        return getBillInfo(billNumber);
-    }
 
     /**
      * 获取指定就餐位的账单详情
@@ -72,7 +45,7 @@ public class MCompletedBillServiceImpl {
      * @return
      */
     public MBillDto getBillInfo(String billNumber) {
-        BillEntity billEntity = billDao.selectBill(billNumber);
+        BillEntity billEntity = completedBillDao.selectBill(billNumber);
         MBillDto dto = new MBillDto();
         dto.setBillCustomerNumber(billEntity.getBillCustomerNumber());
         dto.setBillEndDateTime(billEntity.getBillEndDateTime());
@@ -90,7 +63,7 @@ public class MCompletedBillServiceImpl {
         dto.setBillStartDateTime(billEntity.getBillStartDateTime());
         dto.setBillTotalAmount(billEntity.getBillTotalAmount());
         dto.setBillCustomerName(billEntity.getBillCustomerName());
-        dto.setOrderList(mOrderService.getAllOrderInRoom(billNumber));
+        dto.setOrderList(mCompletedOrderService.getAllOrderInBill(billNumber));
         return dto;
     }
 
@@ -99,17 +72,17 @@ public class MCompletedBillServiceImpl {
      * @param entity
      */
     public void updateBillInfo (BillEntity entity) {
-        billDao.updateBillEntity(entity);
+        completedBillDao.updateBillEntity(entity);
     }
 
     /**
-     * 账单结账
+     * 为记账的账单进行结账
      * @param billNumber
      * @param totalAmount
      * @param receiveAmount
      */
     public void settleAccount (String billNumber, BigDecimal totalAmount, BigDecimal receiveAmount, String remarks) throws ServiceException {
-        BillEntity bill = billDao.selectBill(billNumber);
+        BillEntity bill = completedBillDao.selectBill(billNumber);
         if (null == bill || null == bill.getBillId()) {
             return;
         }
@@ -128,25 +101,7 @@ public class MCompletedBillServiceImpl {
             newBill.setBillReceivedDateTime(newDate);
         }
         newBill.setBillRemarks(remarks);
-        billDao.updateBillEntity(newBill);
-        DiningRoomEntity room = new DiningRoomEntity();
-        room.setDiningRoomId(bill.getBillOwnerId());
-        room.setCurrentBillNumber("");
-        diningRoomDao.updateDiningRoom(room);
-        billService.deleteBillNumberBuffer(bill.getBillOwnerId());
-        setAllProductItemToFinish(billNumber);
-
-        // 将结账订单映射到当前就餐位的点餐二维码上，进行电子账单的挂载。
-        String key = diningRoomRequestPositionService.getDiningRoomKey(bill.getBillOwnerId());
-        invoiceService.setInvoiceKeyValue(key, billNumber);
-        // 修改对应就餐位的状态为出单状态
-        DiningRoomEntity diningRoomEntity = new DiningRoomEntity();
-        diningRoomEntity.setDiningRoomId(bill.getBillOwnerId());
-        diningRoomEntity.setDiningRoomStatus(3);
-        mDiningRoomService.updateDiningRoom(diningRoomEntity);
-        systemOptimizationService.submitWorkAsynchronously(()->{
-            systemOptimizationService.OptimizeBillData();
-        });
+        completedBillDao.updateBillEntity(newBill);
     }
 
     /**
@@ -161,7 +116,7 @@ public class MCompletedBillServiceImpl {
                                               Boolean zeroFlag,
                                               Boolean unPay,
                                               Boolean finishFlag) {
-        return billDao.countWithCondition(diningRoomName, zeroFlag, unPay, finishFlag);
+        return completedBillDao.countWithCondition(diningRoomName, zeroFlag, unPay, finishFlag);
     }
 
     /**
@@ -180,7 +135,7 @@ public class MCompletedBillServiceImpl {
                                                      Boolean finishFlag,
                                                      Integer startIndex,
                                                      Integer maxSize) {
-        List<BillEntity> result = billDao.selectWithCondition(diningRoomName, zeroFlag, unPay, finishFlag, startIndex, maxSize);
+        List<BillEntity> result = completedBillDao.selectWithCondition(diningRoomName, zeroFlag, unPay, finishFlag, startIndex, maxSize);
         return result;
     }
 
@@ -189,43 +144,13 @@ public class MCompletedBillServiceImpl {
      * @return
      */
     public BillCountInfoEntity getBillCountInfo() {
-        BillCountInfoEntity entity = billDao.countAllBillCountInfo();
-        BillCountInfoEntity temp = billDao.countZeroBillNumber();
+        BillCountInfoEntity entity = completedBillDao.countAllBillCountInfo();
+        BillCountInfoEntity temp = completedBillDao.countZeroBillNumber();
         entity.setZeroBillNumber(temp.getZeroBillNumber());
-        temp = billDao.countUnPayBillCountInfo();
+        temp = completedBillDao.countUnPayBillCountInfo();
         entity.setUnPayBillNumber(temp.getUnPayBillNumber());
         entity.setTotalUnReceive(temp.getTotalUnReceive());
         return entity;
     }
 
-    /**
-     * 将指定账单下所有未完成的商品项设置为已完成
-     * @param billNumber
-     */
-    public void setAllProductItemToFinish(String billNumber) {
-        List<MOrderDto> orderList = mOrderService.getAllOrderInRoom(billNumber);
-        if (isEmptyCollection(orderList)) {
-            return;
-        }
-        List<Integer> orderProductItemIdList = new LinkedList();
-        for (MOrderDto order : orderList) {
-            List<MOrderItemDto> itemList = order.getItemList();
-            if (isEmptyCollection(itemList)) {
-                continue;
-            }
-            for (MOrderItemDto item : itemList) {
-                if (item.getOrderProductItemStatusFlag() == null) {
-                    continue;
-                }
-                int status = item.getOrderProductItemStatusFlag().intValue();
-                // 收集状态为“待确定”和“待发货”的商品项编号
-                if (0 == status || 2 == status) {
-                    orderProductItemIdList.add(item.getOrderProductItemId());
-                }
-            }
-        }
-        if (!isEmptyCollection(orderProductItemIdList)) {
-            mOrderService.setOrderProductItemToFinish(orderProductItemIdList);
-        }
-    }
 }
