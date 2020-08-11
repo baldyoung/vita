@@ -68,12 +68,9 @@ var NewsModule = {
     socket : undefined,
     newsData : [],
     init : function() {
-        if (SocketModule.init()) {
-            // 获取websocket连接的密钥
-            var key = NewsModule.requestSocketLinkKey();
-            if (undefined == key) {
-                location.reload();
-            }
+        // 获取websocket连接的密钥
+        var key = NewsModule.requestSocketLinkKey();
+        if (SocketModule.init() && undefined != key) {
             var tSocket = SocketModule.createSocket("/mSystemMessage/"+key);
             if (undefined != tSocket) {
                 tSocket.onmessage = function(data) {
@@ -90,7 +87,7 @@ var NewsModule = {
                     NewsModule.loadData(list);
                 }
                 tSocket.onclose = function() {
-                    location.reload();
+
                 };
                 setInterval("NewsModule.loadCurrentNewsData()", 1000);
                 return;
@@ -133,7 +130,7 @@ var NewsModule = {
                 }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
-                location.reload();
+                // location.reload();
                 //console.log(XMLHttpRequest);
             }
         });
