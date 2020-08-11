@@ -56,7 +56,7 @@ public class SystemOptimizationServiceImpl {
 
     @Transactional(rollbackFor = {RuntimeException.class, Error.class, Exception.class})
     public void OptimizeBillData() {
-        System.out.println("开始账单数据迁移");
+        // System.out.println("开始账单数据迁移");
         // 从营业表中获取已完结的账单
         List<BillEntity> billEntities = billDao.selectCompletedBill();
         if (isEmptyCollection(billEntities)) {

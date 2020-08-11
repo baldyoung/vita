@@ -93,7 +93,7 @@ var BillTableModule = {
 	requestCountInfo : function(filterData) {
 		var targetData = 0;
 		$.ajax({
-			url: GlobalConfig.serverAddress + "/mBill/billNumberWithCondition",
+			url: GlobalConfig.serverAddress + "/mCompletedBill/billNumberWithCondition",
 			type: 'POST',
 			cache: false,
 			dataType: 'json',
@@ -115,7 +115,7 @@ var BillTableModule = {
 	},
 	requestAndLoadData : function(data) {
 		$.ajax({
-			url: GlobalConfig.serverAddress + "/mBill/billListWithCondition",
+			url: GlobalConfig.serverAddress + "/mCompletedBill/billListWithCondition",
 			type: 'POST',
 			cache: false,
 			dataType: 'json',
@@ -214,7 +214,7 @@ var BillCountModule = {
 	requestAndLoadData : function() {
 		// ajax请求，并加载数据
 		$.ajax({
-			url: GlobalConfig.serverAddress + "/mBill/billCountInfo",
+			url: GlobalConfig.serverAddress + "/mCompletedBill/billCountInfo",
 			type: 'GET',
 			cache: false,
 			dataType: 'json',
@@ -331,7 +331,7 @@ var BillInfoModule = {
 	},
 	requestAndLoadData : function(tBillNumber) {
 		$.ajax({
-			url: GlobalConfig.serverAddress + "/mBill/orderListInBill",
+			url: GlobalConfig.serverAddress + "/mCompletedBill/orderListInBill",
 			type: 'POST',
 			cache: false,
 			dataType: 'json',
@@ -414,7 +414,7 @@ var BillSettleAccountModule = {
 	},
 	requestSettleAccount : function (sendData) {
 		$.ajax({
-			url: GlobalConfig.serverAddress + "/mBill/settleAccount",
+			url: GlobalConfig.serverAddress + "/mCompletedBill/settleAccount",
 			type: 'POST',
 			cache: false,
 			dataType:'json',
